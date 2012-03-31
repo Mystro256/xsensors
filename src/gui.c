@@ -27,10 +27,10 @@ extern char *imagefile;
 GtkWidget *mainwindow = NULL;
 
 GdkColor colorWhite = { 0, 0xFFFF, 0xFFFF, 0xFFFF };
-    
-GdkColormap *cmap = NULL;
 
-GdkPixmap *theme = NULL;
+GdkPixbuf *theme = NULL;
+
+cairo_surface_t *surface = NULL;
 
 /* Destroy the main window. */
 gint destroy_gui( GtkWidget *widget, gpointer data ) {
@@ -76,17 +76,16 @@ static void get_pm_location( gchar curInt, int *x, int *y, int *w ) {
     }
 }
 
-static void draw_digits( GtkWidget *widget, const gchar *digits, int highLow )
+static void draw_digits( GtkWidget *widget, cairo_t *cr, const gchar *digits, int highLow )
 {
     const gchar *digit = digits;
     int pos = 0, x = 0, y = 0, w = 0;
 
     while ( *digit ) {
         get_pm_location( *digit, &x, &y, &w );
-        gdk_draw_drawable( widget->window,
-                           widget->style->fg_gc[ GTK_WIDGET_STATE
-                           (widget) ], theme, x, y + highLow,
-                           pos, 0, w, 30 );
+        cairo_set_source_surface (cr, surface, pos-x, 0-(y + highLow));
+		cairo_rectangle(cr, pos, 0, w, 30);
+		cairo_fill(cr);
         pos += w;
         digit++;
     }
@@ -101,6 +100,8 @@ gboolean expose_event_callback( GtkWidget *widget, GdkEventExpose *event,
     updates *current = data;
 
     gchar result[7];
+
+    cairo_t *cr = gdk_cairo_create(widget->window);
 
 #ifdef DEBUG_XSENSORS
     printf( "area.width = %d, area.height = %d\n", event->area.width,
@@ -117,13 +118,11 @@ gboolean expose_event_callback( GtkWidget *widget, GdkEventExpose *event,
 
             /* Display the digits */
             if ( g_snprintf( result, 6, "%5.0f", current->curvalue ) >= 0 )
-               draw_digits( widget, result, highLow );
+               draw_digits( widget, cr, result, highLow );
 
             /* Display RPM */
-            gdk_draw_drawable( widget->window, 
-                               widget->style->fg_gc[ GTK_WIDGET_STATE 
-                               (widget) ], theme, 0, 120 + highLow, 
-                               90, 0, 57, 30 );
+            cairo_set_source_surface (cr, surface, 90-0, 0-(120 + highLow));
+     	    cairo_rectangle(cr, 90, 0, 57, 30);
             break;
         case TEMP:
             if ( current->curvalue > current->curmax )
@@ -134,17 +133,15 @@ gboolean expose_event_callback( GtkWidget *widget, GdkEventExpose *event,
 
             /* Display the digits */
             if ( g_snprintf( result, 7, "%6.1f", current->curvalue ) >= 0 )
-               draw_digits( widget, result, highLow );
+               draw_digits( widget, cr, result, highLow );
 
             /* Display degree symbol */
             if ( tf == FALSE )
                 x = 0;
             else
                 x = 57;
-            gdk_draw_drawable( widget->window, 
-                             widget->style->fg_gc[ GTK_WIDGET_STATE 
-                             (widget) ], theme, x, 60 + highLow, 
-                             96, 0, 57, 30 );
+            cairo_set_source_surface (cr, surface, 96-x, 0-(60 + highLow));
+     	    cairo_rectangle(cr, 96, 0, 57, 30);
             
             break;
         case VOLT:
@@ -154,20 +151,17 @@ gboolean expose_event_callback( GtkWidget *widget, GdkEventExpose *event,
             
             /* Display the digits */
             if ( g_snprintf( result, 7, "%6.2f", current->curvalue ) >= 0 )
-               draw_digits( widget, result, highLow );
+               draw_digits( widget, cr, result, highLow );
 
             /* Display V */
-            gdk_draw_drawable( widget->window, 
-                             widget->style->fg_gc[ GTK_WIDGET_STATE 
-                             (widget) ], theme, 114, 60 + highLow, 
-                             96, 0, 57, 30 );
-
-
+            cairo_set_source_surface (cr, surface, 96-114, 0-(60 + highLow));
+     	    cairo_rectangle(cr, 96, 0, 57, 30);
             break;
         default:
             break;
     }
-            
+    cairo_fill(cr);
+    cairo_destroy(cr);
     return TRUE;
 }
 
@@ -180,6 +174,15 @@ gint free_llist( updates *node ) {
     }
 
     return SUCCESS;
+}
+
+/* Find the tail of a non-NULL linked list. */
+static updates *llist_tail( updates *node ) {
+
+    if ( node->next == NULL )
+        return node;
+    else
+        return llist_tail( node->next );
 }
 
 /* Update the sensor information. */
@@ -257,11 +260,10 @@ gint update_sensor_data( gpointer data ) {
 
 /* Start the sensor info update timer. */
 gint start_timer( GtkWidget *widget, gpointer data ) {
-    gint timer;
 
     /* Setup timer for updates. */
-    timer = g_timeout_add( update_time * 1000, 
-                             (GtkFunction) update_sensor_data, 
+    g_timeout_add( update_time * 1000,
+                             (GSourceFunc) update_sensor_data,
 			     (gpointer) data );
 
     return SUCCESS;
@@ -287,7 +289,7 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
 
     /* feature data */
     updates *head = NULL;
-    updates *current = NULL, *prev = NULL;
+    updates *current = NULL;
 
     const sensors_feature *feature;
 
@@ -347,10 +349,8 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
             new_node->pbar = featpbar;
 
             if ( head == NULL ) {
-                prev = head;
                 head = current = new_node;
             } else {
-                prev = current;
                 current = current->next = new_node;
             }
 
@@ -361,19 +361,20 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
             feattext = sensors_get_label( name, feature );
 	    
             if ( feattext != NULL ) {
+                /* We need a temporary variable in case realloc fails */
+                char *new_feattext;
 #ifdef DEBUG_XSENSORS
                 printf( "Adding feature %d, %s.\n", i, feattext );
 #endif
-                if ( ( feattext = realloc( feattext, 
+                if ( ( new_feattext = realloc( feattext,
                                 ( strlen( feattext ) + 2 ) * 
                                 sizeof( char ) ) ) == NULL ) {
                     fprintf( stderr, "realloc failed in add_sensor_tab()!\n" );
+                    free( feattext );
                     return NULL;
                 }
-                if ( strcat( feattext, ":" ) == NULL ) {
-                    fprintf( stderr, "strcat failed in add_sensor_tab()!\n" );
-                    return NULL;
-                }
+                feattext = new_feattext;
+                strcat( feattext, ":" );
                 
                 gtk_frame_set_label( GTK_FRAME (featframe), feattext );
 
@@ -411,8 +412,7 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
             gtk_widget_show( innerbox );
             gtk_widget_show( darea );
             gtk_widget_show( featpbar );
-            g_free( feattext );
-            feattext = NULL;
+            free( feattext );
     }
 
     if ( usedvolt > 0 ) {
@@ -433,7 +433,44 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
         gtk_widget_show( fanlabel );
     }
 
-    g_free( feattext );
+    return head;
+}
+
+static updates *add_sensor_chips( GtkWidget *notebook, const char *pattern ) {
+    const sensors_chip_name *name = NULL, *pquery = NULL;
+    sensors_chip_name query;
+
+    updates *head = NULL, *tail = NULL, *new_nodes;
+
+    int chipnum = 0;
+
+    if ( pattern ) {
+        if ( sensors_parse_chip_name( pattern, &query ) ) {
+            fprintf( stderr,
+                    "Couldn't parse chip name %s!  Exiting!\n",
+                    pattern );
+            return NULL;
+        }
+        pquery = &query;
+    }
+
+    while ( ( name = sensors_get_detected_chips( pquery, &chipnum ) ) != NULL ) {
+#ifdef DEBUG_XSENSORS
+        printf( "Adding tab for %s\n", name->prefix );
+#endif
+        if ( ( new_nodes = add_sensor_tab( notebook, name ) ) == NULL )
+            return head;
+
+        update_sensor_data( new_nodes );
+        g_signal_connect( G_OBJECT (mainwindow), "realize",
+                          G_CALLBACK (start_timer), new_nodes );
+
+        if ( head == NULL )
+            head = new_nodes;
+        else
+            tail->next = new_nodes;
+        tail = llist_tail( new_nodes );
+    }
 
     return head;
 }
@@ -441,14 +478,11 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
 int start_gui( int argc, char **argv ) {
     struct stat sbuf;
     char *title = NULL;
-    int errone;
+    int i, errone;
 
     GtkWidget *notebook = NULL;
     
     updates *head = NULL;
-
-    int chipnum = 0;
-    const sensors_chip_name *name = NULL;
 
     gtk_init( &argc, &argv );
 
@@ -465,8 +499,6 @@ int start_gui( int argc, char **argv ) {
     g_signal_connect( G_OBJECT (mainwindow), "delete_event",
                       G_CALLBACK (destroy_gui), NULL );
 
-    /* Graphics needed for drawing info. */
-    cmap = gtk_widget_get_colormap( mainwindow );
 
     /* Set up the image file used for displaying characters. */
     if ( imagefile == NULL ) {
@@ -486,12 +518,10 @@ int start_gui( int argc, char **argv ) {
                        "Image file not found in either location!  Exiting!\n" );
                 exit( 1 );
             } else {
-                theme = gdk_pixmap_colormap_create_from_xpm( NULL, cmap,
-                        NULL, NULL, "./images/default.xpm" );
+                theme = gdk_pixbuf_new_from_file("./images/default.xpm", NULL );
             }
         } else {
-            theme = gdk_pixmap_colormap_create_from_xpm( NULL, cmap,
-                    NULL, NULL, imagefile );
+            theme = gdk_pixbuf_new_from_file(imagefile, NULL );
         }
     } else {
         if ( stat( imagefile, &sbuf ) != 0 ) {
@@ -500,11 +530,15 @@ int start_gui( int argc, char **argv ) {
                     "Image file not found in specified location!  Exiting!\n" );
             exit( 1 );
         } else {
-            theme = gdk_pixmap_colormap_create_from_xpm( NULL, cmap,
-                    NULL, NULL, imagefile );
+            theme = gdk_pixbuf_new_from_file(imagefile, NULL );
         }
     }
-    
+    surface = cairo_image_surface_create_for_data(gdk_pixbuf_get_pixels(theme),
+                                        CAIRO_FORMAT_RGB24,
+										gdk_pixbuf_get_width(theme),
+										gdk_pixbuf_get_height(theme),
+										gdk_pixbuf_get_rowstride(theme));
+
     /* Create notebook for sensors. */
     notebook = gtk_notebook_new( );
     gtk_widget_modify_bg( notebook, GTK_STATE_NORMAL, &colorWhite );
@@ -513,18 +547,16 @@ int start_gui( int argc, char **argv ) {
 
     gtk_container_add( GTK_CONTAINER (mainwindow), notebook );
 
-    while ( ( name = sensors_get_detected_chips( NULL, &chipnum ) ) != NULL ) {
-        if ( 1 ) {
-#ifdef DEBUG_XSENSORS
-            printf( "Adding tab for %s\n", name->prefix );
-#endif
-            if ( ( head = add_sensor_tab( notebook, name ) ) == NULL )
+    if ( argc >= 2 ) {
+        for ( i = 1; i < argc; i++ ) {
+            head = add_sensor_chips( notebook, argv[i] );
+            if ( head == NULL )
                 return FAILURE;
-            
-            update_sensor_data( head );
-            g_signal_connect( G_OBJECT (mainwindow), "realize",
-                              G_CALLBACK (start_timer), head );
         }
+    } else {
+        head = add_sensor_chips( notebook, NULL );
+        if ( head == NULL )
+            return FAILURE;
     }
     
     /* Setup the main components. */
