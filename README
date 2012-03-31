@@ -1,0 +1,19 @@
+xsensors 0.70 - lib3 and Debian support
+---------------------------------------
+
+This is another release of xsensors, a program designed to display all
+the related information from your motherboard sensors.  This information is
+gathered via lm_sensors, the software drivers that actually gathers the 
+sensor information.
+
+Requirements:
+lm_sensors 3.0.0+ (http://www.lm-sensors.org)
+gtk+ 2.x.x+ (http://www.gtk.org)
+
+Installation:
+./configure
+make
+make install
+
+Any problems please let Kris Kersey know at augustus@linuxhardware.org so
+that a fix can be found.

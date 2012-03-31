@@ -1,0 +1,7 @@
+Xsensors was written by:
+
+	Kris Kersey <augustus@linuxhardware.org> (Original core author)
+    Jean Delvare <khali@linux-fr.org> (lib3 support)
+	Joaquim Fellmann <joaquim@altern.org> (Initial autoconf and automake)
+
+Please send bug fixes to: augustus@linuxhardware.org

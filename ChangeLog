@@ -1,0 +1,81 @@
+0.70
+-----
+- Applied lib3 patch submitted by Jean Delvare <khali@linux-fr.org>.  This
+should now have much cleaner support for all lm_sensors supported chips.
+- Simplify expose_event_callback().
+- Update automake/autoconf.
+- Negative reading patch by Jean Delvare <khali@linux-fr.org>.
+
+0.60
+-----
+- Fixed potential segfault. Thanks to Michael Riepe <michael@mr511.de>.
+- Added support for Fintek F71805F/FG and SMSC LPC47M192. Thanks to Jean
+Delvare <khali@linux-fr.org>.
+- Added some sanity checking on sensors. Thanks to Jordi Prats
+<jprats@cesca.es>.
+- Added support for k8temp. Thanks to Jordi Prats <jprats@cesca.es>.
+- Added support for w83627ehf.
+
+0.50
+-----
+- Added support for DDR2 SDRAM EEPROM. Thanks to Jean Delvare 
+<khali@linux-fr.org>
+- Fixed a bug where 1 GB memory modules would show as "1 24 MB". Thanks to Jean
+Delvare <khali@linux-fr.org>
+- Fix a core dump on exit when only unsupported devices were found. Thanks to
+Jean Delvare <khali@linux-fr.org>
+
+0.47
+-----
+- Added support for the following chips: smsc47b397, it8712
+
+0.46
+-----
+- Added support for as99127f.
+- Officially cleaned up some build issues from 0.45.
+
+0.45
+-----
+- Fixed typo in configure.
+- Added support for w83697hf, lm90, adm1032, mc1066, max1617a, w83791d.
+- Replaced deprecated gtk_timeout_add() with g_timeout_add().
+
+0.40
+-----
+- xsensors is now a GTK2 app.  Sorry, GTK1 is no longer supported but I doubt few will care.
+- Fahrenheit didn't work.  It would have been nice to actually write the code to begin with.  It works now.
+- Added support for lm85, lm85b, lm85c, adm1027, adt7463, emc6d100.
+- Added new option "-t time" in order to set refresh delay.
+- New look overall.  Notebook background is now white.  Frames used to isolate individual items.  I think it looks cleaner.  This all should make things seem a bit more uniform.
+- Added new option "-v" to show version number.
+- Version number now displayed in the title bar.
+
+0.20
+-----
+- Fixed potential divide by zero. Thanks to Kim Kulak <kim@vigilant.bc.ca>.
+- Fixed one memory leak. Thanks to Vadim Savchuck <fred_@ukr.net>.
+- Added support for adm1023 sensor
+- Added support for lm87 sensor
+- Added ./configure support. Thanks to Joaquim FELLMANN <Joaquim.FELLMANN@ifaedi.insa-lyon.fr>.
+- Misc. code clean-ups including gcc 3.2 cleanups.
+- Reworked EEPROM support to recognize some memory types and sizes.
+    
+0.10
+-----
+- Added support for w83782d sensor
+- Updated support for w83627hf and as99127f sensors
+- Merged all graphics into single XPM for theme approach and less code
+- Ignoring of certain sensors is now supported
+- "R" now looks more like "R"
+- "make install" now works
+
+0.02
+-----
+- Nifty range bars added
+- License file included
+- Graphical readout in LED form (prettier?)
+- Red LEDs for readings outside the set ranges
+
+0.01
+-----
+- Initial Release
