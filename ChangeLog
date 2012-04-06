@@ -1,3 +1,16 @@
+0.71
+-----
+- Applied a range of debian patches:
+   +remove-unused-variables.patch
+   +cleanup-allocs.patch
+   +replace-deprecated-gtk.patch
+   +select-chip.patch
+   +support-multiple-chips-on-cmd.patch
+  See here for details: http://patch-tracker.debian.org/package/xsensors/0.70-2
+- Fixed FSF Addresses
+- Added desktop and man page thanks to debian upstream:
+http://ftp.de.debian.org/debian/pool/main/x/xsensors/xsensors_0.70-2.debian.tar.gz
+
 0.70
 -----
 - Applied lib3 patch submitted by Jean Delvare <khali@linux-fr.org>.  This

@@ -1,0 +1,40 @@
+.TH XSENSORS 1 "17 January 2010" "" "User Commands"
+
+.SH NAME
+xsensors \- display hardware sensor information as a graphical read-out.
+
+.SH SYNOPSIS
+.B xsensors
+[\fIOPTION\fR]...
+
+.SH DESCRIPTION
+View the output from the libsensors library regarding hardware health in a graphical read-out.
+
+.SH OPTIONS
+.TP
+.B -f
+display all temperatures in Fahrenheit.
+.TP
+\fB\-c\fR filename
+specify the libsensors configuration file.
+.TP
+.B -i
+specify the image file to use as the graphical theme.
+.TP
+\fB\-t\fR time
+specify the update interval in seconds.
+.TP
+.B -v
+display the version number.
+
+.SH CONFIGURATION
+To find the proper kernel modules necessary for xsensors to work, please run the \fBsensors-detect\fR command as superuser and follow the on-screen instructions; a reboot may be required. The \fBsensors-detect\fR command is provided by the \fIlm-sensors\fR package.
+
+.SH FILES
+\fI/usr/share/pixmaps/xsensors/default.xpm\fR: the default graphical theme.
+.PP
+\fI/etc/sensors3.conf\fR: the default configuration file.
+
+.SH AUTHOR
+This manual page was written by Nick Rusnov <nickrusnov@debian.org> and Nanley Chery <nanleychery@gmail.com>
+for the Debian GNU/Linux system (but may be used by others).
