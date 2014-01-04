@@ -1,9 +1,11 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(src/main.c)
 
 AM_CONFIG_HEADER(config.h)
 
-AM_INIT_AUTOMAKE(xsensors, 0.70)
+AC_INIT(xsensors, 0.72)
+AC_CONFIG_SRCDIR(src/main.c)
+AM_INIT_AUTOMAKE
+
 
 AC_PREREQ([2.50])
 
@@ -33,7 +35,7 @@ XSENSORS_LIBS="`pkg-config --libs gtk+-2.0`"
 AC_SUBST(XSENSORS_CFLAGS)
 AC_SUBST(XSENSORS_LIBS)
 
-AC_DEFINE_UNQUOTED(XSENSORS_ICONDIR, "${prefix}/share/pixmaps/xsensors")
+AC_DEFINE_UNQUOTED(XSENSORS_ICONDIR, "${prefix}/share/pixmaps")
 
 AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
@@ -41,6 +43,6 @@ AC_SUBST(LDFLAGS)
 
 AC_OUTPUT([
 	Makefile
-	pixmaps/Makefile
+	xdg/Makefile
 	src/Makefile
 ])

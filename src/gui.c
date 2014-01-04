@@ -508,18 +508,18 @@ int start_gui( int argc, char **argv ) {
             fprintf( stderr, "malloc failed!\n" );
             exit( 1 );
         }
-        sprintf( imagefile, "%s/default.xpm", DATADIR );
+        sprintf( imagefile, "%s/xsensors.xpm", DATADIR );
         if ( ( errone = stat( imagefile, &sbuf ) ) != 0 ) {
-            if ( stat( "./default.xpm", &sbuf ) != 0 ) {
+            if ( stat( "./xsensors.xpm", &sbuf ) != 0 ) {
                 fprintf( stderr, "%s: %s\n", 
                          strerror( errno ), imagefile );
-                fprintf( stderr, "%s: ./default.xpm\n", 
+                fprintf( stderr, "%s: ./xsensors.xpm\n", 
                          strerror( errno ) );
                 fprintf( stderr, 
                        "Image file not found in either location!  Exiting!\n" );
                 exit( 1 );
             } else {
-                theme = gdk_pixbuf_new_from_file("./images/default.xpm", NULL );
+                theme = gdk_pixbuf_new_from_file("./images/xsensors.xpm", NULL );
             }
         } else {
             theme = gdk_pixbuf_new_from_file(imagefile, NULL );

@@ -1,4 +1,4 @@
-xsensors 0.70 - lib3 and Debian support
+xsensors 0.72 - Mystro256 fork
 ---------------------------------------
 
 This is another release of xsensors, a program designed to display all
@@ -14,6 +14,3 @@ Installation:
 ./configure
 make
 make install
-
-Any problems please let Kris Kersey know at augustus@linuxhardware.org so
-that a fix can be found.

@@ -1,4 +1,4 @@
-SUBDIRS = src pixmaps
+SUBDIRS = src xdg
 
 EXTRA_DIST = 			\
 	BUGS			\

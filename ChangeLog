@@ -1,3 +1,9 @@
+0.72
+-----
+- Install the desktop file automatically
+- Rename and move the icon to a better place
+- Fork branding and cleanup (Readme)
+
 0.71
 -----
 - Applied a range of debian patches:
