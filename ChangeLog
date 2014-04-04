@@ -1,3 +1,7 @@
+0.73
+-----
+- Fix bug where the -f flag for Fahrenheit crashes xsensors
+
 0.72
 -----
 - Install the desktop file automatically

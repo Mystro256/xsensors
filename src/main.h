@@ -32,7 +32,7 @@
 #include "gui.h"
 
 /* Version Number */
-#define VERSION "0.71"
+#define VERSION "0.73"
 
 /* Pretty identifiers. */
 enum { SUCCESS, FAILURE };

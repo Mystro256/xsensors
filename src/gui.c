@@ -548,16 +548,18 @@ int start_gui( int argc, char **argv ) {
 
     gtk_container_add( GTK_CONTAINER (mainwindow), notebook );
 
-    if ( argc >= 2 ) {
-        for ( i = 1; i < argc; i++ ) {
-            head = add_sensor_chips( notebook, argv[i] );
-            if ( head == NULL )
-                return FAILURE;
-        }
-    } else {
+    if ( argc < 2 || (argc == 2 && argv[1][0] == '-' && argv[1][1] == 'f')) {
         head = add_sensor_chips( notebook, NULL );
         if ( head == NULL )
             return FAILURE;
+    } else {
+        for ( i = 1; i < argc; i++ ) {
+            if ( argv[i][0] != '-' || argv[i][1] != 'f') {
+                head = add_sensor_chips( notebook, argv[i] );
+                if ( head == NULL )
+                    return FAILURE;
+            }
+        }
     }
     
     /* Setup the main components. */
