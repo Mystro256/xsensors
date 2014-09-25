@@ -1,3 +1,8 @@
+0.74
+-----
+- Use multi-sized PNG icons instead of xpm
+- Add Appdata
+
 0.73
 -----
 - Fix bug where the -f flag for Fahrenheit crashes xsensors

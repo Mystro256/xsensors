@@ -133,8 +133,11 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(desktopdir)" "$(DESTDIR)$(pixmapdir)"
-DATA = $(desktop_DATA) $(pixmap_DATA)
+am__installdirs = "$(DESTDIR)$(appdatadir)" "$(DESTDIR)$(desktopdir)" \
+	"$(DESTDIR)$(icon128dir)" "$(DESTDIR)$(icon48dir)" \
+	"$(DESTDIR)$(icon64dir)"
+DATA = $(appdata_DATA) $(desktop_DATA) $(icon128_DATA) $(icon48_DATA) \
+	$(icon64_DATA)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
@@ -238,13 +241,25 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-pixmapdir = $(datadir)/pixmaps
-pixmap_DATA = \
-	xsensors.xpm
+icon48dir = $(datadir)/icons/hicolor/48x48/apps/
+icon48_DATA = \
+	icons/48x48/xsensors.png
+
+icon64dir = $(datadir)/icons/hicolor/64x64/apps/
+icon64_DATA = \
+	icons/64x64/xsensors.png
+
+icon128dir = $(datadir)/icons/hicolor/128x128/apps/
+icon128_DATA = \
+	icons/128x128/xsensors.png
 
 desktopdir = $(datadir)/applications
 desktop_DATA = \
         xsensors.desktop
+
+appdatadir = $(datadir)/appdata/schema
+appdata_DATA = \
+	xsensors.appdata.xml
 
 all: all-am
 
@@ -279,6 +294,27 @@ $(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
+install-appdataDATA: $(appdata_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(appdata_DATA)'; test -n "$(appdatadir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(appdatadir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(appdatadir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(appdatadir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(appdatadir)" || exit $$?; \
+	done
+
+uninstall-appdataDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(appdata_DATA)'; test -n "$(appdatadir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(appdatadir)'; $(am__uninstall_files_from_dir)
 install-desktopDATA: $(desktop_DATA)
 	@$(NORMAL_INSTALL)
 	@list='$(desktop_DATA)'; test -n "$(desktopdir)" || list=; \
@@ -300,27 +336,69 @@ uninstall-desktopDATA:
 	@list='$(desktop_DATA)'; test -n "$(desktopdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(desktopdir)'; $(am__uninstall_files_from_dir)
-install-pixmapDATA: $(pixmap_DATA)
+install-icon128DATA: $(icon128_DATA)
 	@$(NORMAL_INSTALL)
-	@list='$(pixmap_DATA)'; test -n "$(pixmapdir)" || list=; \
+	@list='$(icon128_DATA)'; test -n "$(icon128dir)" || list=; \
 	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(pixmapdir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(pixmapdir)" || exit 1; \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(icon128dir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(icon128dir)" || exit 1; \
 	fi; \
 	for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  echo "$$d$$p"; \
 	done | $(am__base_list) | \
 	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(pixmapdir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(pixmapdir)" || exit $$?; \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(icon128dir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(icon128dir)" || exit $$?; \
 	done
 
-uninstall-pixmapDATA:
+uninstall-icon128DATA:
 	@$(NORMAL_UNINSTALL)
-	@list='$(pixmap_DATA)'; test -n "$(pixmapdir)" || list=; \
+	@list='$(icon128_DATA)'; test -n "$(icon128dir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(pixmapdir)'; $(am__uninstall_files_from_dir)
+	dir='$(DESTDIR)$(icon128dir)'; $(am__uninstall_files_from_dir)
+install-icon48DATA: $(icon48_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(icon48_DATA)'; test -n "$(icon48dir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(icon48dir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(icon48dir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(icon48dir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(icon48dir)" || exit $$?; \
+	done
+
+uninstall-icon48DATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(icon48_DATA)'; test -n "$(icon48dir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(icon48dir)'; $(am__uninstall_files_from_dir)
+install-icon64DATA: $(icon64_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(icon64_DATA)'; test -n "$(icon64dir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(icon64dir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(icon64dir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(icon64dir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(icon64dir)" || exit $$?; \
+	done
+
+uninstall-icon64DATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(icon64_DATA)'; test -n "$(icon64dir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(icon64dir)'; $(am__uninstall_files_from_dir)
 tags TAGS:
 
 ctags CTAGS:
@@ -362,7 +440,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(desktopdir)" "$(DESTDIR)$(pixmapdir)"; do \
+	for dir in "$(DESTDIR)$(appdatadir)" "$(DESTDIR)$(desktopdir)" "$(DESTDIR)$(icon128dir)" "$(DESTDIR)$(icon48dir)" "$(DESTDIR)$(icon64dir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -415,7 +493,8 @@ info: info-am
 
 info-am:
 
-install-data-am: install-desktopDATA install-pixmapDATA
+install-data-am: install-appdataDATA install-desktopDATA \
+	install-icon128DATA install-icon48DATA install-icon64DATA
 
 install-dvi: install-dvi-am
 
@@ -459,21 +538,26 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-desktopDATA uninstall-pixmapDATA
+uninstall-am: uninstall-appdataDATA uninstall-desktopDATA \
+	uninstall-icon128DATA uninstall-icon48DATA \
+	uninstall-icon64DATA
 
 .MAKE: install-am install-strip
 
 .PHONY: all all-am check check-am clean clean-generic cscopelist-am \
 	ctags-am distclean distclean-generic distdir dvi dvi-am html \
-	html-am info info-am install install-am install-data \
-	install-data-am install-desktopDATA install-dvi install-dvi-am \
-	install-exec install-exec-am install-html install-html-am \
-	install-info install-info-am install-man install-pdf \
-	install-pdf-am install-pixmapDATA install-ps install-ps-am \
+	html-am info info-am install install-am install-appdataDATA \
+	install-data install-data-am install-desktopDATA install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-icon128DATA install-icon48DATA \
+	install-icon64DATA install-info install-info-am install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
 	install-strip installcheck installcheck-am installdirs \
 	maintainer-clean maintainer-clean-generic mostlyclean \
 	mostlyclean-generic pdf pdf-am ps ps-am tags-am uninstall \
-	uninstall-am uninstall-desktopDATA uninstall-pixmapDATA
+	uninstall-am uninstall-appdataDATA uninstall-desktopDATA \
+	uninstall-icon128DATA uninstall-icon48DATA \
+	uninstall-icon64DATA
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
