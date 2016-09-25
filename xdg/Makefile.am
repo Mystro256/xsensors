@@ -27,3 +27,8 @@ appdatadir = $(datadir)/appdata
 
 appdata_DATA =	\
 	xsensors.appdata.xml
+
+mandatadir = $(mandir)/man1
+
+mandata_DATA =	\
+	xsensors.1
