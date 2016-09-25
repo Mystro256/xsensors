@@ -23,7 +23,7 @@ desktopdir = $(datadir)/applications
 desktop_DATA =   \
         xsensors.desktop
 
-appdatadir = $(datadir)/appdata/schema
+appdatadir = $(datadir)/appdata
 
 appdata_DATA =	\
 	xsensors.appdata.xml
