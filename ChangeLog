@@ -1,3 +1,8 @@
+0.75
+-----
+- Fix various issues with 0.74
+- Install manpage by default
+
 0.74
 -----
 - Use multi-sized PNG icons instead of xpm

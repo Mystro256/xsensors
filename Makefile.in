@@ -308,7 +308,7 @@ EXTRA_DIST = \
 	README			\
 	NEWS			\
 	TODO			\
-	COPYING	
+	COPYING
 
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive

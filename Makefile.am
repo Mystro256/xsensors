@@ -6,4 +6,4 @@ EXTRA_DIST = 			\
 	README			\
 	NEWS			\
 	TODO			\
-	COPYING	
+	COPYING

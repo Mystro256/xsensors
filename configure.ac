@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 
 AM_CONFIG_HEADER(config.h)
 
-AC_INIT(xsensors, 0.74)
+AC_INIT(xsensors, 0.75)
 AC_CONFIG_SRCDIR(src/main.c)
 AM_INIT_AUTOMAKE
 
@@ -16,7 +16,7 @@ AC_HEADER_STDC
 
 dnl Checks for the sensors library.
 AC_CHECK_LIB(sensors, sensors_init,[],
- 	AC_MSG_ERROR(You need the sensors library))
+	AC_MSG_ERROR(You need the sensors library))
 
 AC_CHECK_HEADERS([sensors/sensors.h sensors/error.h])
 
