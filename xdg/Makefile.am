@@ -1,3 +1,8 @@
+pixmapdir = $(datadir)/pixmaps
+
+pixmap_DATA =	\
+	xsensors.xpm
+
 icon48dir = $(datadir)/icons/hicolor/48x48/apps/
 
 icon48_DATA =	\

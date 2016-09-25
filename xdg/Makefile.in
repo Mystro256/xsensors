@@ -135,9 +135,9 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(appdatadir)" "$(DESTDIR)$(desktopdir)" \
 	"$(DESTDIR)$(icon128dir)" "$(DESTDIR)$(icon48dir)" \
-	"$(DESTDIR)$(icon64dir)"
+	"$(DESTDIR)$(icon64dir)" "$(DESTDIR)$(pixmapdir)"
 DATA = $(appdata_DATA) $(desktop_DATA) $(icon128_DATA) $(icon48_DATA) \
-	$(icon64_DATA)
+	$(icon64_DATA) $(pixmap_DATA)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
@@ -241,6 +241,9 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+pixmapdir = $(datadir)/pixmaps
+pixmap_DATA = \
+	xsensors.xpm
 icon48dir = $(datadir)/icons/hicolor/48x48/apps/
 icon48_DATA = \
 	icons/48x48/xsensors.png
