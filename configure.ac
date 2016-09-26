@@ -32,14 +32,14 @@ if test "x$enable_gtk3" = "xyes"; then
 *** GTK+ 3.0 is required to build xsensors; please make sure you have the GTK+
 *** development headers installed. The latest version of GTK+ is
 *** always available at http://www.gtk.org/.]))
-	XSENSORS_CFLAGS="`pkg-config --cflags gtk+-3.0` -Wall"
+	XSENSORS_CFLAGS="`pkg-config --cflags gtk+-3.0` -Werror -Wall"
 	XSENSORS_LIBS="`pkg-config --libs gtk+-3.0`"
 else
 	AM_PATH_GTK_2_0(2.0.0,,AC_MSG_ERROR([
 *** GTK+ 2.0 is required to build xsensors; please make sure you have the GTK+
 *** development headers installed. The latest version of GTK+ is
 *** always available at http://www.gtk.org/.]))
-	XSENSORS_CFLAGS="`pkg-config --cflags gtk+-2.0` -Wall"
+	XSENSORS_CFLAGS="`pkg-config --cflags gtk+-2.0` -Werror -Wall"
 	XSENSORS_LIBS="`pkg-config --libs gtk+-2.0`"
 fi
 

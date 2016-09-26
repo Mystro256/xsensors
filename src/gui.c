@@ -27,7 +27,11 @@ extern char *imagefile;
 
 GtkWidget *mainwindow = NULL;
 
+#if GTK_MAJOR_VERSION == 2
 GdkColor colorWhite = { 0, 0xFFFF, 0xFFFF, 0xFFFF };
+#elif GTK_MAJOR_VERSION == 3 && GTK_MINOR_VERSION < 16
+/*FIXME*/
+#endif
 
 GdkPixbuf *theme = NULL;
 
@@ -93,7 +97,7 @@ static void draw_digits( GtkWidget *widget, cairo_t *cr, const gchar *digits, in
 }
 
 /* Expose event function to draw graphical numbers. */
-gboolean expose_event_callback( GtkWidget *widget, GdkEventExpose *event, 
+gboolean expose_event_callback( GtkWidget *widget, GdkEventExpose *event,
                                 gpointer data) {
     int x = 0;
     int highLow = 0;
@@ -102,15 +106,19 @@ gboolean expose_event_callback( GtkWidget *widget, GdkEventExpose *event,
 
     gchar result[7];
 
-    cairo_t *cr = gdk_cairo_create(widget->window);
+    cairo_t *cr = gdk_cairo_create( gtk_widget_get_window(widget) );
 
 #ifdef DEBUG_XSENSORS
     printf( "area.width = %d, area.height = %d\n", event->area.width,
             event->area.height );
 #endif
 
-    gdk_window_clear_area( widget->window, event->area.x, event->area.y, 
+#if GTK_MAJOR_VERSION == 2
+    gdk_window_clear_area( widget->window, event->area.x, event->area.y,
                             event->area.width, event->area.height );
+#elif GTK_MAJOR_VERSION == 3
+/*FIXME*/
+#endif
 
     switch ( current->feattype ) {
         case FAN:
@@ -299,32 +307,43 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
     int usedvolt = 0;
     int usedtemp = 0;
     int usedfan = 0;
-    
+
     /* fields placed in the notebook to display feature info */
     GtkWidget *darea = NULL;
     char *feattext = NULL;
     GtkWidget *featframe = NULL;
     GtkWidget *featpbar = NULL;
- 
+
     /* Setup main boxes. */
+#if GTK_MAJOR_VERSION == 2
     mainbox = gtk_hbox_new( TRUE, 10 );
+#elif GTK_MAJOR_VERSION == 3
+    mainbox = gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 10 );
+#endif
     gtk_container_set_border_width( GTK_CONTAINER (mainbox), 10 );
     gtk_widget_show( mainbox );
+
+#if GTK_MAJOR_VERSION == 2
     voltbox = gtk_vbox_new( FALSE, 0 );
     tempbox = gtk_vbox_new( FALSE, 0 );
     fanbox = gtk_vbox_new( FALSE, 0 );
+#elif GTK_MAJOR_VERSION == 3
+    voltbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 );
+    tempbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 );
+    fanbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 );
+#endif
 
     /* Create notebook for sensors. */
     noteframe = gtk_frame_new( NULL );
     gtk_container_set_border_width( GTK_CONTAINER (noteframe), 10 );
     gtk_widget_show( noteframe );
-    
+
     notelabel = gtk_label_new( name->prefix );
     gtk_widget_show( notelabel );
 
     gtk_container_add( GTK_CONTAINER (noteframe), mainbox );
     gtk_notebook_append_page( GTK_NOTEBOOK (container), noteframe, notelabel );
-    
+
     /* Create main labels. */
     voltlabel = gtk_label_new( "Voltages:" );
     templabel = gtk_label_new( "Temperatures:" );
@@ -340,12 +359,21 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
                 continue;
 
             featframe = gtk_frame_new( NULL );
+#if GTK_MAJOR_VERSION == 2
             innerbox = gtk_vbox_new( FALSE, 0 );
+#elif GTK_MAJOR_VERSION == 3
+            innerbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 );
+#endif
             featpbar = gtk_progress_bar_new();
             darea = gtk_drawing_area_new();
+#if GTK_MAJOR_VERSION == 2
             gtk_widget_modify_bg( darea, GTK_STATE_NORMAL, &colorWhite );
+#elif GTK_MAJOR_VERSION == 3
+/*FIXME*/
+#endif
+
             gtk_widget_set_size_request( darea, 36, 30 );
-            
+
             new_node->darea = darea;
             new_node->pbar = featpbar;
 
@@ -356,11 +384,11 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
             }
 
             /* Connect the expose event sinal handler to redraw the numbers. */
-            g_signal_connect( G_OBJECT(darea), "expose_event", 
+            g_signal_connect( G_OBJECT(darea), "expose_event",
                               G_CALLBACK(expose_event_callback), current );
-            
+
             feattext = sensors_get_label( name, feature );
-	    
+
             if ( feattext != NULL ) {
                 /* We need a temporary variable in case realloc fails */
                 char *new_feattext;
@@ -368,7 +396,7 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
                 printf( "Adding feature %d, %s.\n", i, feattext );
 #endif
                 if ( ( new_feattext = realloc( feattext,
-                                ( strlen( feattext ) + 2 ) * 
+                                ( strlen( feattext ) + 2 ) *
                                 sizeof( char ) ) ) == NULL ) {
                     fprintf( stderr, "realloc failed in add_sensor_tab()!\n" );
                     free( feattext );
@@ -376,7 +404,7 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
                 }
                 feattext = new_feattext;
                 strcat( feattext, ":" );
-                
+
                 gtk_frame_set_label( GTK_FRAME (featframe), feattext );
 
                 switch ( current->feattype ) {
@@ -393,16 +421,16 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
                         usedfan++;
                         break;
                     default:
-                        fprintf( stderr, 
+                        fprintf( stderr,
                                  "Type not recognized, not packing.\n" );
                         break;
                 }
-                gtk_box_pack_start( GTK_BOX (currbox), featframe, 
+                gtk_box_pack_start( GTK_BOX (currbox), featframe,
                                     FALSE, FALSE, 0 );
                 gtk_container_add (GTK_CONTAINER (featframe), innerbox);
-                gtk_box_pack_start( GTK_BOX (innerbox), darea, 
+                gtk_box_pack_start( GTK_BOX (innerbox), darea,
                                     FALSE, FALSE, 0 );
-                
+
                 gtk_box_pack_start( GTK_BOX (innerbox), featpbar,
                                     FALSE, FALSE, 0 );
 
@@ -482,7 +510,7 @@ int start_gui( int argc, char **argv ) {
     int i, errone;
 
     GtkWidget *notebook = NULL;
-    
+
     updates *head = NULL;
 
     gtk_init( &argc, &argv );
@@ -494,7 +522,7 @@ int start_gui( int argc, char **argv ) {
 
     /* Setup main window. */
     mainwindow = gtk_window_new( GTK_WINDOW_TOPLEVEL );
-    title = strcpy( title, "xsensors " ); 
+    title = strcpy( title, "xsensors " );
     title = strcat( title, VERSION );
     gtk_window_set_title( GTK_WINDOW (mainwindow), title );
     g_signal_connect( G_OBJECT (mainwindow), "delete_event",
@@ -503,7 +531,7 @@ int start_gui( int argc, char **argv ) {
 
     /* Set up the image file used for displaying characters. */
     if ( imagefile == NULL ) {
-        if( ( imagefile = g_malloc( sizeof( char ) * 
+        if( ( imagefile = g_malloc( sizeof( char ) *
                           ( sizeof( DATADIR ) + 20 ) ) ) == NULL ) {
             fprintf( stderr, "malloc failed!\n" );
             exit( 1 );
@@ -511,11 +539,11 @@ int start_gui( int argc, char **argv ) {
         sprintf( imagefile, "%s/xsensors.xpm", DATADIR );
         if ( ( errone = stat( imagefile, &sbuf ) ) != 0 ) {
             if ( stat( "./xsensors.xpm", &sbuf ) != 0 ) {
-                fprintf( stderr, "%s: %s\n", 
+                fprintf( stderr, "%s: %s\n",
                          strerror( errno ), imagefile );
-                fprintf( stderr, "%s: ./xsensors.xpm\n", 
+                fprintf( stderr, "%s: ./xsensors.xpm\n",
                          strerror( errno ) );
-                fprintf( stderr, 
+                fprintf( stderr,
                        "Image file not found in either location!  Exiting!\n" );
                 exit( 1 );
             } else {
@@ -527,7 +555,7 @@ int start_gui( int argc, char **argv ) {
     } else {
         if ( stat( imagefile, &sbuf ) != 0 ) {
             fprintf( stderr, "%s: %s\n", strerror( errno ), imagefile );
-            fprintf( stderr, 
+            fprintf( stderr,
                     "Image file not found in specified location!  Exiting!\n" );
             exit( 1 );
         } else {
@@ -542,7 +570,11 @@ int start_gui( int argc, char **argv ) {
 
     /* Create notebook for sensors. */
     notebook = gtk_notebook_new( );
+#if GTK_MAJOR_VERSION == 2
     gtk_widget_modify_bg( notebook, GTK_STATE_NORMAL, &colorWhite );
+#elif GTK_MAJOR_VERSION == 3
+/*FIXME*/
+#endif
     gtk_notebook_set_tab_pos( GTK_NOTEBOOK (notebook), GTK_POS_LEFT );
     gtk_widget_show( notebook );
 
@@ -561,7 +593,7 @@ int start_gui( int argc, char **argv ) {
             }
         }
     }
-    
+
     /* Setup the main components. */
     gtk_widget_show( mainwindow );
 

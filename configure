@@ -4737,7 +4737,7 @@ else
 $as_echo "yes" >&6; }
 
 fi
-	XSENSORS_CFLAGS="`pkg-config --cflags gtk+-3.0` -Wall"
+	XSENSORS_CFLAGS="`pkg-config --cflags gtk+-3.0` -Werror -Wall"
 	XSENSORS_LIBS="`pkg-config --libs gtk+-3.0`"
 else
 	# Check whether --enable-gtktest was given.
@@ -5070,7 +5070,7 @@ rm -f core conftest.err conftest.$ac_objext \
 
   rm -f conf.gtktest
 
-	XSENSORS_CFLAGS="`pkg-config --cflags gtk+-2.0` -Wall"
+	XSENSORS_CFLAGS="`pkg-config --cflags gtk+-2.0` -Werror -Wall"
 	XSENSORS_LIBS="`pkg-config --libs gtk+-2.0`"
 fi
 
