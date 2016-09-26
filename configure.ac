@@ -24,13 +24,25 @@ AM_PATH_GLIB_2_0(2.0.0,,AC_MSG_ERROR([
 *** GLib 2.0 is required to build xsensors; please make sure you have the GLib
 *** development headers installed. The latest version of GLib is
 *** always available at http://www.gtk.org/.]))
-AM_PATH_GTK_2_0(2.0.0,,AC_MSG_ERROR([
+
+AC_ARG_ENABLE([gtk3], AS_HELP_STRING([--enable-gtk3], [Build with the GTK3 instead of GTK2]))
+
+if test "x$enable_gtk3" = "xyes"; then
+        PKG_CHECK_MODULES([GTK], [gtk+-3.0],,AC_MSG_ERROR([
+*** GTK+ 3.0 is required to build xsensors; please make sure you have the GTK+
+*** development headers installed. The latest version of GTK+ is
+*** always available at http://www.gtk.org/.]))
+	XSENSORS_CFLAGS="`pkg-config --cflags gtk+-3.0` -Wall"
+	XSENSORS_LIBS="`pkg-config --libs gtk+-3.0`"
+else
+	AM_PATH_GTK_2_0(2.0.0,,AC_MSG_ERROR([
 *** GTK+ 2.0 is required to build xsensors; please make sure you have the GTK+
 *** development headers installed. The latest version of GTK+ is
 *** always available at http://www.gtk.org/.]))
+	XSENSORS_CFLAGS="`pkg-config --cflags gtk+-2.0` -Wall"
+	XSENSORS_LIBS="`pkg-config --libs gtk+-2.0`"
+fi
 
-XSENSORS_CFLAGS="`pkg-config --cflags gtk+-2.0` -Werror"
-XSENSORS_LIBS="`pkg-config --libs gtk+-2.0`"
 AC_SUBST(XSENSORS_CFLAGS)
 AC_SUBST(XSENSORS_LIBS)
 
