@@ -79,7 +79,7 @@ updates *add_node( const sensors_chip_name *name,
 	g_free( node );
 	return NULL;
     }
-    
+
     node->name = name;
     node->next = NULL;
 

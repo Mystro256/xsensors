@@ -21,7 +21,7 @@
 
 #define UNDEFMAXMIN -1
 
-/* Link list to hold sensor feature data.  This is used since the number of 
+/* Link list to hold sensor feature data.  This is used since the number of
  * features vary.
  */
 typedef struct _updates {

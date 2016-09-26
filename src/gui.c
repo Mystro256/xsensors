@@ -151,13 +151,13 @@ gboolean expose_event_callback( GtkWidget *widget, GdkEventExpose *event,
                 x = 57;
             cairo_set_source_surface (cr, surface, 96-x, 0-(60 + highLow));
      	    cairo_rectangle(cr, 96, 0, 57, 30);
-            
+
             break;
         case VOLT:
             if ( current->curvalue > current->curmax ||
                  current->curvalue < current->curmin )
                 highLow = 30;
-            
+
             /* Display the digits */
             if ( g_snprintf( result, 7, "%6.2f", current->curvalue ) >= 0 )
                draw_digits( widget, cr, result, highLow );
@@ -205,7 +205,7 @@ gint update_sensor_data( gpointer data ) {
              &(updata->curvalue) ) != 0 ) {
                 updata->curvalue = 0;
         }
-        
+
         if ( updata->featminnum != UNDEFMAXMIN ) {
             sensors_get_value( updata->name, updata->featminnum,
                                &(updata->curmin) );
@@ -286,7 +286,7 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
     GtkWidget *fanbox = NULL;
     GtkWidget *currbox = NULL;
     GtkWidget *innerbox = NULL;
-   
+
     /* notebook stuff */
     GtkWidget *notelabel = NULL;
     GtkWidget *noteframe = NULL;

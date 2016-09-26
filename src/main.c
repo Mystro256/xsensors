@@ -76,7 +76,7 @@ int main( int argc, char **argv ) {
                     return EXIT_FAILURE;
             case 'c':
                 if ( ( sens_config = strdup( optarg ) ) == NULL )
-                    fprintf( stderr, 
+                    fprintf( stderr,
                              "strdup failed! Something is very wrong!\n" );
                 break;
             case 'i':
@@ -93,7 +93,7 @@ int main( int argc, char **argv ) {
                     fprintf( stderr,
                              "Do not set update time (-t) equal to 0!\n" );
                     update_time = 1;
-                } 
+                }
                 break;
             case 'v':
                 printf( "\nXsensors version %s\n\n", VERSION );
@@ -129,7 +129,7 @@ int main( int argc, char **argv ) {
 
     /* Clean up the sensors library. */
     sensors_cleanup();
-    
+
     if ( sens_config != NULL )
         free( sens_config );
     if ( imagefile != NULL )
@@ -137,7 +137,7 @@ int main( int argc, char **argv ) {
 
     /* Close the config file. */
     if ( sens_conf_file && fclose( sens_conf_file ) != SUCCESS ) {
-        fprintf( stderr, 
+        fprintf( stderr,
                  "Something has gone wrong closing the config file!\n" );
         return EXIT_FAILURE;
     }
