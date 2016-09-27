@@ -1,1 +1,6 @@
 - Better range readouts (neat speedometer type possibly)
+- If default config file doesn't exist and "-c" isn't use, give an option to autodetect sensors
+- Add useful feedback on errors via message dialogs
+- GUI option to redetect sesnors
+- GTK3 port (work in progress, numbers don't show up)
+- Scrollbars on tabs
