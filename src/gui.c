@@ -29,8 +29,6 @@ GtkWidget *mainwindow = NULL;
 
 #if GTK_MAJOR_VERSION == 2
 GdkColor colorWhite = { 0, 0xFFFF, 0xFFFF, 0xFFFF };
-#elif GTK_MAJOR_VERSION == 3 && GTK_MINOR_VERSION < 16
-/*FIXME*/
 #endif
 
 GdkPixbuf *theme = NULL;
@@ -373,8 +371,6 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
             darea = gtk_drawing_area_new();
 #if GTK_MAJOR_VERSION == 2
             gtk_widget_modify_bg( darea, GTK_STATE_NORMAL, &colorWhite );
-#elif GTK_MAJOR_VERSION == 3
-/*FIXME*/
 #endif
 
             gtk_widget_set_size_request( darea, 36, 30 );
@@ -583,8 +579,6 @@ int start_gui( int argc, char **argv ) {
     notebook = gtk_notebook_new( );
 #if GTK_MAJOR_VERSION == 2
     gtk_widget_modify_bg( notebook, GTK_STATE_NORMAL, &colorWhite );
-#elif GTK_MAJOR_VERSION == 3
-/*FIXME*/
 #endif
     gtk_notebook_set_tab_pos( GTK_NOTEBOOK (notebook), GTK_POS_LEFT );
     gtk_widget_show( notebook );
