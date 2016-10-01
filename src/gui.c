@@ -323,6 +323,7 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
     mainbox = gtk_hbox_new( TRUE, 10 );
 #elif GTK_MAJOR_VERSION == 3
     mainbox = gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 10 );
+    gtk_box_set_homogeneous ( GTK_BOX (mainbox), TRUE );
 #endif
     gtk_container_set_border_width( GTK_CONTAINER (mainbox), 10 );
     gtk_widget_show( mainbox );
