@@ -96,9 +96,14 @@ static void draw_digits( GtkWidget *widget, cairo_t *cr, const gchar *digits, in
     }
 }
 
+#if GTK_MAJOR_VERSION == 2
 /* Expose event function to draw graphical numbers. */
 gboolean expose_event_callback( GtkWidget *widget, GdkEventExpose *event,
                                 gpointer data) {
+#elif GTK_MAJOR_VERSION == 3
+/* Draw event function to draw graphical numbers. */
+gboolean draw_callback( GtkWidget *widget, cairo_t *cr, gpointer data) {
+#endif
     int x = 0;
     int highLow = 0;
 
@@ -106,18 +111,15 @@ gboolean expose_event_callback( GtkWidget *widget, GdkEventExpose *event,
 
     gchar result[7];
 
+#if GTK_MAJOR_VERSION == 2
     cairo_t *cr = gdk_cairo_create( gtk_widget_get_window(widget) );
 
 #ifdef DEBUG_XSENSORS
     printf( "area.width = %d, area.height = %d\n", event->area.width,
             event->area.height );
 #endif
-
-#if GTK_MAJOR_VERSION == 2
     gdk_window_clear_area( widget->window, event->area.x, event->area.y,
                             event->area.width, event->area.height );
-#elif GTK_MAJOR_VERSION == 3
-/*FIXME*/
 #endif
 
     switch ( current->feattype ) {
@@ -170,7 +172,9 @@ gboolean expose_event_callback( GtkWidget *widget, GdkEventExpose *event,
             break;
     }
     cairo_fill(cr);
+#if GTK_MAJOR_VERSION == 2
     cairo_destroy(cr);
+#endif
     return TRUE;
 }
 
@@ -383,9 +387,15 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
                 current = current->next = new_node;
             }
 
+#if GTK_MAJOR_VERSION == 2
             /* Connect the expose event sinal handler to redraw the numbers. */
             g_signal_connect( G_OBJECT(darea), "expose_event",
                               G_CALLBACK(expose_event_callback), current );
+#elif GTK_MAJOR_VERSION == 3
+            /* Connect the expose event sinal handler to redraw the numbers. */
+            g_signal_connect( G_OBJECT(darea), "draw",
+                              G_CALLBACK(draw_callback), current );
+#endif
 
             feattext = sensors_get_label( name, feature );
 
