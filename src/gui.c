@@ -79,7 +79,8 @@ static void get_pm_location( gchar curInt, int *x, int *y, int *w ) {
     }
 }
 
-static void draw_digits( GtkWidget *widget, cairo_t *cr, const gchar *digits, int highLow )
+static void draw_digits( GtkWidget *widget, cairo_t *cr, const gchar *digits,
+                         int highLow )
 {
     const gchar *digit = digits;
     int pos = 0, x = 0, y = 0, w = 0;
@@ -87,19 +88,18 @@ static void draw_digits( GtkWidget *widget, cairo_t *cr, const gchar *digits, in
     while ( *digit ) {
         get_pm_location( *digit, &x, &y, &w );
         cairo_set_source_surface (cr, surface, pos-x, 0-(y + highLow));
-		cairo_rectangle(cr, pos, 0, w, 30);
-		cairo_fill(cr);
+        cairo_rectangle(cr, pos, 0, w, 30);
+        cairo_fill(cr);
         pos += w;
         digit++;
     }
 }
 
+/* Event function to draw graphical numbers. */
 #if GTK_MAJOR_VERSION == 2
-/* Expose event function to draw graphical numbers. */
 gboolean expose_event_callback( GtkWidget *widget, GdkEventExpose *event,
                                 gpointer data) {
-#elif GTK_MAJOR_VERSION == 3
-/* Draw event function to draw graphical numbers. */
+#else
 gboolean draw_callback( GtkWidget *widget, cairo_t *cr, gpointer data) {
 #endif
     int x = 0;
@@ -117,7 +117,7 @@ gboolean draw_callback( GtkWidget *widget, cairo_t *cr, gpointer data) {
             event->area.height );
 #endif
     gdk_window_clear_area( widget->window, event->area.x, event->area.y,
-                            event->area.width, event->area.height );
+                           event->area.width, event->area.height );
 #endif
 
     switch ( current->feattype ) {
@@ -131,7 +131,7 @@ gboolean draw_callback( GtkWidget *widget, cairo_t *cr, gpointer data) {
 
             /* Display RPM */
             cairo_set_source_surface (cr, surface, 90-0, 0-(120 + highLow));
-     	    cairo_rectangle(cr, 90, 0, 57, 30);
+            cairo_rectangle(cr, 90, 0, 57, 30);
             break;
         case TEMP:
             if ( current->curvalue > current->curmax )
@@ -150,7 +150,7 @@ gboolean draw_callback( GtkWidget *widget, cairo_t *cr, gpointer data) {
             else
                 x = 57;
             cairo_set_source_surface (cr, surface, 96-x, 0-(60 + highLow));
-     	    cairo_rectangle(cr, 96, 0, 57, 30);
+            cairo_rectangle(cr, 96, 0, 57, 30);
 
             break;
         case VOLT:
@@ -164,7 +164,7 @@ gboolean draw_callback( GtkWidget *widget, cairo_t *cr, gpointer data) {
 
             /* Display V */
             cairo_set_source_surface (cr, surface, 96-114, 0-(60 + highLow));
-     	    cairo_rectangle(cr, 96, 0, 57, 30);
+            cairo_rectangle(cr, 96, 0, 57, 30);
             break;
         default:
             break;
@@ -275,7 +275,7 @@ gint start_timer( GtkWidget *widget, gpointer data ) {
     /* Setup timer for updates. */
     g_timeout_add( update_time * 1000,
                              (GSourceFunc) update_sensor_data,
-			     (gpointer) data );
+                 (gpointer) data );
 
     return SUCCESS;
 }
@@ -320,7 +320,7 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
     /* Setup main boxes. */
 #if GTK_MAJOR_VERSION == 2
     mainbox = gtk_hbox_new( TRUE, 10 );
-#elif GTK_MAJOR_VERSION == 3
+#else
     mainbox = gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 10 );
     gtk_box_set_homogeneous ( GTK_BOX (mainbox), TRUE );
 #endif
@@ -331,7 +331,7 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
     voltbox = gtk_vbox_new( FALSE, 0 );
     tempbox = gtk_vbox_new( FALSE, 0 );
     fanbox = gtk_vbox_new( FALSE, 0 );
-#elif GTK_MAJOR_VERSION == 3
+#else
     voltbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 );
     tempbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 );
     fanbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 );
@@ -356,7 +356,7 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
 #if GTK_MAJOR_VERSION == 2
     gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW (notescroll),
                                            mainbox );
-#elif GTK_MAJOR_VERSION == 3
+#else
     gtk_container_add( GTK_CONTAINER (notescroll), mainbox );
 #endif
     gtk_notebook_append_page( GTK_NOTEBOOK (container), noteframe, notelabel );
@@ -378,7 +378,7 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
             featframe = gtk_frame_new( NULL );
 #if GTK_MAJOR_VERSION == 2
             innerbox = gtk_vbox_new( FALSE, 0 );
-#elif GTK_MAJOR_VERSION == 3
+#else
             innerbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 );
 #endif
             featpbar = gtk_progress_bar_new();
@@ -398,12 +398,11 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
                 current = current->next = new_node;
             }
 
+            /* Connect the event signal handler to redraw the numbers. */
 #if GTK_MAJOR_VERSION == 2
-            /* Connect the expose event sinal handler to redraw the numbers. */
             g_signal_connect( G_OBJECT(darea), "expose_event",
                               G_CALLBACK(expose_event_callback), current );
-#elif GTK_MAJOR_VERSION == 3
-            /* Connect the expose event sinal handler to redraw the numbers. */
+#else
             g_signal_connect( G_OBJECT(darea), "draw",
                               G_CALLBACK(draw_callback), current );
 #endif
@@ -504,7 +503,8 @@ static updates *add_sensor_chips( GtkWidget *notebook, const char *pattern ) {
         pquery = &query;
     }
 
-    while ( ( name = sensors_get_detected_chips( pquery, &chipnum ) ) != NULL ) {
+    while ( ( name = sensors_get_detected_chips( pquery,
+                                                 &chipnum ) ) != NULL ) {
 #ifdef DEBUG_XSENSORS
         printf( "Adding tab for %s\n", name->prefix );
 #endif
@@ -568,7 +568,8 @@ int start_gui( int argc, char **argv ) {
                        "Image file not found in either location!  Exiting!\n" );
                 exit( 1 );
             } else {
-                theme = gdk_pixbuf_new_from_file("./images/xsensors.xpm", NULL );
+                theme = gdk_pixbuf_new_from_file( "./images/xsensors.xpm",
+                                                  NULL );
             }
         } else {
             theme = gdk_pixbuf_new_from_file(imagefile, NULL );
@@ -584,10 +585,10 @@ int start_gui( int argc, char **argv ) {
         }
     }
     surface = cairo_image_surface_create_for_data(gdk_pixbuf_get_pixels(theme),
-                                        CAIRO_FORMAT_RGB24,
-										gdk_pixbuf_get_width(theme),
-										gdk_pixbuf_get_height(theme),
-										gdk_pixbuf_get_rowstride(theme));
+                                               CAIRO_FORMAT_RGB24,
+                                               gdk_pixbuf_get_width(theme),
+                                               gdk_pixbuf_get_height(theme),
+                                               gdk_pixbuf_get_rowstride(theme));
 
     /* Create notebook for sensors. */
     notebook = gtk_notebook_new( );
