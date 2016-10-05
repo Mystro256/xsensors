@@ -292,6 +292,7 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
     /* notebook stuff */
     GtkWidget *notelabel = NULL;
     GtkWidget *noteframe = NULL;
+    GtkWidget *notescroll = NULL;
 
     /* main feature labels */
     GtkWidget *voltlabel = NULL;
@@ -341,10 +342,23 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
     gtk_container_set_border_width( GTK_CONTAINER (noteframe), 10 );
     gtk_widget_show( noteframe );
 
+    notescroll = gtk_scrolled_window_new( NULL, NULL );
+    gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW (notescroll),
+                                    GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC );
+    /*min height of 400px seems sensible*/
+    gtk_widget_set_size_request( notescroll, -1, 400 );
+    gtk_widget_show( notescroll );
+
     notelabel = gtk_label_new( name->prefix );
     gtk_widget_show( notelabel );
 
-    gtk_container_add( GTK_CONTAINER (noteframe), mainbox );
+    gtk_container_add( GTK_CONTAINER (noteframe), notescroll );
+#if GTK_MAJOR_VERSION == 2
+    gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW (notescroll),
+                                           mainbox );
+#elif GTK_MAJOR_VERSION == 3
+    gtk_container_add( GTK_CONTAINER (notescroll), mainbox );
+#endif
     gtk_notebook_append_page( GTK_NOTEBOOK (container), noteframe, notelabel );
 
     /* Create main labels. */

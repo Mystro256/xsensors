@@ -2,5 +2,4 @@
 - If default config file doesn't exist and "-c" isn't use, give an option to autodetect sensors
 - Add useful feedback on errors via message dialogs
 - GUI option to re-autodetect sensors
-- Scrollbars on tabs
 - Port gtkbox in gtk3 to gtkgrid
