@@ -9,7 +9,8 @@ sensor information.
 
 ##Requirements:
 - lm_sensors 3.0.0+ (http://www.lm-sensors.org)
-- gtk+ 2.x.x+ (http://www.gtk.org)
+- gtk+ 2 or 3 (http://www.gtk.org)
+- cairo (https://www.cairographics.org)
 
 ##Installation:
 ```sh

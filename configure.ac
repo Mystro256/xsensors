@@ -25,18 +25,15 @@ AM_PATH_GLIB_2_0(2.0.0,,AC_MSG_ERROR([
 *** development headers installed. The latest version of GLib is
 *** always available at http://www.gtk.org/.]))
 
-AC_ARG_ENABLE([gtk3], AS_HELP_STRING([--enable-gtk3], [Build with the GTK3 instead of GTK2]))
+PKG_CHECK_MODULES([GTK],[gtk+-3.0],foundgtk3=true,foundgtk3=false)
 
-if test "x$enable_gtk3" = "xyes"; then
-        PKG_CHECK_MODULES([GTK], [gtk+-3.0],,AC_MSG_ERROR([
-*** GTK+ 3.0 is required to build xsensors; please make sure you have the GTK+
-*** development headers installed. The latest version of GTK+ is
-*** always available at http://www.gtk.org/.]))
+if [ $foundgtk3 ]; then
 	XSENSORS_CFLAGS="`pkg-config --cflags gtk+-3.0` -Werror -Wall"
 	XSENSORS_LIBS="`pkg-config --libs gtk+-3.0`"
 else
+    echo "GTK3 is not installed, checking for GTK2 instead..."
 	AM_PATH_GTK_2_0(2.0.0,,AC_MSG_ERROR([
-*** GTK+ 2.0 is required to build xsensors; please make sure you have the GTK+
+*** GTK+ is required to build xsensors; please make sure you have the GTK+
 *** development headers installed. The latest version of GTK+ is
 *** always available at http://www.gtk.org/.]))
 	XSENSORS_CFLAGS="`pkg-config --cflags gtk+-2.0` -Werror -Wall"

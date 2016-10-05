@@ -731,7 +731,6 @@ enable_silent_rules
 enable_maintainer_mode
 enable_dependency_tracking
 enable_glibtest
-enable_gtk3
 enable_gtktest
 '
       ac_precious_vars='build_alias
@@ -1372,7 +1371,6 @@ Optional Features:
   --disable-dependency-tracking
                           speeds up one-time build
   --disable-glibtest      do not try to compile and run a test GLIB program
-  --enable-gtk3           Build with the GTK3 instead of GTK2
   --disable-gtktest       do not try to compile and run a test GTK+ program
 
 Some influential environment variables:
@@ -4653,13 +4651,6 @@ rm -f core conftest.err conftest.$ac_objext \
   rm -f conf.glibtest
 
 
-# Check whether --enable-gtk3 was given.
-if test "${enable_gtk3+set}" = set; then :
-  enableval=$enable_gtk3;
-fi
-
-
-if test "x$enable_gtk3" = "xyes"; then
 
 pkg_failed=no
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for GTK" >&5
@@ -4719,27 +4710,24 @@ fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$GTK_PKG_ERRORS" >&5
 
-	as_fn_error $? "
-*** GTK+ 3.0 is required to build xsensors; please make sure you have the GTK+
-*** development headers installed. The latest version of GTK+ is
-*** always available at http://www.gtk.org/." "$LINENO" 5
+	foundgtk3=false
 elif test $pkg_failed = untried; then
      	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-	as_fn_error $? "
-*** GTK+ 3.0 is required to build xsensors; please make sure you have the GTK+
-*** development headers installed. The latest version of GTK+ is
-*** always available at http://www.gtk.org/." "$LINENO" 5
+	foundgtk3=false
 else
 	GTK_CFLAGS=$pkg_cv_GTK_CFLAGS
 	GTK_LIBS=$pkg_cv_GTK_LIBS
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-
+	foundgtk3=true
 fi
+
+if  $foundgtk3 ; then
 	XSENSORS_CFLAGS="`pkg-config --cflags gtk+-3.0` -Werror -Wall"
 	XSENSORS_LIBS="`pkg-config --libs gtk+-3.0`"
 else
+    echo "GTK3 is not installed, checking for GTK2 instead..."
 	# Check whether --enable-gtktest was given.
 if test "${enable_gtktest+set}" = set; then :
   enableval=$enable_gtktest;
@@ -5062,7 +5050,7 @@ rm -f core conftest.err conftest.$ac_objext \
      GTK_CFLAGS=""
      GTK_LIBS=""
      as_fn_error $? "
-*** GTK+ 2.0 is required to build xsensors; please make sure you have the GTK+
+*** GTK+ is required to build xsensors; please make sure you have the GTK+
 *** development headers installed. The latest version of GTK+ is
 *** always available at http://www.gtk.org/." "$LINENO" 5
   fi
