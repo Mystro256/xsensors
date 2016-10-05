@@ -30,8 +30,8 @@ enum { VOLT, TEMP, FAN };
 gint destroy_gui( GtkWidget *, gpointer );
 #if GTK_MAJOR_VERSION == 2
 gboolean expose_event_callback( GtkWidget *, GdkEventExpose *, gpointer );
-#elif GTK_MAJOR_VERSION == 3
-gboolean draw_callback( GtkWidget *, cairo_t *cr, gpointer );
+#else
+gboolean draw_callback( GtkWidget *, cairo_t *, gpointer );
 #endif
 gint free_llist( updates * );
 gint update_sensor_data( gpointer );
