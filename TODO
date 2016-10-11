@@ -1,11 +1,12 @@
 For 0.80:
-- Some bugs I need to look into:
+- A bug I need to look into:
   https://bugzilla.redhat.com/show_bug.cgi?id=1108377
-- Add argument to show stderr messages as message dialogs
+- About box
+- Show some stderr messages as message dialogs
+Low Priority:
+- Better range readouts (neat speedometer type possibly)
+- Port gtkbox in gtk3 to gtkgrid
 - GUI option to re-autodetect sensors (should launch a terminal,
   "sensors-detect --auto is not considered safe)
 - If default config file doesn't exist and "-c" is not used, give an option to
   autodetect sensors, see previous item
-Low Priority:
-- Better range readouts (neat speedometer type possibly)
-- Port gtkbox in gtk3 to gtkgrid
