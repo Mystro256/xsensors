@@ -23,7 +23,8 @@
 
 /* Add a node to the feature linked list at the passed node pointer. */
 updates *add_node( const sensors_chip_name *name,
-                   const sensors_feature *feature ) {
+                   const sensors_feature *feature )
+{
     const sensors_subfeature *subfeature;
     updates *node;
 
@@ -51,33 +52,33 @@ updates *add_node( const sensors_chip_name *name,
     node->featminnum = UNDEFMAXMIN;
     node->featmaxnum = UNDEFMAXMIN;
     switch ( node->feattype ) {
-	case VOLT:
-	    if ( (subfeature = sensors_get_subfeature (name, feature, SENSORS_SUBFEATURE_IN_INPUT)) )
-		node->featnum = subfeature->number;
-	    if ( (subfeature = sensors_get_subfeature (name, feature, SENSORS_SUBFEATURE_IN_MIN)) )
-		node->featminnum = subfeature->number;
-	    if ( (subfeature = sensors_get_subfeature (name, feature, SENSORS_SUBFEATURE_IN_MAX)) )
-		node->featmaxnum = subfeature->number;
-	    break;
-	case TEMP:
-	    if ( (subfeature = sensors_get_subfeature (name, feature, SENSORS_SUBFEATURE_TEMP_INPUT)) )
-		node->featnum = subfeature->number;
-	    if ( (subfeature = sensors_get_subfeature (name, feature, SENSORS_SUBFEATURE_TEMP_MIN)) )
-		node->featminnum = subfeature->number;
-	    if ( (subfeature = sensors_get_subfeature (name, feature, SENSORS_SUBFEATURE_TEMP_MAX)) )
-		node->featmaxnum = subfeature->number;
-	    break;
-	case FAN:
-	    if ( (subfeature = sensors_get_subfeature (name, feature, SENSORS_SUBFEATURE_FAN_INPUT)) )
-		node->featnum = subfeature->number;
-	    if ( (subfeature = sensors_get_subfeature (name, feature, SENSORS_SUBFEATURE_FAN_MIN)) )
-		node->featminnum = subfeature->number;
-	    break;
+	    case VOLT:
+        if ( ( subfeature = sensors_get_subfeature( name, feature, SENSORS_SUBFEATURE_IN_INPUT ) ) )
+	        node->featnum = subfeature->number;
+        if ( ( subfeature = sensors_get_subfeature( name, feature, SENSORS_SUBFEATURE_IN_MIN ) ) )
+	        node->featminnum = subfeature->number;
+        if ( ( subfeature = sensors_get_subfeature( name, feature, SENSORS_SUBFEATURE_IN_MAX ) ) )
+	        node->featmaxnum = subfeature->number;
+        break;
+    case TEMP:
+        if ( ( subfeature = sensors_get_subfeature( name, feature, SENSORS_SUBFEATURE_TEMP_INPUT ) ) )
+	        node->featnum = subfeature->number;
+        if ( ( subfeature = sensors_get_subfeature( name, feature, SENSORS_SUBFEATURE_TEMP_MIN ) ) )
+	        node->featminnum = subfeature->number;
+        if ( ( subfeature = sensors_get_subfeature( name, feature, SENSORS_SUBFEATURE_TEMP_MAX ) ) )
+	        node->featmaxnum = subfeature->number;
+        break;
+    case FAN:
+        if ( ( subfeature = sensors_get_subfeature( name, feature, SENSORS_SUBFEATURE_FAN_INPUT ) ) )
+	        node->featnum = subfeature->number;
+        if ( ( subfeature = sensors_get_subfeature( name, feature, SENSORS_SUBFEATURE_FAN_MIN ) ) )
+	        node->featminnum = subfeature->number;
+        break;
     }
 
     if ( node->featnum == UNDEFMAXMIN ) {
-	g_free( node );
-	return NULL;
+        g_free( node );
+        return NULL;
     }
 
     node->name = name;

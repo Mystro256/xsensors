@@ -39,7 +39,8 @@ int update_time = 1;
 char *imagefile = NULL;
 
 /* Print the help message. */
-int help_msg( void ) {
+int help_msg( void )
+{
     printf( "\nUsage: xsensors [options]\n\n"
             "Options:\n"
             "--------\n\n"
@@ -57,7 +58,8 @@ int help_msg( void ) {
 }
 
 /* Main. */
-int main( int argc, char **argv ) {
+int main( int argc, char **argv )
+{
     int c = 0;
     char *sens_config = NULL;
     FILE *sens_conf_file = NULL;

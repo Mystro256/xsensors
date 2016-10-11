@@ -36,15 +36,16 @@ GdkPixbuf *theme = NULL;
 cairo_surface_t *surface = NULL;
 
 /* Destroy the main window. */
-gint destroy_gui( GtkWidget *widget, gpointer data ) {
-
+gint destroy_gui( GtkWidget *widget, gpointer data )
+{
     gtk_main_quit();
 
     return (FALSE);
 }
 
 /* Get the position and width of a character */
-static void get_pm_location( gchar curInt, int *x, int *y, int *w ) {
+static void get_pm_location( gchar curInt, int *x, int *y, int *w )
+{
     switch ( curInt ) {
         case '0':
         case '1':
@@ -87,9 +88,9 @@ static void draw_digits( GtkWidget *widget, cairo_t *cr, const gchar *digits,
 
     while ( *digit ) {
         get_pm_location( *digit, &x, &y, &w );
-        cairo_set_source_surface (cr, surface, pos-x, 0-(y + highLow));
-        cairo_rectangle(cr, pos, 0, w, 30);
-        cairo_fill(cr);
+        cairo_set_source_surface ( cr, surface, pos - x, 0 - ( y + highLow ) );
+        cairo_rectangle( cr, pos, 0, w, 30 );
+        cairo_fill( cr );
         pos += w;
         digit++;
     }
@@ -98,10 +99,11 @@ static void draw_digits( GtkWidget *widget, cairo_t *cr, const gchar *digits,
 /* Event function to draw graphical numbers. */
 #if GTK_MAJOR_VERSION == 2
 gboolean expose_event_callback( GtkWidget *widget, GdkEventExpose *event,
-                                gpointer data) {
+                                gpointer data )
 #else
-gboolean draw_callback( GtkWidget *widget, cairo_t *cr, gpointer data) {
+gboolean draw_callback( GtkWidget *widget, cairo_t *cr, gpointer data )
 #endif
+{
     int x = 0;
     int highLow = 0;
     gfloat temp;
@@ -111,7 +113,7 @@ gboolean draw_callback( GtkWidget *widget, cairo_t *cr, gpointer data) {
     gchar result[7];
 
 #if GTK_MAJOR_VERSION == 2
-    cairo_t *cr = gdk_cairo_create( gtk_widget_get_window(widget) );
+    cairo_t *cr = gdk_cairo_create( gtk_widget_get_window( widget ) );
 
 #ifdef DEBUG_XSENSORS
     printf( "area.width = %d, area.height = %d\n", event->area.width,
@@ -128,11 +130,12 @@ gboolean draw_callback( GtkWidget *widget, cairo_t *cr, gpointer data) {
 
             /* Display the digits */
             if ( g_snprintf( result, 6, "%5.0f", current->curvalue ) >= 0 )
-               draw_digits( widget, cr, result, highLow );
+                draw_digits( widget, cr, result, highLow );
 
             /* Display RPM */
-            cairo_set_source_surface (cr, surface, 90-0, 0-(120 + highLow));
-            cairo_rectangle(cr, 90, 0, 57, 30);
+            cairo_set_source_surface ( cr, surface, 90 - 0,
+                                       0 - ( 120 + highLow ) );
+            cairo_rectangle( cr, 90, 0, 57, 30 );
             break;
         case TEMP:
             if ( current->curvalue > current->curmax )
@@ -145,15 +148,16 @@ gboolean draw_callback( GtkWidget *widget, cairo_t *cr, gpointer data) {
 
             /* Display the digits */
             if ( g_snprintf( result, 7, "%6.1f", temp ) >= 0 )
-               draw_digits( widget, cr, result, highLow );
+                draw_digits( widget, cr, result, highLow );
 
             /* Display degree symbol */
             if ( tf == FALSE )
                 x = 0;
             else
                 x = 57;
-            cairo_set_source_surface (cr, surface, 96-x, 0-(60 + highLow));
-            cairo_rectangle(cr, 96, 0, 57, 30);
+            cairo_set_source_surface ( cr, surface, 96 - x,
+                                       0 - ( 60 + highLow ) );
+            cairo_rectangle( cr, 96, 0, 57, 30 );
 
             break;
         case VOLT:
@@ -163,11 +167,12 @@ gboolean draw_callback( GtkWidget *widget, cairo_t *cr, gpointer data) {
 
             /* Display the digits */
             if ( g_snprintf( result, 7, "%6.2f", current->curvalue ) >= 0 )
-               draw_digits( widget, cr, result, highLow );
+                draw_digits( widget, cr, result, highLow );
 
             /* Display V */
-            cairo_set_source_surface (cr, surface, 96-114, 0-(60 + highLow));
-            cairo_rectangle(cr, 96, 0, 57, 30);
+            cairo_set_source_surface ( cr, surface, 96 - 114,
+                                       0 - ( 60 + highLow ) );
+            cairo_rectangle( cr, 96, 0, 57, 30 );
             break;
         default:
             break;
@@ -180,8 +185,8 @@ gboolean draw_callback( GtkWidget *widget, cairo_t *cr, gpointer data) {
 }
 
 /* Free the link list. */
-gint free_llist( updates *node ) {
-
+gint free_llist( updates *node )
+{
     if ( node != NULL ) {
         free_llist( node->next );
         g_free( node );
@@ -191,8 +196,8 @@ gint free_llist( updates *node ) {
 }
 
 /* Find the tail of a non-NULL linked list. */
-static updates *llist_tail( updates *node ) {
-
+static updates *llist_tail( updates *node )
+{
     if ( node->next == NULL )
         return node;
     else
@@ -200,7 +205,8 @@ static updates *llist_tail( updates *node ) {
 }
 
 /* Update the sensor information. */
-gint update_sensor_data( gpointer data ) {
+gint update_sensor_data( gpointer data )
+{
     updates *updata = data;
 
     gfloat percent = 0;
@@ -208,7 +214,7 @@ gint update_sensor_data( gpointer data ) {
     do {
         if ( sensors_get_value( updata->name, updata->featnum,
              &(updata->curvalue) ) != 0 ) {
-                updata->curvalue = 0;
+            updata->curvalue = 0;
         }
 
         if ( updata->featminnum != UNDEFMAXMIN ) {
@@ -273,8 +279,8 @@ gint update_sensor_data( gpointer data ) {
 }
 
 /* Start the sensor info update timer. */
-gint start_timer( GtkWidget *widget, gpointer data ) {
-
+gint start_timer( GtkWidget *widget, gpointer data )
+{
     /* Setup timer for updates. */
     g_timeout_add( update_time * 1000,
                              (GSourceFunc) update_sensor_data,
@@ -283,24 +289,19 @@ gint start_timer( GtkWidget *widget, gpointer data ) {
     return SUCCESS;
 }
 
-updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
+updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name )
+{
     /* packing boxes */
-    GtkWidget *mainbox = NULL;
-    GtkWidget *voltbox = NULL;
-    GtkWidget *tempbox = NULL;
-    GtkWidget *fanbox = NULL;
+    GtkWidget *mainbox, *voltbox, *tempbox, *fanbox;
+
     GtkWidget *currbox = NULL;
     GtkWidget *innerbox = NULL;
 
     /* notebook stuff */
-    GtkWidget *notelabel = NULL;
-    GtkWidget *noteframe = NULL;
-    GtkWidget *notescroll = NULL;
+    GtkWidget *notelabel, *noteframe, *notescroll;
 
     /* main feature labels */
-    GtkWidget *voltlabel = NULL;
-    GtkWidget *templabel = NULL;
-    GtkWidget *fanlabel = NULL;
+    GtkWidget *voltlabel, *templabel, *fanlabel;
 
     /* feature data */
     updates *head = NULL;
@@ -488,7 +489,8 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
     return head;
 }
 
-static updates *add_sensor_chips( GtkWidget *notebook, const char *pattern ) {
+static updates *add_sensor_chips( GtkWidget *notebook, const char *pattern )
+{
     const sensors_chip_name *name = NULL, *pquery = NULL;
 
     updates *head = NULL, *tail = NULL, *new_nodes;
@@ -530,10 +532,10 @@ static updates *add_sensor_chips( GtkWidget *notebook, const char *pattern ) {
     return head;
 }
 
-int start_gui( int argc, char **argv ) {
+int start_gui( int argc, char **argv )
+{
     struct stat sbuf;
     char *title = NULL;
-    int errone;
 
     GtkWidget *notebook = NULL;
 
@@ -563,7 +565,8 @@ int start_gui( int argc, char **argv ) {
             exit( 1 );
         }
         sprintf( imagefile, "%s/xsensors.xpm", DATADIR );
-        if ( ( errone = stat( imagefile, &sbuf ) ) != 0 ) {
+
+        if ( ( stat( imagefile, &sbuf ) ) != 0 ) {
             if ( stat( "./xsensors.xpm", &sbuf ) != 0 ) {
                 fprintf( stderr, "%s: %s\n",
                          strerror( errno ), imagefile );
@@ -606,8 +609,8 @@ int start_gui( int argc, char **argv ) {
     gtk_container_add( GTK_CONTAINER (mainwindow), notebook );
 
 #ifdef DEBUG_XSENSORS
-    int i;
     if ( argc >= 2 ) {
+        int i;
         for ( i = 1; i < argc; i++ ) {
             if ( argv[i][0] != '-' ) {
                 head = add_sensor_chips( notebook, argv[i] );
