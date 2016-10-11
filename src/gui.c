@@ -104,6 +104,7 @@ gboolean draw_callback( GtkWidget *widget, cairo_t *cr, gpointer data) {
 #endif
     int x = 0;
     int highLow = 0;
+    gfloat temp;
 
     updates *current = data;
 
@@ -138,10 +139,12 @@ gboolean draw_callback( GtkWidget *widget, cairo_t *cr, gpointer data) {
                 highLow = 30;
 
             if ( tf == TRUE )
-                current->curvalue = ( 1.8 * current->curvalue ) + 32;
+                temp = ( 1.8 * current->curvalue ) + 32;
+            else
+                temp = current->curvalue;
 
             /* Display the digits */
-            if ( g_snprintf( result, 7, "%6.1f", current->curvalue ) >= 0 )
+            if ( g_snprintf( result, 7, "%6.1f", temp ) >= 0 )
                draw_digits( widget, cr, result, highLow );
 
             /* Display degree symbol */
