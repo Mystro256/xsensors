@@ -528,7 +528,7 @@ static updates *add_sensor_chips( GtkWidget *notebook, const char *pattern ) {
 int start_gui( int argc, char **argv ) {
     struct stat sbuf;
     char *title = NULL;
-    int i, errone;
+    int errone;
 
     GtkWidget *notebook = NULL;
 
@@ -552,7 +552,7 @@ int start_gui( int argc, char **argv ) {
 
     /* Set up the image file used for displaying characters. */
     if ( imagefile == NULL ) {
-        if( ( imagefile = g_malloc( sizeof( char ) *
+        if ( ( imagefile = g_malloc( sizeof( char ) *
                           ( sizeof( DATADIR ) + 20 ) ) ) == NULL ) {
             fprintf( stderr, "malloc failed!\n" );
             exit( 1 );
@@ -600,18 +600,26 @@ int start_gui( int argc, char **argv ) {
 
     gtk_container_add( GTK_CONTAINER (mainwindow), notebook );
 
-    if ( argc < 2 || (argc == 2 && argv[1][0] == '-' && argv[1][1] == 'f')) {
-        head = add_sensor_chips( notebook, NULL );
-        if ( head == NULL )
-            return FAILURE;
-    } else {
+#ifdef DEBUG_XSENSORS
+    int i;
+    if ( argc >= 2 ) {
         for ( i = 1; i < argc; i++ ) {
-            if ( argv[i][0] != '-' || argv[i][1] != 'f') {
+            if ( argv[i][0] != '-' ) {
                 head = add_sensor_chips( notebook, argv[i] );
                 if ( head == NULL )
                     return FAILURE;
+            } else {
+                /* Skip another for all but -f */
+                i += ( argv[i][1] != 'f' );
             }
         }
+    }
+#endif
+
+    if ( head == NULL ) {
+        head = add_sensor_chips( notebook, NULL );
+        if ( head == NULL )
+            return FAILURE;
     }
 
     /* Setup the main components. */
