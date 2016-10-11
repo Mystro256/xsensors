@@ -1,3 +1,8 @@
+0.80-dev so far
+-----
+- Added GTK3 port
+- Various bug fixes
+
 0.75
 -----
 - Fix various issues with 0.74
