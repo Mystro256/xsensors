@@ -116,9 +116,21 @@ int main( int argc, char **argv )
 
 
     /* Initialize the sensors library. */
-    if ( sensors_init( sens_conf_file ) != SUCCESS ) {
+    int errorno = sensors_init( sens_conf_file );
+    if ( errorno != SUCCESS ) {
         fprintf( stderr, "Could not initialize sensors!\n"
-                 "Is everything installed properly?\n" );
+                 "Is everything installed properly?\n"
+                 "Error Number: %d", errorno );
+        if ( !sens_config ) {
+            GtkWidget *dialog = gtk_message_dialog_new( NULL,
+                                          GTK_DIALOG_DESTROY_WITH_PARENT,
+                                          GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
+                                          "Could not initialize sensors!\n"
+                                          "Is everything installed properly?\n"
+                                          "Error Number: %d", errorno );
+            gtk_dialog_run( GTK_DIALOG (dialog) );
+            gtk_widget_destroy( dialog );
+        }
         return EXIT_FAILURE;
     }
 
