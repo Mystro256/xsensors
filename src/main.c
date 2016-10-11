@@ -49,7 +49,7 @@ int help_msg( void ) {
             "-i filename\tSpecify the image file to use as a theme.\n"
             "-t time\t\tSpecify the update time in number of seconds.\n"
             "\t\tSet this to a negative number for no update.\n"
-            "\t\tDon't set this to 0.\n"
+            "\t\tSet this to zero for default time.\n"
             "-v\t\tDisplay version number.\n"
             "\n" );
 
@@ -90,8 +90,6 @@ int main( int argc, char **argv ) {
                              "strdup failed! Something is very wrong!\n" );
                 update_time = atoi( temp_str );
                 if ( update_time == 0 ) {
-                    fprintf( stderr,
-                             "Do not set update time (-t) equal to 0!\n" );
                     update_time = 1;
                 }
                 break;
