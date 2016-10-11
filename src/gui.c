@@ -487,12 +487,13 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name ) {
 
 static updates *add_sensor_chips( GtkWidget *notebook, const char *pattern ) {
     const sensors_chip_name *name = NULL, *pquery = NULL;
-    sensors_chip_name query;
 
     updates *head = NULL, *tail = NULL, *new_nodes;
 
     int chipnum = 0;
 
+#ifdef DEBUG_XSENSORS
+    sensors_chip_name query;
     if ( pattern ) {
         if ( sensors_parse_chip_name( pattern, &query ) ) {
             fprintf( stderr,
@@ -502,6 +503,7 @@ static updates *add_sensor_chips( GtkWidget *notebook, const char *pattern ) {
         }
         pquery = &query;
     }
+#endif
 
     while ( ( name = sensors_get_detected_chips( pquery,
                                                  &chipnum ) ) != NULL ) {
