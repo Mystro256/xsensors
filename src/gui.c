@@ -580,7 +580,7 @@ int start_gui( int argc, char **argv )
                                                   NULL );
             }
         } else {
-            theme = gdk_pixbuf_new_from_file(imagefile, NULL );
+            theme = gdk_pixbuf_new_from_file( imagefile, NULL );
         }
     } else {
         if ( stat( imagefile, &sbuf ) != 0 ) {
@@ -589,7 +589,7 @@ int start_gui( int argc, char **argv )
                     "Image file not found in specified location!  Exiting!\n" );
             exit( 1 );
         } else {
-            theme = gdk_pixbuf_new_from_file(imagefile, NULL );
+            theme = gdk_pixbuf_new_from_file( imagefile, NULL );
         }
     }
     surface = cairo_image_surface_create_for_data(gdk_pixbuf_get_pixels(theme),
