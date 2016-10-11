@@ -30,9 +30,7 @@
 #include <gtk/gtk.h>
 #include "chips.h"
 #include "gui.h"
-
-/* Version Number */
-#define VERSION "0.74"
+#include "../config.h"
 
 /* Pretty identifiers. */
 enum { SUCCESS, FAILURE };

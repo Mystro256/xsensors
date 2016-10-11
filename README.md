@@ -1,4 +1,4 @@
-#xsensors 0.75 - Mystro256 fork
+#xsensors - Mystro256 fork
 
 This is another release of xsensors, a program designed to display all
 the related information from your motherboard sensors.  This information is
