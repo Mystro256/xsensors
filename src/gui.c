@@ -535,7 +535,7 @@ static updates *add_sensor_chips( GtkWidget *notebook, const char *pattern )
 int start_gui( int argc, char **argv )
 {
     struct stat sbuf;
-    char *title = NULL;
+    char title [20];
 
     GtkWidget *notebook = NULL;
 
@@ -543,15 +543,13 @@ int start_gui( int argc, char **argv )
 
     gtk_init( &argc, &argv );
 
-    if ( ( title = g_malloc( 15 * sizeof( char ) ) ) == NULL ) {
-            fprintf( stderr, "malloc failed!\n" );
-            exit( 1 );
-    }
-
     /* Setup main window. */
     mainwindow = gtk_window_new( GTK_WINDOW_TOPLEVEL );
-    title = strcpy( title, "xsensors " );
-    title = strcat( title, VERSION );
+    strncpy( title, PACKAGE , 20);
+    if( strlen( PACKAGE ) < 19 )
+        strcat( title, " " );
+    if( 18 - strlen( PACKAGE ) > 0 )
+        strncat( title, VERSION , 18 - strlen( PACKAGE ) > 0 );
     gtk_window_set_title( GTK_WINDOW (mainwindow), title );
     g_signal_connect( G_OBJECT (mainwindow), "delete_event",
                       G_CALLBACK (destroy_gui), NULL );
@@ -636,7 +634,6 @@ int start_gui( int argc, char **argv )
     gtk_main();
 
     free_llist( head );
-    free( title );
 
     return SUCCESS;
 }
