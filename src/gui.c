@@ -651,9 +651,10 @@ int start_gui( int argc, char **argv )
             }
         }
     }
-#endif
 
-    if ( head == NULL ) {
+    if ( head == NULL ) 
+#endif
+    {
         head = add_sensor_chips( notebook, NULL );
         if ( head == NULL )
             return FAILURE;
