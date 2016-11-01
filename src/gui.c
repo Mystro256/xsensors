@@ -605,7 +605,7 @@ int start_gui( int argc, char **argv )
                 gtk_widget_destroy( dialog );
                 exit( 1 );
             } else {
-                theme = gdk_pixbuf_new_from_file( "./images/xsensors.xpm",
+                theme = gdk_pixbuf_new_from_file( "./xsensors.xpm",
                                                   NULL );
             }
         } else {
