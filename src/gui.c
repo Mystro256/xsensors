@@ -424,6 +424,16 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name )
                                 sizeof( char ) ) ) == NULL ) {
                     fprintf( stderr, "realloc failed in add_sensor_tab()!\n" );
                     free( feattext );
+                    GtkWidget *dialog = gtk_message_dialog_new(
+                                                GTK_WINDOW (mainwindow),
+                                                GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                GTK_MESSAGE_ERROR,
+                                                GTK_BUTTONS_CLOSE,
+                                                "Memory allocation error!\n\n"
+                                                "Failed to create GTK "
+                                                "Notebook." );
+                    gtk_dialog_run( GTK_DIALOG (dialog) );
+                    gtk_widget_destroy( dialog );
                     return NULL;
                 }
                 feattext = new_feattext;
@@ -560,6 +570,15 @@ int start_gui( int argc, char **argv )
         if ( ( imagefile = g_malloc( sizeof( char ) *
                           ( sizeof( DATADIR ) + 20 ) ) ) == NULL ) {
             fprintf( stderr, "malloc failed!\n" );
+            GtkWidget *dialog = gtk_message_dialog_new(
+                                                GTK_WINDOW (mainwindow),
+                                                GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                GTK_MESSAGE_ERROR,
+                                                GTK_BUTTONS_CLOSE,
+                                                "Memory allocation error!\n\n"
+                                                "Failed import theme." );
+            gtk_dialog_run( GTK_DIALOG (dialog) );
+            gtk_widget_destroy( dialog );
             exit( 1 );
         }
         sprintf( imagefile, "%s/xsensors.xpm", DATADIR );
@@ -572,6 +591,18 @@ int start_gui( int argc, char **argv )
                          strerror( errno ) );
                 fprintf( stderr,
                        "Image file not found in either location!  Exiting!\n" );
+                GtkWidget *dialog = gtk_message_dialog_new(
+                                                GTK_WINDOW (mainwindow),
+                                                GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                GTK_MESSAGE_ERROR,
+                                                GTK_BUTTONS_CLOSE,
+                                                "Theme Import error!\n\n"
+                                                "Could not find xsensors.xpm\n"
+                                                "Please make sure it exists in"
+                                                " the working directory or in:"
+                                                "\n%s", DATADIR );
+                gtk_dialog_run( GTK_DIALOG (dialog) );
+                gtk_widget_destroy( dialog );
                 exit( 1 );
             } else {
                 theme = gdk_pixbuf_new_from_file( "./images/xsensors.xpm",

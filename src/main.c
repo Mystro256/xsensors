@@ -126,7 +126,7 @@ int main( int argc, char **argv )
             GtkWidget *dialog = gtk_message_dialog_new( NULL,
                                           GTK_DIALOG_DESTROY_WITH_PARENT,
                                           GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
-                                          "Could not initialize sensors!\n"
+                                          "Could not initialize sensors!\n\n"
                                           "Is everything installed properly?\n"
                                           "Error Number: %d", errorno );
             gtk_dialog_run( GTK_DIALOG (dialog) );
