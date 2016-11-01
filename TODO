@@ -1,9 +1,12 @@
 For 0.80:
-- About box
+- Gnome AppMenu(gtk3)/Gtkmenubar(gtk2):
+  > Preferences:
+    - Change "theme" (default or select, with preview)
+    - Change sensors config file (default or select)
+    - Celsius (Default) or Fahrenheit
+    - Update time (default, do not update, or select)
+  > About box
+  > Exit for Gtkmenubar?
 Low Priority:
 - Better range readouts (neat speedometer type possibly)
-- Port gtkbox in gtk3 to gtkgrid
-- GUI option to re-autodetect sensors (should launch a terminal,
-  "sensors-detect --auto is not considered safe)
-- If default config file doesn't exist and "-c" is not used, give an option to
-  autodetect sensors, see previous item
+- Port gtkbox to gtkgrid (probably deprecated in gtk4)
