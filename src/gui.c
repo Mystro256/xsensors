@@ -555,11 +555,7 @@ int start_gui( int argc, char **argv )
 
     /* Setup main window. */
     mainwindow = gtk_window_new( GTK_WINDOW_TOPLEVEL );
-    strncpy( title, PACKAGE , 20);
-    if( strlen( PACKAGE ) < 19 )
-        strcat( title, " " );
-    if( 18 - strlen( PACKAGE ) > 0 )
-        strncat( title, VERSION , 18 - strlen( PACKAGE ) > 0 );
+    g_snprintf( title, 20, "%s %s", PACKAGE, VERSION );
     gtk_window_set_title( GTK_WINDOW (mainwindow), title );
     g_signal_connect( G_OBJECT (mainwindow), "delete_event",
                       G_CALLBACK (destroy_gui), NULL );
