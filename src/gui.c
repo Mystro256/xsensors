@@ -20,6 +20,7 @@
 */
 
 #include "main.h"
+#include "prefs.h"
 
 extern int tf;
 extern int update_time;
@@ -41,6 +42,32 @@ gint destroy_gui( GtkWidget *widget, gpointer data )
     gtk_main_quit();
 
     return (FALSE);
+}
+
+/* About Dialog */
+gboolean about_callback( GtkWidget *widget, GdkEvent *event )
+{
+    char* authors [3] = {"Kris Kersey",
+                         "Jeremy Newton (mystro256)",
+                         "with patches from Nanley Chery"};
+
+    /* TODO, Use better logo, such as the 128x128 icon */
+    GdkPixbuf *logo = theme;
+
+    gtk_show_about_dialog( GTK_WINDOW (mainwindow),
+                           "program-name", PACKAGE,
+                           "version", VERSION,
+                           "copyright", "© 2012-2015 Jeremy Newton, "
+                           "2002-2007 Kris Kersey",
+                           "comments", "A GTK interface to lm_sensors",
+                           "website", "https://github.com/Mystro256/xsensors",
+                           "authors", authors,
+                           "license", GPL2PLUS,
+                           "logo", logo,
+                           "title", "About",
+                           NULL );
+
+    return TRUE;
 }
 
 /* Get the position and width of a character */
@@ -547,6 +574,9 @@ int start_gui( int argc, char **argv )
     struct stat sbuf;
     char title [20];
 
+    GtkWidget *mainbox = NULL;
+    GtkWidget *menubar = NULL;
+    GtkWidget *tempwgt = NULL;
     GtkWidget *notebook = NULL;
 
     updates *head = NULL;
@@ -623,15 +653,48 @@ int start_gui( int argc, char **argv )
                                                gdk_pixbuf_get_height(theme),
                                                gdk_pixbuf_get_rowstride(theme));
 
+    /* Create main vertical box */
+#if GTK_MAJOR_VERSION == 2
+    mainbox = gtk_vbox_new( FALSE, 0 );
+#else
+    mainbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 );
+#endif
+    gtk_container_add( GTK_CONTAINER (mainwindow), mainbox );
+    gtk_widget_show( mainbox );
+
+    /* Create menu */
+    /* TODO Make into appmenu for gtk3 */
+    menubar = gtk_menu_new();
+
+    tempwgt = gtk_menu_item_new_with_label( "Preferences" );
+    gtk_menu_shell_append( GTK_MENU_SHELL (menubar), tempwgt );
+    g_signal_connect( G_OBJECT (tempwgt), "activate",
+                      G_CALLBACK (prefs_callback), NULL );
+    gtk_widget_show( tempwgt );
+
+    tempwgt = gtk_menu_item_new_with_label( "About" );
+    gtk_menu_shell_append( GTK_MENU_SHELL (menubar), tempwgt );
+    g_signal_connect( G_OBJECT (tempwgt), "activate",
+                      G_CALLBACK (about_callback), NULL );
+    gtk_widget_show( tempwgt );
+
+    tempwgt = gtk_menu_item_new_with_label( "xsensors" );
+    gtk_widget_show( tempwgt );
+    gtk_menu_item_set_submenu( GTK_MENU_ITEM (tempwgt), menubar );
+
+    menubar = gtk_menu_bar_new();
+    gtk_box_pack_start( GTK_BOX (mainbox), menubar, FALSE, FALSE, 2 );
+    gtk_widget_show( menubar );
+    gtk_menu_shell_append( GTK_MENU_SHELL (menubar), tempwgt );
+
     /* Create notebook for sensors. */
     notebook = gtk_notebook_new( );
 #if GTK_MAJOR_VERSION == 2
     gtk_widget_modify_bg( notebook, GTK_STATE_NORMAL, &colorWhite );
 #endif
     gtk_notebook_set_tab_pos( GTK_NOTEBOOK (notebook), GTK_POS_LEFT );
+    gtk_box_pack_end( GTK_BOX (mainbox), notebook, TRUE, TRUE, 2 );
     gtk_widget_show( notebook );
-
-    gtk_container_add( GTK_CONTAINER (mainwindow), notebook );
 
 #ifdef DEBUG_XSENSORS
     if ( argc >= 2 ) {

@@ -14,6 +14,7 @@ bin_PROGRAMS = xsensors
 xsensors_SOURCES =	\
 	main.c  \
     gui.c   \
+    prefs.c \
     chips.c
 
 xsensors_LDADD = $(XSENSORS_LIBS)

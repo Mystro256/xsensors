@@ -99,7 +99,8 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_xsensors_OBJECTS = main.$(OBJEXT) gui.$(OBJEXT) chips.$(OBJEXT)
+am_xsensors_OBJECTS = main.$(OBJEXT) gui.$(OBJEXT) prefs.$(OBJEXT) \
+	chips.$(OBJEXT)
 xsensors_OBJECTS = $(am_xsensors_OBJECTS)
 am__DEPENDENCIES_1 =
 xsensors_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -275,6 +276,7 @@ AM_CPPFLAGS = \
 xsensors_SOURCES = \
 	main.c  \
     gui.c   \
+    prefs.c \
     chips.c
 
 xsensors_LDADD = $(XSENSORS_LIBS)
@@ -367,6 +369,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chips.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prefs.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
