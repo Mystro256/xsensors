@@ -51,14 +51,21 @@ gboolean about_callback( GtkWidget *widget, GdkEvent *event )
                          "Jeremy Newton (mystro256)",
                          "with patches from Nanley Chery"};
 
-    /* TODO, Use better logo, such as the 128x128 icon */
+    struct stat sbuf;
     GdkPixbuf *logo = theme;
+    char iconfile [sizeof( DATADIR ) - 1 + sizeof( PACKAGE ) - 1 +
+                            sizeof( "/icons/hicolor/128x128/apps/.png")];
+
+    /* Import 128x128 logo if it's available */
+    sprintf( iconfile, "%s/icons/hicolor/128x128/apps/%s.png",
+             DATADIR, PACKAGE );
+    if ( ( stat( iconfile, &sbuf ) ) == 0 )
+        logo = gdk_pixbuf_new_from_file( iconfile, NULL );
 
     gtk_show_about_dialog( GTK_WINDOW (mainwindow),
                            "program-name", PACKAGE,
                            "version", VERSION,
-                           "copyright", "© 2012-2015 Jeremy Newton, "
-                           "2002-2007 Kris Kersey",
+                           "copyright", COPYRIGHT,
                            "comments", "A GTK interface to lm_sensors",
                            "website", "https://github.com/Mystro256/xsensors",
                            "authors", authors,
@@ -594,7 +601,8 @@ int start_gui( int argc, char **argv )
     /* Set up the image file used for displaying characters. */
     if ( imagefile == NULL ) {
         if ( ( imagefile = g_malloc( sizeof( char ) *
-                          ( sizeof( DATADIR ) + 20 ) ) ) == NULL ) {
+                          ( sizeof( DATADIR ) - 1 +
+                            sizeof( "/pixmaps/xsensors.xpm" ) ) ) ) == NULL ) {
             fprintf( stderr, "malloc failed!\n" );
             GtkWidget *dialog = gtk_message_dialog_new(
                                                 GTK_WINDOW (mainwindow),
@@ -607,7 +615,7 @@ int start_gui( int argc, char **argv )
             gtk_widget_destroy( dialog );
             exit( 1 );
         }
-        sprintf( imagefile, "%s/xsensors.xpm", DATADIR );
+        sprintf( imagefile, "%s/pixmaps/xsensors.xpm", DATADIR );
 
         if ( ( stat( imagefile, &sbuf ) ) != 0 ) {
             if ( stat( "./xsensors.xpm", &sbuf ) != 0 ) {
@@ -626,7 +634,7 @@ int start_gui( int argc, char **argv )
                                                 "Could not find xsensors.xpm\n"
                                                 "Please make sure it exists in"
                                                 " the working directory or in:"
-                                                "\n%s", DATADIR );
+                                                "\n%s/pixmaps", DATADIR );
                 gtk_dialog_run( GTK_DIALOG (dialog) );
                 gtk_widget_destroy( dialog );
                 exit( 1 );

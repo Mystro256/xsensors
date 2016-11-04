@@ -26,6 +26,8 @@ enum { VOLT, TEMP, FAN };
 
 #define NA "Not Available!"
 
+#define COPYRIGHT "© 2012-2016 Jeremy Newton, 2002-2007 Kris Kersey"
+
 #define GPL2PLUS \
     "This program is free software; you can redistribute it and/or modify\n"\
     "it under the terms of the GNU General Public License as published by\n"\

@@ -5,8 +5,6 @@ For 0.80:
     - Change sensors config file (default or select)
     - Celsius (Default) or Fahrenheit
     - Update time (default, do not update, or select)
-  > About box
-  > Exit for Gtkmenubar?
 Low Priority:
 - Better range readouts (neat speedometer type possibly)
 - Port gtkbox to gtkgrid (probably deprecated in gtk4)
