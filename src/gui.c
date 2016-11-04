@@ -680,10 +680,20 @@ int start_gui( int argc, char **argv )
                       G_CALLBACK (prefs_callback), NULL );
     gtk_widget_show( tempwgt );
 
+    tempwgt = gtk_separator_menu_item_new();
+    gtk_menu_shell_append( GTK_MENU_SHELL (menubar), tempwgt );
+    gtk_widget_show( tempwgt );
+
     tempwgt = gtk_menu_item_new_with_label( "About" );
     gtk_menu_shell_append( GTK_MENU_SHELL (menubar), tempwgt );
     g_signal_connect( G_OBJECT (tempwgt), "activate",
                       G_CALLBACK (about_callback), NULL );
+    gtk_widget_show( tempwgt );
+
+    tempwgt = gtk_menu_item_new_with_label( "Quit" );
+    gtk_menu_shell_append( GTK_MENU_SHELL (menubar), tempwgt );
+    g_signal_connect( tempwgt, "activate",
+                      G_CALLBACK (destroy_gui), NULL );
     gtk_widget_show( tempwgt );
 
     tempwgt = gtk_menu_item_new_with_label( "xsensors" );
@@ -696,7 +706,7 @@ int start_gui( int argc, char **argv )
     gtk_menu_shell_append( GTK_MENU_SHELL (menubar), tempwgt );
 
     /* Create notebook for sensors. */
-    notebook = gtk_notebook_new( );
+    notebook = gtk_notebook_new();
 #if GTK_MAJOR_VERSION == 2
     gtk_widget_modify_bg( notebook, GTK_STATE_NORMAL, &colorWhite );
 #endif
