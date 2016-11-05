@@ -74,7 +74,7 @@ gboolean about_callback( GtkWidget *widget, GdkEvent *event )
                            "title", "About",
                            NULL );
 
-    return TRUE;
+    return SUCCESS;
 }
 
 /* Get the position and width of a character */

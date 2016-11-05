@@ -21,4 +21,7 @@
 
 #include <gdk/gdk.h>
 
+/* Prototypes */
+gint destroy_prefs( GtkWidget *, gpointer );
 gboolean prefs_callback( GtkWidget *, GdkEvent * );
+gint set_tf( GtkWidget *, gpointer );
