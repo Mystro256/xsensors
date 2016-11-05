@@ -25,3 +25,5 @@
 gint destroy_prefs( GtkWidget *, gpointer );
 gboolean prefs_callback( GtkWidget *, GdkEvent * );
 gint set_tf( GtkWidget *, gpointer );
+gint toggle_updates( GtkWidget *, gpointer );
+gint check_update_time( GtkWidget *, gpointer );

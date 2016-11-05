@@ -316,9 +316,10 @@ gint update_sensor_data( gpointer data )
 gint start_timer( GtkWidget *widget, gpointer data )
 {
     /* Setup timer for updates. */
-    g_timeout_add( update_time * 1000,
-                             (GSourceFunc) update_sensor_data,
-                 (gpointer) data );
+    if( update_time )
+        g_timeout_add( update_time * 1000,
+                       (GSourceFunc) update_sensor_data,
+                       (gpointer) data );
 
     return SUCCESS;
 }

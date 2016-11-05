@@ -49,8 +49,8 @@ int help_msg( void )
             "-c filename\tSpecify the libsensors configuration file.\n"
             "-i filename\tSpecify the image file to use as a theme.\n"
             "-t time\t\tSpecify the update time in number of seconds.\n"
-            "\t\tSet this to a negative number for no update.\n"
-            "\t\tSet this to zero for default time.\n"
+            "\t\tSet this to a negative number for default time.\n"
+            "\t\tSet this to zero for no update.\n"
             "-v\t\tDisplay version number.\n"
             "\n" );
 
@@ -91,7 +91,7 @@ int main( int argc, char **argv )
                     fprintf( stderr,
                              "strdup failed! Something is very wrong!\n" );
                 update_time = atoi( temp_str );
-                if ( update_time == 0 ) {
+                if ( update_time < 0 ) {
                     update_time = 1;
                 }
                 break;
