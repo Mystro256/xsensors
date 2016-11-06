@@ -111,17 +111,13 @@ gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
 
 #if GTK_MAJOR_VERSION == 2
     hbox = gtk_hbox_new( FALSE, 0 );
+    vbox = gtk_vbox_new( FALSE, 0 );
 #else
     hbox = gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 0 );
+    vbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 );
 #endif
     gtk_container_add( GTK_CONTAINER (noteframe), hbox );
     gtk_widget_show( hbox );
-
-#if GTK_MAJOR_VERSION == 2
-    vbox = gtk_vbox_new( FALSE, 0 );
-#else
-    vbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 );
-#endif
     gtk_box_pack_start( GTK_BOX (hbox), vbox, FALSE, FALSE, 10 );
     gtk_widget_show( vbox );
 
@@ -180,17 +176,13 @@ gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
 
 #if GTK_MAJOR_VERSION == 2
     hbox = gtk_hbox_new( FALSE, 0 );
+    vbox = gtk_vbox_new( FALSE, 0 );
 #else
     hbox = gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 0 );
+    vbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 );
 #endif
     gtk_container_add( GTK_CONTAINER (noteframe), hbox );
     gtk_widget_show( hbox );
-
-#if GTK_MAJOR_VERSION == 2
-    vbox = gtk_vbox_new( FALSE, 0 );
-#else
-    vbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 );
-#endif
     gtk_box_pack_start( GTK_BOX (hbox), vbox, FALSE, FALSE, 10 );
     gtk_widget_show( vbox );
 
