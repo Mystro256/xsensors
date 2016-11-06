@@ -582,10 +582,7 @@ int start_gui( int argc, char **argv )
     struct stat sbuf;
     char title [20];
 
-    GtkWidget *mainbox = NULL;
-    GtkWidget *menubar = NULL;
-    GtkWidget *tempwgt = NULL;
-    GtkWidget *notebook = NULL;
+    GtkWidget *mainbox, *menubar, *tempwgt, *notebook;
 
     updates *head = NULL;
 

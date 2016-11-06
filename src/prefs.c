@@ -82,12 +82,8 @@ gint toggle_updates( GtkWidget *widget, gpointer data )
 
 gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
 {
-    GtkWidget *notebook = NULL;
-    GtkWidget *notelabel = NULL;
-    GtkWidget *noteframe = NULL;
-    GtkWidget *vbox = NULL;
-    GtkWidget *hbox = NULL;
-    GtkWidget *tmpwidget = NULL;
+    GtkWidget *notebook, *notelabel, *noteframe,
+              *vbox,     *hbox,      *tmpwidget;
 
     /* Setup main window. */
     prefwindow = gtk_window_new( GTK_WINDOW_TOPLEVEL );
