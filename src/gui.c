@@ -691,14 +691,14 @@ int start_gui( int argc, char **argv )
     gtk_menu_item_set_submenu( GTK_MENU_ITEM (tempwgt), menubar );
 
     menubar = gtk_menu_bar_new();
-    gtk_box_pack_start( GTK_BOX (mainbox), menubar, FALSE, FALSE, 2 );
+    gtk_box_pack_start( GTK_BOX (mainbox), menubar, FALSE, FALSE, 0 );
     gtk_widget_show( menubar );
     gtk_menu_shell_append( GTK_MENU_SHELL (menubar), tempwgt );
 
     /* Create notebook for sensors. */
     notebook = gtk_notebook_new();
     gtk_notebook_set_tab_pos( GTK_NOTEBOOK (notebook), GTK_POS_LEFT );
-    gtk_box_pack_end( GTK_BOX (mainbox), notebook, TRUE, TRUE, 2 );
+    gtk_box_pack_end( GTK_BOX (mainbox), notebook, TRUE, TRUE, 0 );
     gtk_widget_show( notebook );
 
 #ifdef DEBUG_XSENSORS
