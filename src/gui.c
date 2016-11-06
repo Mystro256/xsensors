@@ -51,16 +51,17 @@ gboolean about_callback( GtkWidget *widget, GdkEvent *event )
                          "Jeremy Newton (mystro256)",
                          "with patches from Nanley Chery"};
 
-    struct stat sbuf;
     GdkPixbuf *logo = theme;
+#if GTK_MAJOR_VERSION == 3
+    /* Import 128x128 logo if it's available */
+    struct stat sbuf;
     char iconfile [sizeof( DATADIR ) - 1 + sizeof( PACKAGE ) - 1 +
                             sizeof( "/icons/hicolor/128x128/apps/.png")];
-
-    /* Import 128x128 logo if it's available */
     sprintf( iconfile, "%s/icons/hicolor/128x128/apps/%s.png",
              DATADIR, PACKAGE );
     if ( ( stat( iconfile, &sbuf ) ) == 0 )
         logo = gdk_pixbuf_new_from_file( iconfile, NULL );
+#endif
 
     gtk_show_about_dialog( GTK_WINDOW (mainwindow),
                            "program-name", PACKAGE,
@@ -705,9 +706,6 @@ int start_gui( int argc, char **argv )
 
     /* Create notebook for sensors. */
     notebook = gtk_notebook_new();
-#if GTK_MAJOR_VERSION == 2
-    gtk_widget_modify_bg( notebook, GTK_STATE_NORMAL, &colorWhite );
-#endif
     gtk_notebook_set_tab_pos( GTK_NOTEBOOK (notebook), GTK_POS_LEFT );
     gtk_box_pack_end( GTK_BOX (mainbox), notebook, TRUE, TRUE, 2 );
     gtk_widget_show( notebook );

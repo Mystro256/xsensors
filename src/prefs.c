@@ -99,9 +99,6 @@ gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
 
     /* Create notebook for prefs. */
     notebook = gtk_notebook_new();
-#if GTK_MAJOR_VERSION == 2
-    gtk_widget_modify_bg( notebook, GTK_STATE_NORMAL, &colorWhite );
-#endif
     gtk_container_add( GTK_CONTAINER (prefwindow), notebook );
     gtk_widget_show( notebook );
 
