@@ -28,10 +28,6 @@ extern char *imagefile;
 
 GtkWidget *mainwindow = NULL;
 
-#if GTK_MAJOR_VERSION == 2
-GdkColor colorWhite = { 0, 0xFFFF, 0xFFFF, 0xFFFF };
-#endif
-
 GdkPixbuf *theme = NULL;
 
 cairo_surface_t *surface = NULL;
@@ -360,22 +356,18 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name )
     /* Setup main boxes. */
 #if GTK_MAJOR_VERSION == 2
     mainbox = gtk_hbox_new( TRUE, 10 );
-#else
-    mainbox = gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 10 );
-    gtk_box_set_homogeneous ( GTK_BOX (mainbox), TRUE );
-#endif
-    gtk_container_set_border_width( GTK_CONTAINER (mainbox), 10 );
-    gtk_widget_show( mainbox );
-
-#if GTK_MAJOR_VERSION == 2
     voltbox = gtk_vbox_new( FALSE, 0 );
     tempbox = gtk_vbox_new( FALSE, 0 );
     fanbox = gtk_vbox_new( FALSE, 0 );
 #else
+    mainbox = gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 10 );
+    gtk_box_set_homogeneous ( GTK_BOX (mainbox), TRUE );
     voltbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 );
     tempbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 );
     fanbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 );
 #endif
+    gtk_container_set_border_width( GTK_CONTAINER (mainbox), 10 );
+    gtk_widget_show( mainbox );
 
     /* Create notebook for sensors. */
     noteframe = gtk_frame_new( NULL );
@@ -416,15 +408,14 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name )
                 continue;
 
             featframe = gtk_frame_new( NULL );
-#if GTK_MAJOR_VERSION == 2
-            innerbox = gtk_vbox_new( FALSE, 0 );
-#else
-            innerbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 );
-#endif
             featpbar = gtk_progress_bar_new();
             darea = gtk_drawing_area_new();
 #if GTK_MAJOR_VERSION == 2
+            innerbox = gtk_vbox_new( FALSE, 0 );
+            GdkColor colorWhite = { 0, 0xFFFF, 0xFFFF, 0xFFFF };
             gtk_widget_modify_bg( darea, GTK_STATE_NORMAL, &colorWhite );
+#else
+            innerbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 );
 #endif
 
             gtk_widget_set_size_request( darea, 36, 30 );
