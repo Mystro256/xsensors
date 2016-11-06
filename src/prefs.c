@@ -39,7 +39,6 @@ gint destroy_prefs( GtkWidget *widget, gpointer data )
 
 gint set_tf( GtkWidget *widget, gpointer data )
 {
-    /*TODO*/
     tf = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(widget) );
     return (FALSE);
 }

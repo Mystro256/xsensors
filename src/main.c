@@ -21,6 +21,9 @@
 
 
 #include "main.h"
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
 
 /* getopt stuff */
 extern int      optopt;
@@ -37,6 +40,7 @@ char *strdup(const char *s);
 int tf = FALSE;
 int update_time = 1;
 char *imagefile = NULL;
+const char *home_dir = NULL;
 
 /* Print the help message. */
 int help_msg( void )
@@ -65,6 +69,10 @@ int main( int argc, char **argv )
     FILE *sens_conf_file = NULL;
     char *temp_str = NULL;
 
+    /* Get homedir */
+    if ( ( home_dir = getenv( "HOME" ) ) == NULL )
+        home_dir = getpwuid(getuid())->pw_dir;
+
     /* Process arguements. */
     while ( ( c = getopt( argc, argv, "fhc:i:t:v" ) ) != EOF ) {
         switch (c) {
@@ -91,9 +99,8 @@ int main( int argc, char **argv )
                     fprintf( stderr,
                              "strdup failed! Something is very wrong!\n" );
                 update_time = atoi( temp_str );
-                if ( update_time < 0 ) {
+                if ( update_time < 0 )
                     update_time = 1;
-                }
                 break;
             case 'v':
                 printf( "\nXsensors version %s\n\n", VERSION );
@@ -136,9 +143,8 @@ int main( int argc, char **argv )
     }
 
     /* This will start the GUI. */
-    if ( start_gui( argc, argv ) != SUCCESS ) {
+    if ( start_gui( argc, argv ) != SUCCESS )
         fprintf( stderr, "GUI failed!\n" );
-    }
 
     /* Clean up the sensors library. */
     sensors_cleanup();
