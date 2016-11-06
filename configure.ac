@@ -32,7 +32,7 @@ if [ $foundgtk3 ]; then
 	XSENSORS_LIBS="`pkg-config --libs gtk+-3.0`"
 else
     echo "GTK3 is not installed, checking for GTK2 instead..."
-	AM_PATH_GTK_2_0(2.12.0,,AC_MSG_ERROR([
+	AM_PATH_GTK_2_0(2.6.0,,AC_MSG_ERROR([
 *** GTK+ is required to build xsensors; please make sure you have the GTK+
 *** development headers installed. The latest version of GTK+ is
 *** always available at http://www.gtk.org/.]))
