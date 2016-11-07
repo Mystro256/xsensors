@@ -45,9 +45,9 @@ gint destroy_gui( GtkWidget *widget, gpointer data )
 /* About Dialog */
 gboolean about_callback( GtkWidget *widget, GdkEvent *event )
 {
-    char* authors [3] = {"Kris Kersey",
+    char* authors [4] = {"Kris Kersey",
                          "Jeremy Newton (mystro256)",
-                         "with patches from Nanley Chery"};
+                         "with patches from Nanley Chery",NULL};
 
     gtk_show_about_dialog( GTK_WINDOW (mainwindow),
                            "version", VERSION,
