@@ -29,6 +29,7 @@ extern char *imagefile;
 GtkWidget *mainwindow = NULL;
 
 GdkPixbuf *theme = NULL;
+GdkPixbuf *icon = NULL;
 
 cairo_surface_t *surface = NULL;
 
@@ -47,18 +48,6 @@ gboolean about_callback( GtkWidget *widget, GdkEvent *event )
                          "Jeremy Newton (mystro256)",
                          "with patches from Nanley Chery"};
 
-    GdkPixbuf *logo = theme;
-#if GTK_MAJOR_VERSION == 3
-    /* Import 128x128 logo if it's available */
-    struct stat sbuf;
-    char iconfile [sizeof( DATADIR ) - 1 + sizeof( PACKAGE ) - 1 +
-                            sizeof( "/icons/hicolor/128x128/apps/.png")];
-    sprintf( iconfile, "%s/icons/hicolor/128x128/apps/%s.png",
-             DATADIR, PACKAGE );
-    if ( ( stat( iconfile, &sbuf ) ) == 0 )
-        logo = gdk_pixbuf_new_from_file( iconfile, NULL );
-#endif
-
     gtk_show_about_dialog( GTK_WINDOW (mainwindow),
                            "program-name", PACKAGE,
                            "version", VERSION,
@@ -67,7 +56,7 @@ gboolean about_callback( GtkWidget *widget, GdkEvent *event )
                            "website", "https://github.com/Mystro256/xsensors",
                            "authors", authors,
                            "license", GPL2PLUS,
-                           "logo", logo,
+                           "logo", icon,
                            "title", "About",
                            NULL );
 
@@ -650,6 +639,15 @@ int start_gui( int argc, char **argv )
                                                gdk_pixbuf_get_width(theme),
                                                gdk_pixbuf_get_height(theme),
                                                gdk_pixbuf_get_rowstride(theme));
+
+
+    /* Import 128x128 logo if it's available */
+    char iconfile [sizeof( DATADIR ) - 1 + sizeof( PACKAGE ) - 1 +
+                            sizeof( "/icons/hicolor/128x128/apps/.png")];
+    sprintf( iconfile, "%s/icons/hicolor/128x128/apps/%s.png",
+             DATADIR, PACKAGE );
+    if ( ( stat( iconfile, &sbuf ) ) == 0 )
+        icon = gdk_pixbuf_new_from_file( iconfile, NULL );
 
     /* Create main vertical box */
 #if GTK_MAJOR_VERSION == 2
