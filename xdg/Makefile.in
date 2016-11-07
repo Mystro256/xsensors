@@ -252,9 +252,9 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-pixmapdir = $(datadir)/pixmaps
+pixmapdir = $(datadir)/xsensors
 pixmap_DATA = \
-	xsensors.xpm
+	theme.png
 
 icon48dir = $(datadir)/icons/hicolor/48x48/apps/
 icon48_DATA = \

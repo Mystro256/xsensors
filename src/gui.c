@@ -25,6 +25,7 @@
 extern int tf;
 extern int update_time;
 extern char *imagefile;
+extern char *home_dir;
 
 GtkWidget *mainwindow = NULL;
 
@@ -49,7 +50,6 @@ gboolean about_callback( GtkWidget *widget, GdkEvent *event )
                          "with patches from Nanley Chery"};
 
     gtk_show_about_dialog( GTK_WINDOW (mainwindow),
-                           "program-name", PACKAGE,
                            "version", VERSION,
                            "copyright", COPYRIGHT,
                            "comments", "A GTK interface to lm_sensors",
@@ -579,9 +579,16 @@ int start_gui( int argc, char **argv )
 
     /* Set up the image file used for displaying characters. */
     if ( imagefile == NULL ) {
+
+        /* find max size for string */
+        gsize tempsize = sizeof( DATADIR );
+        if ( tempsize < ( strlen( home_dir ) + sizeof( "/.local/share") ) )
+            tempsize = strlen( home_dir ) + sizeof( "/.local/share");
+        tempsize += sizeof( PACKAGE ) + sizeof( "theme.png" );
+
+        /* alloc some memory for imagefile string */
         if ( ( imagefile = g_malloc( sizeof( char ) *
-                          ( sizeof( DATADIR ) - 1 +
-                            sizeof( "/pixmaps/xsensors.xpm" ) ) ) ) == NULL ) {
+                           ( tempsize ) ) ) == NULL ) {
             fprintf( stderr, "malloc failed!\n" );
             GtkWidget *dialog = gtk_message_dialog_new(
                                                 GTK_WINDOW (mainwindow),
@@ -594,35 +601,38 @@ int start_gui( int argc, char **argv )
             gtk_widget_destroy( dialog );
             exit( 1 );
         }
-        sprintf( imagefile, "%s/pixmaps/xsensors.xpm", DATADIR );
 
-        if ( ( stat( imagefile, &sbuf ) ) != 0 ) {
-            if ( stat( "./xsensors.xpm", &sbuf ) != 0 ) {
+        /* Check home dir first */
+        sprintf( imagefile, "%s/.local/share/%s/theme.png",
+                 home_dir, PACKAGE );
+        if ( stat( imagefile, &sbuf ) != 0 ) {
+
+            /* Check system dir next */
+            sprintf( imagefile, "%s/%s/theme.png", DATADIR, PACKAGE );
+            if ( stat( imagefile, &sbuf ) != 0 ) {
+                fprintf( stderr, "%s: %s/.local/share/%s/theme.png\n",
+                         strerror( errno ) , home_dir, PACKAGE );
                 fprintf( stderr, "%s: %s\n",
                          strerror( errno ), imagefile );
-                fprintf( stderr, "%s: ./xsensors.xpm\n",
-                         strerror( errno ) );
                 fprintf( stderr,
-                       "Image file not found in either location!  Exiting!\n" );
+                      "Image file not found in either location!  Exiting!\n" );
                 GtkWidget *dialog = gtk_message_dialog_new(
                                                 GTK_WINDOW (mainwindow),
                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
                                                 GTK_MESSAGE_ERROR,
                                                 GTK_BUTTONS_CLOSE,
                                                 "Theme Import error!\n\n"
-                                                "Could not find xsensors.xpm\n"
+                                                "Could not find theme.png\n"
                                                 "Please make sure it exists in"
-                                                " the working directory or in:"
-                                                "\n%s/pixmaps", DATADIR );
+                                                " one of these directories:"
+                                                "\n\n%s/%s"
+                                                "\n%s/.local/%s",
+                                                DATADIR, PACKAGE,
+                                                home_dir, PACKAGE );
                 gtk_dialog_run( GTK_DIALOG (dialog) );
                 gtk_widget_destroy( dialog );
                 exit( 1 );
-            } else {
-                theme = gdk_pixbuf_new_from_file( "./xsensors.xpm",
-                                                  NULL );
             }
-        } else {
-            theme = gdk_pixbuf_new_from_file( imagefile, NULL );
         }
     } else {
         if ( stat( imagefile, &sbuf ) != 0 ) {
@@ -630,10 +640,9 @@ int start_gui( int argc, char **argv )
             fprintf( stderr,
                     "Image file not found in specified location!  Exiting!\n" );
             exit( 1 );
-        } else {
-            theme = gdk_pixbuf_new_from_file( imagefile, NULL );
         }
     }
+    theme = gdk_pixbuf_new_from_file( imagefile, NULL );
     surface = cairo_image_surface_create_for_data(gdk_pixbuf_get_pixels(theme),
                                                CAIRO_FORMAT_RGB24,
                                                gdk_pixbuf_get_width(theme),
@@ -641,7 +650,7 @@ int start_gui( int argc, char **argv )
                                                gdk_pixbuf_get_rowstride(theme));
 
 
-    /* Import 128x128 logo if it's available */
+    /* Import 128x128 icon if it's available */
     char iconfile [sizeof( DATADIR ) - 1 + sizeof( PACKAGE ) - 1 +
                             sizeof( "/icons/hicolor/128x128/apps/.png")];
     sprintf( iconfile, "%s/icons/hicolor/128x128/apps/%s.png",

@@ -1,7 +1,7 @@
-pixmapdir = $(datadir)/pixmaps
+pixmapdir = $(datadir)/xsensors
 
 pixmap_DATA =	\
-	xsensors.xpm
+	theme.png
 
 icon48dir = $(datadir)/icons/hicolor/48x48/apps/
 
