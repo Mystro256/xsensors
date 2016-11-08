@@ -167,7 +167,7 @@ gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
 #endif
     gtk_container_add( GTK_CONTAINER (noteframe), hbox );
     gtk_widget_show( hbox );
-    gtk_box_pack_start( GTK_BOX (hbox), vbox, FALSE, FALSE, 10 );
+    gtk_box_pack_start( GTK_BOX (hbox), vbox, FALSE, FALSE, 8 );
     gtk_widget_show( vbox );
 
     gtk_notebook_append_page( GTK_NOTEBOOK (notebook), noteframe, notelabel );
@@ -178,7 +178,7 @@ gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(tmpwidget), tf );
     g_signal_connect( G_OBJECT (tmpwidget), "toggled",
                       G_CALLBACK (set_tf), NULL );
-    gtk_box_pack_start( GTK_BOX (vbox), tmpwidget, FALSE, FALSE, 10 );
+    gtk_box_pack_start( GTK_BOX (vbox), tmpwidget, FALSE, FALSE, 8 );
     gtk_widget_show( tmpwidget );
 
     /* Add checkbox for enabling updates */
@@ -187,7 +187,7 @@ gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(uptmwidget), update_time );
     g_signal_connect( G_OBJECT (uptmwidget), "toggled",
                       G_CALLBACK (toggle_updates), NULL );
-    gtk_box_pack_start( GTK_BOX (vbox), uptmwidget, FALSE, FALSE, 10 );
+    gtk_box_pack_start( GTK_BOX (vbox), uptmwidget, FALSE, FALSE, 8 );
     gtk_widget_show( uptmwidget );
 
     /* Add spinbutton for update time */
@@ -196,7 +196,7 @@ gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
 #else
     hbox = gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 0 );
 #endif
-    gtk_box_pack_start( GTK_BOX (vbox), hbox, FALSE, FALSE, 10 );
+    gtk_box_pack_start( GTK_BOX (vbox), hbox, FALSE, FALSE, 8 );
     gtk_widget_show( hbox );
 
     tmpwidget = gtk_label_new( "Update time in number of seconds: " );
@@ -214,9 +214,9 @@ gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
     /* Warning for updates requiring restart */
     warnwidget = gtk_label_new( NULL );
     gtk_label_set_markup( GTK_LABEL(warnwidget),
-                          "<span fgcolor='#FF0000'>Some preferences require "
-                          "restarting to apply</span>" );
-    gtk_box_pack_start( GTK_BOX (vbox), warnwidget, FALSE, FALSE, 10 );
+                          "<span fgcolor='#FF0000'>Restart application for "
+                          "change to take effect</span>" );
+    gtk_box_pack_start( GTK_BOX (vbox), warnwidget, FALSE, FALSE, 8 );
 
     /* Create page for theme prefs. */
     noteframe = gtk_frame_new( NULL );
@@ -234,7 +234,7 @@ gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
 #endif
     gtk_container_add( GTK_CONTAINER (noteframe), hbox );
     gtk_widget_show( hbox );
-    gtk_box_pack_start( GTK_BOX (hbox), vbox, FALSE, FALSE, 10 );
+    gtk_box_pack_start( GTK_BOX (hbox), vbox, FALSE, FALSE, 8 );
     gtk_widget_show( vbox );
 
     gtk_notebook_append_page( GTK_NOTEBOOK (notebook), noteframe, notelabel );
