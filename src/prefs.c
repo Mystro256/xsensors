@@ -46,7 +46,8 @@ gint destroy_prefs( GtkWidget *widget, gpointer data )
             fprintf( stderr, "Unable to create configuration!\n"
                      "Failed to create directory %s\n"
                      "Error Number: %d", temp_str, errno );
-            GtkWidget *dialog = gtk_message_dialog_new( GTK_WINDOW (prefwindow),
+            GtkWidget *dialog = gtk_message_dialog_new(
+                                          GTK_WINDOW (prefwindow),
                                           GTK_DIALOG_DESTROY_WITH_PARENT,
                                           GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
                                           "Unable to create configuration!\n\n"
@@ -112,10 +113,11 @@ gint toggle_updates( GtkWidget *widget, gpointer data )
 {
     int state = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(uptmwidget) );
     int value = gtk_spin_button_get_value_as_int(
-                                               GTK_SPIN_BUTTON( timewidget ) );
+                                               GTK_SPIN_BUTTON(timewidget) );
     if ( state ) {
         if ( update_time)
-            gtk_spin_button_set_value( GTK_SPIN_BUTTON(timewidget), update_time);
+            gtk_spin_button_set_value( GTK_SPIN_BUTTON(timewidget),
+                                       update_time );
         else
             gtk_spin_button_set_value( GTK_SPIN_BUTTON(timewidget), 1);
         gtk_widget_set_sensitive( timewidget, TRUE );
@@ -180,7 +182,8 @@ gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
     gtk_widget_show( tmpwidget );
 
     /* Add checkbox for enabling updates */
-    uptmwidget = gtk_check_button_new_with_label( "Continually update values" );
+    uptmwidget = gtk_check_button_new_with_label(
+                                                "Continually update values" );
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(uptmwidget), update_time );
     g_signal_connect( G_OBJECT (uptmwidget), "toggled",
                       G_CALLBACK (toggle_updates), NULL );

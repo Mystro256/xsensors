@@ -638,16 +638,17 @@ int start_gui( int argc, char **argv )
         if ( stat( imagefile, &sbuf ) != 0 ) {
             fprintf( stderr, "%s: %s\n", strerror( errno ), imagefile );
             fprintf( stderr,
-                    "Image file not found in specified location!  Exiting!\n" );
+                    "Image file not found in specified location! Exiting!\n" );
             exit( 1 );
         }
     }
     theme = gdk_pixbuf_new_from_file( imagefile, NULL );
-    surface = cairo_image_surface_create_for_data(gdk_pixbuf_get_pixels(theme),
-                                               CAIRO_FORMAT_RGB24,
-                                               gdk_pixbuf_get_width(theme),
-                                               gdk_pixbuf_get_height(theme),
-                                               gdk_pixbuf_get_rowstride(theme));
+    surface = cairo_image_surface_create_for_data(
+                                             gdk_pixbuf_get_pixels(theme),
+                                             CAIRO_FORMAT_RGB24,
+                                             gdk_pixbuf_get_width(theme),
+                                             gdk_pixbuf_get_height(theme),
+                                             gdk_pixbuf_get_rowstride(theme) );
 
 
     /* Import 128x128 icon if it's available */
