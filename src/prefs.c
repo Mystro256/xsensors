@@ -153,7 +153,8 @@ gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
     gtk_widget_show( tmpwidget );
 
     timewidget = gtk_spin_button_new_with_range( 0, ((guint)-1)/1000, 1 );
-    gtk_spin_button_set_value( GTK_SPIN_BUTTON(timewidget), update_time);
+    gtk_spin_button_set_value( GTK_SPIN_BUTTON(timewidget), update_time );
+    gtk_widget_set_sensitive( timewidget, update_time );
     g_signal_connect( G_OBJECT (timewidget), "changed",
                       G_CALLBACK (check_update_time), NULL );
     gtk_box_pack_start( GTK_BOX (hbox), timewidget, FALSE, FALSE, 0 );
