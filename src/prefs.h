@@ -20,6 +20,7 @@
 */
 
 #include <gdk/gdk.h>
+#include <sys/stat.h>
 
 /* Prototypes */
 gint destroy_prefs( GtkWidget *, gpointer );

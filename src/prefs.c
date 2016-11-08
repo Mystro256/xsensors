@@ -21,10 +21,12 @@
 
 #include "main.h"
 #include "prefs.h"
+
 extern int tf;
 extern int update_time;
 extern GdkPixbuf *theme;
 extern GtkWidget *mainwindow;
+extern char *home_dir;
 
 GtkWidget *prefwindow = NULL;
 GtkWidget *uptmwidget = NULL;
@@ -33,7 +35,53 @@ GtkWidget *warnwidget = NULL;
 
 gint destroy_prefs( GtkWidget *widget, gpointer data )
 {
-    /*TODO Save preferences to a file*/
+    struct stat sbuf;
+    FILE * fileconf;
+    char temp_str[ 100 ];
+
+    sprintf( temp_str, "%s/.local/share/%s/",
+             home_dir, PACKAGE );
+    if ( stat( temp_str, &sbuf ) != 0 ) {
+        if ( mkdir( temp_str, 0700 ) != 0 ) {
+            fprintf( stderr, "Unable to create configuration!\n"
+                     "Failed to create directory %s\n"
+                     "Error Number: %d", temp_str, errno );
+            GtkWidget *dialog = gtk_message_dialog_new( GTK_WINDOW (prefwindow),
+                                          GTK_DIALOG_DESTROY_WITH_PARENT,
+                                          GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
+                                          "Unable to create configuration!\n\n"
+                                          "Failed to create directory %s\n"
+                                          "Error Number: %d",
+                                          temp_str, errno );
+            gtk_dialog_run( GTK_DIALOG (dialog) );
+            gtk_widget_destroy( dialog );
+            return (FALSE);
+        }
+    }
+
+    strcat( temp_str, "custom.ini" );
+    fileconf = fopen( temp_str, "w" );
+    if ( fileconf == NULL ) {
+        fprintf( stderr, "Could not save preferences!\n"
+                 "Failed to save preferences to %s\n"
+                 , temp_str );
+        GtkWidget *dialog = gtk_message_dialog_new( GTK_WINDOW (prefwindow),
+                                          GTK_DIALOG_DESTROY_WITH_PARENT,
+                                          GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
+                                          "Could not save preferences!\n\n"
+                                          "Failed to save preferences to %s\n"
+                                          , temp_str );
+        gtk_dialog_run( GTK_DIALOG (dialog) );
+        gtk_widget_destroy( dialog );
+        return (FALSE);
+    }
+
+    fprintf( fileconf, "[%s]\n", PACKAGE );
+    fprintf( fileconf, "use_fahrenheit=%d\n", tf );
+    fprintf( fileconf, "update_time=%d\n",
+             gtk_spin_button_get_value_as_int(
+                GTK_SPIN_BUTTON( timewidget ) ) );
+
     return (FALSE);
 }
 

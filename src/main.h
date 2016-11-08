@@ -37,3 +37,4 @@ enum { SUCCESS, FAILURE };
 
 /* Prototypes */
 int help_msg( void );
+void read_config( void );

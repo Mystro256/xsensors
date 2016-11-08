@@ -61,6 +61,41 @@ int help_msg( void )
     return SUCCESS;
 }
 
+void read_config( void )
+{
+    FILE * fileconf;
+    char temp_str[ 100 ];
+    sprintf( temp_str, "%s/.local/share/%s/custom.ini",
+             home_dir, PACKAGE );
+
+    fileconf = fopen( temp_str, "r" );
+    if ( fileconf == NULL )
+        return;
+
+    /*
+     Possible config values:
+        use_fahrenheit=0 or 1
+        update_time=(uint)
+    */
+
+    while ( fgets( temp_str, 100, fileconf ) != NULL ) {
+        if ( temp_str[0] != '[' && temp_str[0] != ';' ) {
+            if ( strlen( temp_str ) > 15 &&
+                    strncmp( temp_str, "use_fahrenheit=", 15 ) == 0 ) {
+                tf = ( temp_str[15] != '0' );
+            } else if ( strlen( temp_str ) > 12 &&
+                    strncmp( temp_str, "update_time=", 12 ) == 0 ) {
+                strcpy ( temp_str, &temp_str[12] );
+                update_time = atoi( temp_str );
+                if ( update_time < 0 )
+                    update_time = 1;
+            }
+        }
+    }
+
+    fclose(fileconf);
+}
+
 /* Main. */
 int main( int argc, char **argv )
 {
@@ -72,6 +107,8 @@ int main( int argc, char **argv )
     /* Get homedir */
     if ( ( home_dir = getenv( "HOME" ) ) == NULL )
         home_dir = getpwuid(getuid())->pw_dir;
+
+    read_config();
 
     /* Process arguements. */
     while ( ( c = getopt( argc, argv, "fhc:i:t:v" ) ) != EOF ) {
