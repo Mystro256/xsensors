@@ -24,6 +24,11 @@
 
 /* Prototypes */
 gint destroy_prefs( GtkWidget *, gpointer );
+#if GTK_MAJOR_VERSION == 2
+gboolean draw_preview( GtkWidget *, GdkEventExpose *, gpointer );
+#else
+gboolean draw_preview( GtkWidget *, cairo_t *, gpointer );
+#endif
 gboolean prefs_callback( GtkWidget *, GdkEvent * );
 gint set_tf( GtkWidget *, gpointer );
 gint toggle_updates( GtkWidget *, gpointer );

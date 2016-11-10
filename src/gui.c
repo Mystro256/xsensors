@@ -118,7 +118,7 @@ static void draw_digits( GtkWidget *widget, cairo_t *cr, const gchar *digits,
 
 /* Event function to draw graphical numbers. */
 #if GTK_MAJOR_VERSION == 2
-gboolean expose_event_callback( GtkWidget *widget, GdkEventExpose *event,
+gboolean draw_callback( GtkWidget *widget, GdkEventExpose *event,
                                 gpointer data )
 #else
 gboolean draw_callback( GtkWidget *widget, cairo_t *cr, gpointer data )
@@ -421,11 +421,10 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name )
             /* Connect the event signal handler to redraw the numbers. */
 #if GTK_MAJOR_VERSION == 2
             g_signal_connect( G_OBJECT(darea), "expose_event",
-                              G_CALLBACK(expose_event_callback), current );
 #else
             g_signal_connect( G_OBJECT(darea), "draw",
-                              G_CALLBACK(draw_callback), current );
 #endif
+                              G_CALLBACK(draw_callback), current );
 
             feattext = sensors_get_label( name, feature );
 

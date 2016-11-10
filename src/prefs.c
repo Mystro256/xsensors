@@ -27,11 +27,44 @@ extern int update_time;
 extern GdkPixbuf *theme;
 extern GtkWidget *mainwindow;
 extern char *home_dir;
+extern cairo_surface_t *surface;
 
 GtkWidget *prefwindow = NULL;
 GtkWidget *uptmwidget = NULL;
 GtkWidget *timewidget = NULL;
 GtkWidget *warnwidget = NULL;
+
+/* Event function to draw theme preview. */
+#if GTK_MAJOR_VERSION == 2
+gboolean draw_preview( GtkWidget *widget, GdkEventExpose *event,
+                       gpointer data )
+#else
+gboolean draw_preview( GtkWidget *widget, cairo_t *cr, gpointer data )
+#endif
+{
+    int i;
+
+#if GTK_MAJOR_VERSION == 2
+    cairo_t *cr = gdk_cairo_create( gtk_widget_get_window( widget ) );
+    gdk_window_clear_area( widget->window, event->area.x, event->area.y,
+                           event->area.width, event->area.height );
+#endif
+
+    for ( i = 0; i < 11; i++ ) {
+        int x = i * 18;
+        int pos = 180 - x;
+        cairo_set_source_surface( cr, surface, pos - x, 0 );
+        cairo_rectangle( cr, pos, 0, 18, 30 );
+        cairo_fill( cr );
+        cairo_set_source_surface( cr, surface, 0, 0 );
+        cairo_rectangle( cr, x, 30, 18, 30 );
+        cairo_fill( cr );
+    }
+#if GTK_MAJOR_VERSION == 2
+    cairo_destroy( cr );
+#endif
+    return TRUE;
+}
 
 gint destroy_prefs( GtkWidget *widget, gpointer data )
 {
@@ -238,6 +271,56 @@ gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
     gtk_widget_show( vbox );
 
     gtk_notebook_append_page( GTK_NOTEBOOK (notebook), noteframe, notelabel );
+
+    /* Warning for updates requiring restart */
+    tmpwidget = gtk_label_new( "Preview theme:" );
+    gtk_box_pack_start( GTK_BOX (vbox), tmpwidget, FALSE, FALSE, 8 );
+    gtk_widget_show( tmpwidget );
+
+    /* Theme Preview */
+    tmpwidget = gtk_drawing_area_new();
+    gtk_widget_set_size_request( tmpwidget, 198, 60 );
+#if GTK_MAJOR_VERSION == 2
+    GdkColor colorWhite = { 0, 0xFFFF, 0xFFFF, 0xFFFF };
+    gtk_widget_modify_bg( tmpwidget, GTK_STATE_NORMAL, &colorWhite );
+    g_signal_connect( G_OBJECT(tmpwidget), "expose_event",
+#else
+    g_signal_connect( G_OBJECT(tmpwidget), "draw",
+#endif
+                              G_CALLBACK(draw_preview), NULL );
+    gtk_box_pack_start( GTK_BOX (vbox), tmpwidget, TRUE, TRUE, 8 );
+    gtk_widget_show( tmpwidget );
+
+    /* Change theme */
+    tmpwidget = gtk_button_new_with_label( "Select theme" );
+    gtk_box_pack_start( GTK_BOX (vbox), tmpwidget, FALSE, FALSE, 8 );
+    gtk_widget_show( tmpwidget );
+
+    /* Use default theme */
+    tmpwidget = gtk_button_new_with_label( "Use default theme" );
+    gtk_box_pack_start( GTK_BOX (vbox), tmpwidget, FALSE, FALSE, 8 );
+    gtk_widget_show( tmpwidget );
+
+    /* Add Cancel/Apply buttons */
+#if GTK_MAJOR_VERSION == 2
+    hbox = gtk_vbox_new( FALSE, 0 );
+#else
+    hbox = gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 0 );
+#endif
+    gtk_box_pack_start( GTK_BOX (vbox), hbox, FALSE, FALSE, 8 );
+    gtk_widget_show( hbox );
+
+    tmpwidget = gtk_button_new_with_label( "Cancel" );
+    gtk_box_pack_start( GTK_BOX (hbox), tmpwidget, FALSE, FALSE, 0 );
+    gtk_widget_show( tmpwidget );
+
+    tmpwidget = gtk_label_new( NULL );
+    gtk_box_pack_start( GTK_BOX (hbox), tmpwidget, TRUE, TRUE, 32 );
+    gtk_widget_show( tmpwidget );
+
+    tmpwidget = gtk_button_new_with_label( "Apply theme" );
+    gtk_box_pack_end( GTK_BOX (hbox), tmpwidget, FALSE, FALSE, 0 );
+    gtk_widget_show( tmpwidget );
 
     /* Setup the main components. */
     gtk_widget_show( prefwindow );

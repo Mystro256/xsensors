@@ -47,7 +47,7 @@ enum { VOLT, TEMP, FAN };
 /* Prototypes */
 gint destroy_gui( GtkWidget *, gpointer );
 #if GTK_MAJOR_VERSION == 2
-gboolean expose_event_callback( GtkWidget *, GdkEventExpose *, gpointer );
+gboolean draw_callback( GtkWidget *, GdkEventExpose *, gpointer );
 #else
 gboolean draw_callback( GtkWidget *, cairo_t *, gpointer );
 #endif
