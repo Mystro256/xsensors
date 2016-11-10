@@ -437,7 +437,7 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name )
                 if ( ( new_feattext = realloc( feattext,
                                 ( strlen( feattext ) + 2 ) *
                                 sizeof( char ) ) ) == NULL ) {
-                    fprintf( stderr, "realloc failed in add_sensor_tab()!\n" );
+                    fputs( "realloc failed in add_sensor_tab()!\n", stderr );
                     free( feattext );
                     GtkWidget *dialog = gtk_message_dialog_new(
                                                 GTK_WINDOW (mainwindow),
@@ -470,8 +470,7 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name )
                         usedfan++;
                         break;
                     default:
-                        fprintf( stderr,
-                                 "Type not recognized, not packing.\n" );
+                        fputs( "Type not recognized, not packing.\n", stderr );
                         break;
                 }
                 gtk_box_pack_start( GTK_BOX (currbox), featframe,
@@ -588,7 +587,7 @@ int start_gui( int argc, char **argv )
         /* alloc some memory for imagefile string */
         if ( ( imagefile = g_malloc( sizeof( char ) *
                            ( tempsize ) ) ) == NULL ) {
-            fprintf( stderr, "malloc failed!\n" );
+            fputs( "malloc failed!\n", stderr );
             GtkWidget *dialog = gtk_message_dialog_new(
                                                 GTK_WINDOW (mainwindow),
                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -613,8 +612,8 @@ int start_gui( int argc, char **argv )
                          strerror( errno ) , home_dir, PACKAGE );
                 fprintf( stderr, "%s: %s\n",
                          strerror( errno ), imagefile );
-                fprintf( stderr,
-                      "Image file not found in either location!  Exiting!\n" );
+                fputs( "Image file not found in either location!  Exiting!\n",
+                       stderr );
                 GtkWidget *dialog = gtk_message_dialog_new(
                                                 GTK_WINDOW (mainwindow),
                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -636,8 +635,8 @@ int start_gui( int argc, char **argv )
     } else {
         if ( stat( imagefile, &sbuf ) != 0 ) {
             fprintf( stderr, "%s: %s\n", strerror( errno ), imagefile );
-            fprintf( stderr,
-                    "Image file not found in specified location! Exiting!\n" );
+            fputs( "Image file not found in specified location! Exiting!\n",
+                   stderr );
             exit( 1 );
         }
     }

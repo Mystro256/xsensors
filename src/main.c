@@ -102,20 +102,20 @@ void read_config( void )
                 if ( temp_str[15] == '1' )
                     tf = TRUE;
                 else if ( temp_str[15] != '0' )
-                    fprintf( stderr, "Warning: invalid custom.ini entry!\n"
-                                     "use_fahrenheit can only "
-                                     "have a value of 0 or 1\n" );
+                    fputs( "Warning: invalid custom.ini entry!\n"
+                           "use_fahrenheit can only "
+                           "have a value of 0 or 1.\n", stderr );
             } else if ( strlen( temp_str ) > 12 &&
                     strncmp( temp_str, "update_time=", 12 ) == 0 ) {
                 switch ( get_updatetime( &temp_str[12] ) ) {
                     case UPDATE_TIME_NAN :
-                        fprintf( stderr, "Warning: invalid custom.ini entry!\n"
-                                         "update_time does not appear to be "
-                                         "a valid number\n" ); break;
+                        fputs( "Warning: invalid custom.ini entry!\n"
+                               "update_time does not appear to be "
+                               "a valid number.\n", stderr ); break;
                     case UPDATE_TIME_NEG :
-                        fprintf( stderr, "Warning: invalid custom.ini entry!\n"
-                                         "update_time should be a positive "
-                                         "number.\n" ); break;
+                        fputs("Warning: invalid custom.ini entry!\n"
+                              "update_time should be a positive "
+                              "number.\n", stderr ); break;
                 }
             }
         }
@@ -150,21 +150,21 @@ int main( int argc, char **argv )
                     return EXIT_FAILURE;
             case 'c':
                 if ( ( sens_config = strdup( optarg ) ) == NULL )
-                    fprintf( stderr,
-                             "strdup failed! Something is very wrong!\n" );
+                    fputs( "strdup failed! Something is very wrong!\n",
+                           stderr );
                 break;
             case 'i':
                 if ( ( imagefile = strdup( optarg ) ) == NULL )
-                    fprintf( stderr,
-                             "strdup failed! Something is very wrong!\n" );
+                    fputs( "strdup failed! Something is very wrong!\n",
+                           stderr );
                 break;
             case 't':
                 if ( ( temp_str =  strdup( optarg ) ) == NULL )
-                    fprintf( stderr,
-                             "strdup failed! Something is very wrong!\n" );
+                    fputs( "strdup failed! Something is very wrong!\n",
+                           stderr );
                 if ( get_updatetime( temp_str ) == UPDATE_TIME_NAN )
-                    fprintf( stderr, "Warning!!\nSpecified update time does "
-                                     "not appear to be a valid number\n" );
+                    fputs( "Warning!!\nSpecified update time does "
+                           "not appear to be a valid number\n", stderr );
                 break;
             case 'v':
                 printf( "\nXsensors version %s\n\n", VERSION );
@@ -172,7 +172,7 @@ int main( int argc, char **argv )
             case '?':
                 return EXIT_FAILURE;
             default:
-                fprintf( stderr, "Something has gone wrong!\n" );
+                fputs( "Something has gone wrong!\n", stderr );
                 return EXIT_FAILURE;
         }
     }
@@ -208,7 +208,7 @@ int main( int argc, char **argv )
 
     /* This will start the GUI. */
     if ( start_gui( argc, argv ) != SUCCESS )
-        fprintf( stderr, "GUI failed!\n" );
+        fputs( "GUI failed!\n", stderr );
 
     /* Clean up the sensors library. */
     sensors_cleanup();
@@ -220,8 +220,7 @@ int main( int argc, char **argv )
 
     /* Close the config file. */
     if ( sens_conf_file && fclose( sens_conf_file ) != SUCCESS ) {
-        fprintf( stderr,
-                 "Something has gone wrong closing the config file!\n" );
+        fputs( "Something has gone wrong closing the config file!\n", stderr );
         return EXIT_FAILURE;
     }
 
