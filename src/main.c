@@ -82,7 +82,12 @@ void read_config( void )
         if ( temp_str[0] != '[' && temp_str[0] != ';' ) {
             if ( strlen( temp_str ) > 15 &&
                     strncmp( temp_str, "use_fahrenheit=", 15 ) == 0 ) {
-                tf = ( temp_str[15] != '0' );
+                if ( temp_str[15] == '1' )
+                    tf = TRUE;
+                else if ( temp_str[15] != '0' )
+                    fprintf( stderr, "Warning: invalid custom.ini entry!\n"
+                                     "use_fahrenheit can only "
+                                     " have a value of 0 or 1\n" );
             } else if ( strlen( temp_str ) > 12 &&
                     strncmp( temp_str, "update_time=", 12 ) == 0 ) {
                 strcpy ( temp_str, &temp_str[12] );
