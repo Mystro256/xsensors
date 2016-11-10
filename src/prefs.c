@@ -111,7 +111,10 @@ gint destroy_prefs( GtkWidget *widget, gpointer data )
     }
 
     fprintf( fileconf, "[%s]\n", PACKAGE );
+    fputs( "; Display all temperatures in Fahrenheit (0 or 1):\n", fileconf );
     fprintf( fileconf, "use_fahrenheit=%d\n", tf );
+    fputs( "; Specify the update time in number of seconds "
+           "(eg. 0, 1, 2), 0 for no update:\n", fileconf );
     fprintf( fileconf, "update_time=%d\n",
              gtk_spin_button_get_value_as_int(
                 GTK_SPIN_BUTTON( timewidget ) ) );
