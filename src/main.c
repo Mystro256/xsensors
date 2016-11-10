@@ -42,25 +42,21 @@ int update_time = 1;
 char *imagefile = NULL;
 const char *home_dir = NULL;
 
-#define UPDATE_TIME_SUCC 0
-#define UPDATE_TIME_NAN -1
-#define UPDATE_TIME_NEG -2
+enum { UPDATE_TIME_SUCCESS, UPDATE_TIME_NAN, UPDATE_TIME_NEG };
 
 static int get_updatetime( const char temp_str * ) {
     if ( temp_str[0] == '0' && temp_str[1] < '0' ) {
         update_time = 0;
     } else {
         int temp = atoi( temp_str );
-        if ( ret == 0 ) {
+        if ( ret == 0 )
             return UPDATE_TIME_NAN;
-        } else if ( update_time < 0 ) {
+        else if ( update_time < 0 )
             return UPDATE_TIME_NEG;
-        } else {
-            update_time = temp;
-        }
+        update_time = temp;
     }
 
-    return UPDATE_TIME_SUCC;
+    return UPDATE_TIME_SUCCESS;
 }
 
 /* Print the help message. */
@@ -124,8 +120,7 @@ void read_config( void )
             }
         }
     }
-
-    fclose(fileconf);
+    fclose( fileconf );
 }
 
 /* Main. */
@@ -184,7 +179,7 @@ int main( int argc, char **argv )
 
     /* Open the config file if specified. */
     if ( sens_config &&
-        ( sens_conf_file = fopen( sens_config, "r" ) ) == NULL ) {
+            ( sens_conf_file = fopen( sens_config, "r" ) ) == NULL ) {
         fprintf( stderr, "Error opening config file: %s\n"
                  , sens_config );
         return EXIT_FAILURE;
