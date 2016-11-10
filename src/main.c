@@ -42,6 +42,27 @@ int update_time = 1;
 char *imagefile = NULL;
 const char *home_dir = NULL;
 
+#define UPDATE_TIME_SUCC 0
+#define UPDATE_TIME_NAN -1
+#define UPDATE_TIME_NEG -2
+
+static int get_updatetime( const char temp_str * ) {
+    if ( temp_str[0] == '0' && temp_str[1] < '0' ) {
+        update_time = 0;
+    } else {
+        int temp = atoi( temp_str );
+        if ( ret == 0 ) {
+            return UPDATE_TIME_NAN;
+        } else if ( update_time < 0 ) {
+            return UPDATE_TIME_NEG;
+        } else {
+            update_time = temp;
+        }
+    }
+
+    return UPDATE_TIME_SUCC;
+}
+
 /* Print the help message. */
 int help_msg( void )
 {
@@ -87,13 +108,19 @@ void read_config( void )
                 else if ( temp_str[15] != '0' )
                     fprintf( stderr, "Warning: invalid custom.ini entry!\n"
                                      "use_fahrenheit can only "
-                                     " have a value of 0 or 1\n" );
+                                     "have a value of 0 or 1\n" );
             } else if ( strlen( temp_str ) > 12 &&
                     strncmp( temp_str, "update_time=", 12 ) == 0 ) {
-                strcpy ( temp_str, &temp_str[12] );
-                update_time = atoi( temp_str );
-                if ( update_time < 0 )
-                    update_time = 1;
+                switch ( get_updatetime( &temp_str[12] ) ) {
+                    case UPDATE_TIME_NAN :
+                        fprintf( stderr, "Warning: invalid custom.ini entry!\n"
+                                         "update_time does not appear to be "
+                                         "a valid number\n" ); break;
+                    case UPDATE_TIME_NEG :
+                        fprintf( stderr, "Warning: invalid custom.ini entry!\n"
+                                         "update_time should be a positive "
+                                         "number.\n" ); break;
+                }
             }
         }
     }
@@ -140,9 +167,9 @@ int main( int argc, char **argv )
                 if ( ( temp_str =  strdup( optarg ) ) == NULL )
                     fprintf( stderr,
                              "strdup failed! Something is very wrong!\n" );
-                update_time = atoi( temp_str );
-                if ( update_time < 0 )
-                    update_time = 1;
+                if ( get_updatetime( temp_str ) == UPDATE_TIME_NAN )
+                    fprintf( stderr, "Warning!!\nSpecified update time does "
+                                     "not appear to be a valid number\n" );
                 break;
             case 'v':
                 printf( "\nXsensors version %s\n\n", VERSION );
