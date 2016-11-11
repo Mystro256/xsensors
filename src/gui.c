@@ -32,8 +32,6 @@ GtkWidget *mainwindow = NULL;
 GdkPixbuf *theme = NULL;
 GdkPixbuf *icon = NULL;
 
-cairo_surface_t *surface = NULL;
-
 /* Destroy the main window. */
 gint destroy_gui( GtkWidget *widget, gpointer data )
 {
@@ -128,7 +126,7 @@ static void draw_digits( GtkWidget *widget, cairo_t *cr, const gchar *digits,
 
     while ( *digit ) {
         get_pm_location( *digit, &x, &y, &w );
-        cairo_set_source_surface( cr, surface, pos - x, 0 - ( y + highLow ) );
+        gdk_cairo_set_source_pixbuf( cr, theme, pos - x, 0 - ( y + highLow ) );
         cairo_rectangle( cr, pos, 0, w, 30 );
         cairo_fill( cr );
         pos += w;
@@ -173,7 +171,7 @@ gboolean draw_callback( GtkWidget *widget, cairo_t *cr, gpointer data )
                 draw_digits( widget, cr, result, highLow );
 
             /* Display RPM */
-            cairo_set_source_surface ( cr, surface, 90 - 0,
+            gdk_cairo_set_source_pixbuf( cr, theme, 90 - 0,
                                        0 - ( 120 + highLow ) );
             cairo_rectangle( cr, 90, 0, 57, 30 );
             break;
@@ -195,7 +193,7 @@ gboolean draw_callback( GtkWidget *widget, cairo_t *cr, gpointer data )
                 x = 0;
             else
                 x = 57;
-            cairo_set_source_surface ( cr, surface, 96 - x,
+            gdk_cairo_set_source_pixbuf( cr, theme, 96 - x,
                                        0 - ( 60 + highLow ) );
             cairo_rectangle( cr, 96, 0, 57, 30 );
 
@@ -210,8 +208,8 @@ gboolean draw_callback( GtkWidget *widget, cairo_t *cr, gpointer data )
                 draw_digits( widget, cr, result, highLow );
 
             /* Display V */
-            cairo_set_source_surface ( cr, surface, 96 - 114,
-                                       0 - ( 60 + highLow ) );
+            gdk_cairo_set_source_pixbuf( cr, theme, 96 - 114,
+                                         0 - ( 60 + highLow ) );
             cairo_rectangle( cr, 96, 0, 57, 30 );
             break;
         default:
@@ -661,13 +659,6 @@ int start_gui( int argc, char **argv )
         }
     }
     theme = gdk_pixbuf_new_from_file( imagefile, NULL );
-    surface = cairo_image_surface_create_for_data(
-                                             gdk_pixbuf_get_pixels(theme),
-                                             CAIRO_FORMAT_RGB24,
-                                             gdk_pixbuf_get_width(theme),
-                                             gdk_pixbuf_get_height(theme),
-                                             gdk_pixbuf_get_rowstride(theme) );
-
 
     /* Import 128x128 icon if it's available */
     char iconfile [sizeof( DATADIR ) - 1 + sizeof( PACKAGE ) - 1 +

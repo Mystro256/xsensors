@@ -63,8 +63,8 @@ gboolean draw_preview( GtkWidget *widget, cairo_t *cr, gpointer data )
                 posx = 0; posy += 30; break;
             default:
                 get_pm_location( *digit, &x, &y, &w );
-                cairo_set_source_surface( cr, surface, posx - x,
-                                          posy -( y + highLow ) );
+                gdk_cairo_set_source_pixbuf( cr, theme, posx - x,
+                                             posy -( y + highLow ) );
                 cairo_rectangle( cr, posx, posy, w, 30 );
                 cairo_fill( cr );
                 posx += w;
