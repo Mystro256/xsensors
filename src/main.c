@@ -44,14 +44,14 @@ const char *home_dir = NULL;
 
 enum { UPDATE_TIME_SUCCESS, UPDATE_TIME_NAN, UPDATE_TIME_NEG };
 
-static int get_updatetime( const char temp_str * ) {
+static int get_updatetime( const char * temp_str ) {
     if ( temp_str[0] == '0' && temp_str[1] < '0' ) {
         update_time = 0;
     } else {
         int temp = atoi( temp_str );
-        if ( ret == 0 )
+        if ( temp == 0 )
             return UPDATE_TIME_NAN;
-        else if ( update_time < 0 )
+        else if ( temp < 0 )
             return UPDATE_TIME_NEG;
         update_time = temp;
     }
