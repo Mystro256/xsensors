@@ -56,4 +56,5 @@ gint free_llist( updates * );
 gint update_sensor_data( gpointer );
 gint start_timer( GtkWidget *, gpointer );
 updates *add_sensor_tab( GtkWidget *, const sensors_chip_name * );
+void get_pm_location( gchar, int *, int *, int * );
 int start_gui( int, char ** );

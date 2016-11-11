@@ -64,7 +64,7 @@ gboolean about_callback( GtkWidget *widget, GdkEvent *event )
 }
 
 /* Get the position and width of a character */
-static void get_pm_location( gchar curInt, int *x, int *y, int *w )
+void get_pm_location( gchar curInt, int *x, int *y, int *w )
 {
     switch ( curInt ) {
         case '0':
@@ -97,6 +97,26 @@ static void get_pm_location( gchar curInt, int *x, int *y, int *w )
             *y = 60;
             *w = 6;
             break;
+        case 'R':
+            *x = 0;
+            *y = 120;
+            *w = 57;
+            break;
+        case 'V':
+            *x = 114;
+            *y = 60;
+            *w = 57;
+            break;
+        case 'C':
+            *x = 0;
+            *y = 60;
+            *w = 57;
+            break;
+        case 'F':
+            *x = 57;
+            *y = 60;
+            *w = 57;
+            break;
     }
 }
 
@@ -108,7 +128,7 @@ static void draw_digits( GtkWidget *widget, cairo_t *cr, const gchar *digits,
 
     while ( *digit ) {
         get_pm_location( *digit, &x, &y, &w );
-        cairo_set_source_surface ( cr, surface, pos - x, 0 - ( y + highLow ) );
+        cairo_set_source_surface( cr, surface, pos - x, 0 - ( y + highLow ) );
         cairo_rectangle( cr, pos, 0, w, 30 );
         cairo_fill( cr );
         pos += w;

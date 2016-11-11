@@ -42,23 +42,34 @@ gboolean draw_preview( GtkWidget *widget, GdkEventExpose *event,
 gboolean draw_preview( GtkWidget *widget, cairo_t *cr, gpointer data )
 #endif
 {
-    int i;
-
 #if GTK_MAJOR_VERSION == 2
     cairo_t *cr = gdk_cairo_create( gtk_widget_get_window( widget ) );
     gdk_window_clear_area( widget->window, event->area.x, event->area.y,
                            event->area.width, event->area.height );
 #endif
 
-    for ( i = 0; i < 11; i++ ) {
-        int x = i * 18;
-        int pos = 180 - x;
-        cairo_set_source_surface( cr, surface, pos - x, 0 );
-        cairo_rectangle( cr, pos, 0, 18, 30 );
-        cairo_fill( cr );
-        cairo_set_source_surface( cr, surface, 0, 0 );
-        cairo_rectangle( cr, x, 30, 18, 30 );
-        cairo_fill( cr );
+    const gchar digits[] = "3.40V*28.7C*83.6F*\n"
+                           "3.40V*28.7C*83.6F*\n"
+                           "591R *591R * -* -";
+    const gchar *digit = digits;
+    int highLow = 0;
+    int posx = 0, posy = 0, x = 0, y = 0, w = 0;
+
+    while ( *digit ) {
+        switch ( *digit ) {
+            case '*':
+                highLow = highLow ? 0 : 30; break;
+            case '\n':
+                posx = 0; posy += 30; break;
+            default:
+                get_pm_location( *digit, &x, &y, &w );
+                cairo_set_source_surface( cr, surface, posx - x,
+                                          posy -( y + highLow ) );
+                cairo_rectangle( cr, posx, posy, w, 30 );
+                cairo_fill( cr );
+                posx += w;
+        }
+        digit++;
     }
 #if GTK_MAJOR_VERSION == 2
     cairo_destroy( cr );
@@ -214,7 +225,7 @@ gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(tmpwidget), tf );
     g_signal_connect( G_OBJECT (tmpwidget), "toggled",
                       G_CALLBACK (set_tf), NULL );
-    gtk_box_pack_start( GTK_BOX (vbox), tmpwidget, FALSE, FALSE, 8 );
+    gtk_box_pack_start( GTK_BOX (vbox), tmpwidget, FALSE, FALSE, 16 );
     gtk_widget_show( tmpwidget );
 
     /* Add checkbox for enabling updates */
@@ -227,16 +238,8 @@ gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
     gtk_widget_show( uptmwidget );
 
     /* Add spinbutton for update time */
-#if GTK_MAJOR_VERSION == 2
-    hbox = gtk_vbox_new( FALSE, 0 );
-#else
-    hbox = gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 0 );
-#endif
-    gtk_box_pack_start( GTK_BOX (vbox), hbox, FALSE, FALSE, 8 );
-    gtk_widget_show( hbox );
-
     tmpwidget = gtk_label_new( "Update time in number of seconds: " );
-    gtk_box_pack_start( GTK_BOX (hbox), tmpwidget, FALSE, FALSE, 0 );
+    gtk_box_pack_start( GTK_BOX (vbox), tmpwidget, FALSE, FALSE, 0 );
     gtk_widget_show( tmpwidget );
 
     timewidget = gtk_spin_button_new_with_range( 0, ((guint)-1)/1000, 1 );
@@ -244,7 +247,7 @@ gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
     gtk_widget_set_sensitive( timewidget, update_time );
     g_signal_connect( G_OBJECT (timewidget), "changed",
                       G_CALLBACK (check_update_time), NULL );
-    gtk_box_pack_start( GTK_BOX (hbox), timewidget, FALSE, FALSE, 0 );
+    gtk_box_pack_start( GTK_BOX (vbox), timewidget, FALSE, FALSE, 0 );
     gtk_widget_show( timewidget );
 
     /* Warning for updates requiring restart */
@@ -282,7 +285,7 @@ gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
 
     /* Theme Preview */
     tmpwidget = gtk_drawing_area_new();
-    gtk_widget_set_size_request( tmpwidget, 198, 60 );
+    gtk_widget_set_size_request( tmpwidget, 351, 90 );
 #if GTK_MAJOR_VERSION == 2
     GdkColor colorWhite = { 0, 0xFFFF, 0xFFFF, 0xFFFF };
     gtk_widget_modify_bg( tmpwidget, GTK_STATE_NORMAL, &colorWhite );
@@ -291,7 +294,7 @@ gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
     g_signal_connect( G_OBJECT(tmpwidget), "draw",
 #endif
                               G_CALLBACK(draw_preview), NULL );
-    gtk_box_pack_start( GTK_BOX (vbox), tmpwidget, TRUE, TRUE, 8 );
+    gtk_box_pack_start( GTK_BOX (vbox), tmpwidget, FALSE, FALSE, 8 );
     gtk_widget_show( tmpwidget );
 
     /* Change theme */
@@ -306,7 +309,7 @@ gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
 
     /* Add Cancel/Apply buttons */
 #if GTK_MAJOR_VERSION == 2
-    hbox = gtk_vbox_new( FALSE, 0 );
+    hbox = gtk_hbox_new( FALSE, 0 );
 #else
     hbox = gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 0 );
 #endif
@@ -318,7 +321,7 @@ gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
     gtk_widget_show( tmpwidget );
 
     tmpwidget = gtk_label_new( NULL );
-    gtk_box_pack_start( GTK_BOX (hbox), tmpwidget, TRUE, TRUE, 32 );
+    gtk_box_pack_start( GTK_BOX (hbox), tmpwidget, TRUE, TRUE, 0 );
     gtk_widget_show( tmpwidget );
 
     tmpwidget = gtk_button_new_with_label( "Apply theme" );
