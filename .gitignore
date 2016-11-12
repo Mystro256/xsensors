@@ -1,0 +1,8 @@
+Makefile
+.deps/
+/aclocal.m4
+/autom4te.cache/
+/config.*
+/stamp-h?
+/src/*.o
+/src/xsensors
