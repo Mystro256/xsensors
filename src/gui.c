@@ -30,6 +30,7 @@ extern char *home_dir;
 GtkWidget *mainwindow = NULL;
 
 GdkPixbuf *theme = NULL;
+gboolean usedefaulttheme = FALSE;
 GdkPixbuf *icon = NULL;
 
 /* Destroy the main window. */
@@ -649,6 +650,7 @@ int start_gui( int argc, char **argv )
                 gtk_widget_destroy( dialog );
                 exit( 1 );
             }
+            usedefaulttheme = TRUE;
         }
     } else {
         if ( stat( imagefile, &sbuf ) != 0 ) {

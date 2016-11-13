@@ -24,15 +24,20 @@
 
 extern int tf;
 extern int update_time;
+extern int usedefaulttheme;
 extern GdkPixbuf *theme;
 extern GtkWidget *mainwindow;
 extern char *home_dir;
 extern cairo_surface_t *surface;
 
+GdkPixbuf *temptheme = NULL;
 GtkWidget *prefwindow = NULL;
 GtkWidget *uptmwidget = NULL;
 GtkWidget *timewidget = NULL;
 GtkWidget *warnwidget = NULL;
+GtkWidget *undowidget = NULL;
+GtkWidget *applywidget = NULL;
+GtkWidget *defaultwidget = NULL;
 
 /* Event function to draw theme preview. */
 #if GTK_MAJOR_VERSION == 2
@@ -63,7 +68,7 @@ gboolean draw_preview( GtkWidget *widget, cairo_t *cr, gpointer data )
                 posx = 0; posy += 30; break;
             default:
                 get_pm_location( *digit, &x, &y, &w );
-                gdk_cairo_set_source_pixbuf( cr, theme, posx - x,
+                gdk_cairo_set_source_pixbuf( cr, temptheme, posx - x,
                                              posy -( y + highLow ) );
                 cairo_rectangle( cr, posx, posy, w, 30 );
                 cairo_fill( cr );
@@ -130,6 +135,9 @@ gint destroy_prefs( GtkWidget *widget, gpointer data )
              gtk_spin_button_get_value_as_int(
                 GTK_SPIN_BUTTON( timewidget ) ) );
 
+    if ( temptheme != theme )
+        g_object_unref( temptheme );
+
     return (FALSE);
 }
 
@@ -176,10 +184,111 @@ gint toggle_updates( GtkWidget *widget, gpointer data )
     return (FALSE);
 }
 
+gint open_theme_dialog( GtkWidget *widget, gpointer data )
+{
+    GtkWidget *dialog;
+    dialog = gtk_file_chooser_dialog_new( "Open New Theme",
+                                          GTK_WINDOW (prefwindow),
+                                          GTK_FILE_CHOOSER_ACTION_OPEN,
+                                          "_Cancel", GTK_RESPONSE_CANCEL,
+                                          "_Select", GTK_RESPONSE_ACCEPT,
+                                          NULL );
+    if ( gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT )
+    {
+        char *filename;
+        GdkPixbuf *temp;
+
+        filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
+        temp = gdk_pixbuf_new_from_file( filename, NULL );
+        gtk_widget_destroy (dialog);
+        if ( temp ) {
+            if ( temptheme != theme )
+                g_object_unref( temptheme );
+            temptheme = temp;
+            gtk_widget_set_sensitive( undowidget, TRUE );
+            gtk_widget_set_sensitive( applywidget, TRUE );
+            gtk_widget_set_sensitive( defaultwidget, TRUE );
+        } else {
+            fprintf( stderr, "Unable to import theme: %s\n", filename );
+            GtkWidget *warning = gtk_message_dialog_new(
+                                          GTK_WINDOW (prefwindow),
+                                          GTK_DIALOG_DESTROY_WITH_PARENT,
+                                          GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
+                                          "Unable to import theme:\n%s",
+                                          filename );
+            gtk_dialog_run( GTK_DIALOG (warning) );
+            gtk_widget_destroy( warning );
+        }
+        g_free( filename );
+    } else {
+        gtk_widget_destroy( dialog );
+    }
+    return (FALSE);
+}
+
+gint undo_callback( GtkWidget *widget, gpointer data )
+{
+    temptheme = theme;
+    gtk_widget_set_sensitive( undowidget, FALSE );
+    gtk_widget_set_sensitive( applywidget, FALSE );
+    gtk_widget_set_sensitive( defaultwidget, !usedefaulttheme );
+    return (FALSE);
+}
+
+gint setdefault_callback( GtkWidget *widget, gpointer data )
+{
+    char *filename;
+    GdkPixbuf *temp;
+
+    /* alloc some memory for filename string */
+    if ( ( filename = g_malloc( sizeof( char ) *
+                       ( sizeof( DATADIR ) + sizeof( PACKAGE ) +
+                         sizeof( "theme.png" ) ) ) ) == NULL ) {
+        fputs( "malloc failed!\n", stderr );
+        GtkWidget *dialog = gtk_message_dialog_new(
+                                                GTK_WINDOW (mainwindow),
+                                                GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                GTK_MESSAGE_ERROR,
+                                                GTK_BUTTONS_CLOSE,
+                                                "Memory allocation error!\n\n"
+                                                "Failed import theme." );
+        gtk_dialog_run( GTK_DIALOG (dialog) );
+        gtk_widget_destroy( dialog );
+        exit( 1 );
+    }
+
+    sprintf( filename, "%s/%s/theme.png", DATADIR, PACKAGE );
+    temp = gdk_pixbuf_new_from_file( filename, NULL );
+    if ( temp ) {
+        if ( temptheme != theme )
+            g_object_unref( temptheme );
+        temptheme = temp;
+        gtk_widget_set_sensitive( undowidget, !usedefaulttheme );
+        gtk_widget_set_sensitive( applywidget, !usedefaulttheme );
+        gtk_widget_set_sensitive( defaultwidget, FALSE );
+    } else {
+        fprintf( stderr, "Unable to import default theme: %s\n", filename );
+        GtkWidget *dialog = gtk_message_dialog_new(
+                                         GTK_WINDOW (prefwindow),
+                                         GTK_DIALOG_DESTROY_WITH_PARENT,
+                                         GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
+                                         "Unable to import default theme:\n%s",
+                                         filename );
+        gtk_dialog_run( GTK_DIALOG (dialog) );
+        gtk_widget_destroy( dialog );
+    }
+    free( filename );
+
+    return (FALSE);
+}
+
 gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
 {
     GtkWidget *notebook, *notelabel, *noteframe,
               *vbox,     *hbox,      *tmpwidget;
+
+    /* Set temptheme to theme */
+    temptheme = theme;
 
     /* Setup main window. */
     prefwindow = gtk_window_new( GTK_WINDOW_TOPLEVEL );
@@ -300,14 +409,19 @@ gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
     /* Change theme */
     tmpwidget = gtk_button_new_with_label( "Select theme" );
     gtk_box_pack_start( GTK_BOX (vbox), tmpwidget, FALSE, FALSE, 8 );
+    g_signal_connect( G_OBJECT (tmpwidget), "clicked",
+                      G_CALLBACK (open_theme_dialog), NULL );
     gtk_widget_show( tmpwidget );
 
     /* Use default theme */
-    tmpwidget = gtk_button_new_with_label( "Use default theme" );
-    gtk_box_pack_start( GTK_BOX (vbox), tmpwidget, FALSE, FALSE, 8 );
-    gtk_widget_show( tmpwidget );
+    defaultwidget = gtk_button_new_with_label( "Use default theme" );
+    gtk_box_pack_start( GTK_BOX (vbox), defaultwidget, FALSE, FALSE, 8 );
+    g_signal_connect( G_OBJECT (defaultwidget), "clicked",
+                      G_CALLBACK (setdefault_callback), NULL );
+    gtk_widget_set_sensitive( defaultwidget, !usedefaulttheme );
+    gtk_widget_show( defaultwidget );
 
-    /* Add Cancel/Apply buttons */
+    /* Add Undo/Apply buttons */
 #if GTK_MAJOR_VERSION == 2
     hbox = gtk_hbox_new( FALSE, 0 );
 #else
@@ -316,17 +430,21 @@ gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
     gtk_box_pack_start( GTK_BOX (vbox), hbox, FALSE, FALSE, 8 );
     gtk_widget_show( hbox );
 
-    tmpwidget = gtk_button_new_with_label( "Cancel" );
-    gtk_box_pack_start( GTK_BOX (hbox), tmpwidget, FALSE, FALSE, 0 );
-    gtk_widget_show( tmpwidget );
+    undowidget = gtk_button_new_with_label( "Undo" );
+    gtk_box_pack_start( GTK_BOX (hbox), undowidget, FALSE, FALSE, 0 );
+    g_signal_connect( G_OBJECT (undowidget), "clicked",
+                      G_CALLBACK (undo_callback), NULL );
+    gtk_widget_set_sensitive( undowidget, FALSE );
+    gtk_widget_show( undowidget );
 
     tmpwidget = gtk_label_new( NULL );
     gtk_box_pack_start( GTK_BOX (hbox), tmpwidget, TRUE, TRUE, 0 );
     gtk_widget_show( tmpwidget );
 
-    tmpwidget = gtk_button_new_with_label( "Apply theme" );
-    gtk_box_pack_end( GTK_BOX (hbox), tmpwidget, FALSE, FALSE, 0 );
-    gtk_widget_show( tmpwidget );
+    applywidget = gtk_button_new_with_label( "Apply theme" );
+    gtk_box_pack_end( GTK_BOX (hbox), applywidget, FALSE, FALSE, 0 );
+    gtk_widget_set_sensitive( applywidget, FALSE );
+    gtk_widget_show( applywidget );
 
     /* Setup the main components. */
     gtk_widget_show( prefwindow );

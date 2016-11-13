@@ -33,3 +33,6 @@ gboolean prefs_callback( GtkWidget *, GdkEvent * );
 gint set_tf( GtkWidget *, gpointer );
 gint toggle_updates( GtkWidget *, gpointer );
 gint check_update_time( GtkWidget *, gpointer );
+gint open_theme_dialog( GtkWidget *, gpointer );
+gint undo_callback( GtkWidget *, gpointer );
+gint setdefault_callback( GtkWidget *, gpointer );
