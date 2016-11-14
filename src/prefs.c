@@ -38,6 +38,9 @@ GtkWidget *warnwidget = NULL;
 GtkWidget *undowidget = NULL;
 GtkWidget *applywidget = NULL;
 GtkWidget *defaultwidget = NULL;
+#if GTK_MAJOR_VERSION == 2
+GtkWidget *drawwidget = NULL;
+#endif
 
 /* Event function to draw theme preview. */
 #if GTK_MAJOR_VERSION == 2
@@ -205,6 +208,9 @@ gint open_theme_dialog( GtkWidget *widget, gpointer data )
             if ( temptheme != theme )
                 g_object_unref( temptheme );
             temptheme = temp;
+#if GTK_MAJOR_VERSION == 2
+            gtk_widget_queue_draw_area( drawwidget, 0, 0, 351, 90 );
+#endif
             gtk_widget_set_sensitive( undowidget, TRUE );
             gtk_widget_set_sensitive( applywidget, TRUE );
             gtk_widget_set_sensitive( defaultwidget, TRUE );
@@ -229,6 +235,9 @@ gint open_theme_dialog( GtkWidget *widget, gpointer data )
 gint undo_callback( GtkWidget *widget, gpointer data )
 {
     temptheme = theme;
+#if GTK_MAJOR_VERSION == 2
+    gtk_widget_queue_draw_area( drawwidget, 0, 0, 351, 90 );
+#endif
     gtk_widget_set_sensitive( undowidget, FALSE );
     gtk_widget_set_sensitive( applywidget, FALSE );
     gtk_widget_set_sensitive( defaultwidget, !usedefaulttheme );
@@ -281,6 +290,9 @@ gint apply_callback( GtkWidget *widget, gpointer data )
         }
 
     theme = temptheme;
+#if GTK_MAJOR_VERSION == 2
+    gtk_widget_queue_draw_area( drawwidget, 0, 0, 351, 90 );
+#endif
     gtk_widget_set_sensitive( undowidget, FALSE );
     gtk_widget_set_sensitive( applywidget, FALSE );
     usedefaulttheme = !gtk_widget_get_sensitive( defaultwidget );
@@ -315,6 +327,9 @@ gint setdefault_callback( GtkWidget *widget, gpointer data )
         if ( temptheme != theme )
             g_object_unref( temptheme );
         temptheme = temp;
+#if GTK_MAJOR_VERSION == 2
+        gtk_widget_queue_draw_area( drawwidget, 0, 0, 351, 90 );
+#endif
         gtk_widget_set_sensitive( undowidget, !usedefaulttheme );
         gtk_widget_set_sensitive( applywidget, !usedefaulttheme );
         gtk_widget_set_sensitive( defaultwidget, FALSE );
@@ -450,6 +465,7 @@ gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
 #if GTK_MAJOR_VERSION == 2
     GdkColor colorWhite = { 0, 0xFFFF, 0xFFFF, 0xFFFF };
     gtk_widget_modify_bg( tmpwidget, GTK_STATE_NORMAL, &colorWhite );
+    drawwidget = tmpwidget;
     g_signal_connect( G_OBJECT(tmpwidget), "expose_event",
 #else
     g_signal_connect( G_OBJECT(tmpwidget), "draw",
