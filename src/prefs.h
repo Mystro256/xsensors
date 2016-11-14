@@ -19,9 +19,6 @@
     02110-1301  USA.
 */
 
-#include <gdk/gdk.h>
-#include <sys/stat.h>
-
 /* Prototypes */
 gint destroy_prefs( GtkWidget *, gpointer );
 #if GTK_MAJOR_VERSION == 2

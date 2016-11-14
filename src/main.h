@@ -28,13 +28,11 @@
 #include <sensors/sensors.h>
 #include <glib.h>
 #include <gtk/gtk.h>
+#include <sys/stat.h>
+#include <gdk/gdk.h>
 #include "chips.h"
 #include "gui.h"
 #include "../config.h"
 
 /* Pretty identifiers. */
 enum { SUCCESS, FAILURE };
-
-/* Prototypes */
-int help_msg( void );
-void read_config( void );

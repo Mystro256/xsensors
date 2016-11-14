@@ -19,9 +19,6 @@
     02110-1301  USA.
 */
 
-#include <sys/stat.h>
-#include <gdk/gdk.h>
-
 enum { VOLT, TEMP, FAN };
 
 #define NA "Not Available!"

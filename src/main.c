@@ -24,15 +24,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
-
-/* getopt stuff */
-extern int      optopt;
-extern int      optind;
-extern char    *optarg;
-extern int      opterr;
-
-int             getopt (int, char *const *, const char *);
-/* end getopt stuff */
+#include <getopt.h>
 
 char *strdup(const char *s);
 
@@ -60,7 +52,7 @@ static int get_updatetime( const char * temp_str ) {
 }
 
 /* Print the help message. */
-int help_msg( void )
+static int help_msg( void )
 {
     printf( "\nUsage: xsensors [options]\n\n"
             "Options:\n"
@@ -78,7 +70,7 @@ int help_msg( void )
     return SUCCESS;
 }
 
-void read_config( void )
+static void read_config( void )
 {
     FILE * fileconf;
     char temp_str[ 100 ];
