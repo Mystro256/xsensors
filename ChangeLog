@@ -1,7 +1,18 @@
 0.80-dev so far
 -----
-- Added GTK3 port
-- Various bug fixes
+Changes:
+- Minimum GTK2 version is now 2.8
+- Pixmap theme is now in tiff format (instead of xpm)
+- Pixmap theme is now installed in datadir/xsensors/ as theme.tiff
+Enhancements:
+- Show message boxes for most errors
+- Added GTK3 port, which is now built default if gtk3 is installed
+- Menu with Preferences and About dialogs
+- Persistent/saved settings (command line options are temporary)
+Bug fixes:
+- Fix the swaping of red/blue when drawing
+- Fix some memory issues
+- Fix command line argument issues
 
 0.75
 -----
