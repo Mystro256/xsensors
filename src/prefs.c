@@ -206,7 +206,8 @@ gint open_theme_dialog( GtkWidget *widget, gpointer data )
         GdkPixbuf *temp;
 
         filename = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER (dialog) );
-        temp = gdk_pixbuf_new_from_file( filename, NULL );
+        temp = gdk_pixbuf_new_from_file_at_scale( filename, 216, 180, FALSE,
+                                                  NULL );
         gtk_widget_destroy( dialog );
         if ( temp ) {
             if ( temptheme != theme )
