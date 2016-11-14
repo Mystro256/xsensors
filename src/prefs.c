@@ -235,6 +235,58 @@ gint undo_callback( GtkWidget *widget, gpointer data )
     return (FALSE);
 }
 
+gint apply_callback( GtkWidget *widget, gpointer data )
+{
+    struct stat sbuf;
+    char *filename;
+
+    /* alloc some memory for filename string */
+    if ( ( filename = g_malloc( sizeof( char ) *
+                       ( sizeof( DATADIR ) + sizeof( PACKAGE ) +
+                         sizeof( ".local/share/theme.tiff" ) ) ) ) == NULL ) {
+        fputs( "malloc failed!\n", stderr );
+        GtkWidget *dialog = gtk_message_dialog_new(
+                                                GTK_WINDOW (mainwindow),
+                                                GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                GTK_MESSAGE_ERROR,
+                                                GTK_BUTTONS_CLOSE,
+                                                "Memory allocation error!\n\n"
+                                                "Failed apply theme." );
+        gtk_dialog_run( GTK_DIALOG (dialog) );
+        gtk_widget_destroy( dialog );
+        exit( 1 );
+    }
+
+    sprintf( filename, "%s/.local/share/%s/theme.tiff", home_dir, PACKAGE );
+    if ( stat( filename, &sbuf ) == 0 )
+        remove( filename );/*TODO ERROR*/
+
+    if ( gtk_widget_get_sensitive( defaultwidget ) )
+        if ( gdk_pixbuf_save( temptheme, filename, "tiff", NULL, NULL)
+                == FALSE ) {
+            fprintf( stderr, "Could not save theme!\n"
+                     "Failed to save theme to %s\n"
+                     , filename );
+            GtkWidget *dialog = gtk_message_dialog_new(
+                                                GTK_WINDOW (prefwindow),
+                                                GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                GTK_MESSAGE_ERROR,
+                                                GTK_BUTTONS_CLOSE,
+                                                "Could not save theme!\n\n"
+                                                "Failed to save theme to %s\n"
+                                                , filename );
+            gtk_dialog_run( GTK_DIALOG (dialog) );
+            gtk_widget_destroy( dialog );
+            return (FALSE);
+        }
+
+    theme = temptheme;
+    gtk_widget_set_sensitive( undowidget, FALSE );
+    gtk_widget_set_sensitive( applywidget, FALSE );
+    usedefaulttheme = !gtk_widget_get_sensitive( defaultwidget );
+    return (FALSE);
+}
+
 gint setdefault_callback( GtkWidget *widget, gpointer data )
 {
     char *filename;
@@ -443,6 +495,8 @@ gboolean prefs_callback( GtkWidget *widget, GdkEvent *event )
 
     applywidget = gtk_button_new_with_label( "Apply theme" );
     gtk_box_pack_end( GTK_BOX (hbox), applywidget, FALSE, FALSE, 0 );
+    g_signal_connect( G_OBJECT (applywidget), "clicked",
+                      G_CALLBACK (apply_callback), NULL );
     gtk_widget_set_sensitive( applywidget, FALSE );
     gtk_widget_show( applywidget );
 
