@@ -7,7 +7,7 @@ Changes:
 Enhancements:
 - Show message boxes for most errors
 - Scrollbars
-- Added GTK3 port, which is now built default if gtk3 is installed
+- Added GTK3 port, which is default if available, overwritten with --with-gtk2
 - Menu with Preferences and About dialogs
 - Persistent/saved settings (command line options are temporary)
 Bug fixes:
