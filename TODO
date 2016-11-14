@@ -1,10 +1,9 @@
 For 0.80:
-- Gnome AppMenu(gtk3)/Gtkmenubar(gtk2):
-  > Preferences:
-    - Change "theme" (default or select, with preview)
-    - Change sensors config file (default or select)
-    - Celsius (Default) or Fahrenheit
-    - Update time (default, do not update, or select)
+- Filter file chooser to only show gdkpixbuf supported types
+- Check if theme file is correct size
 Low Priority:
 - Better range readouts (neat speedometer type possibly)
-- Port gtkbox to gtkgrid (probably deprecated in gtk4)
+- Port gtkbox to gtkgrid (probably deprecated in the future)
+- Appmenu for gtk3
+Undecided:
+- Preference to change sensors config file (default or select)

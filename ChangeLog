@@ -6,6 +6,7 @@ Changes:
 - Pixmap theme is now installed in datadir/xsensors/ as theme.tiff
 Enhancements:
 - Show message boxes for most errors
+- Scrollbars
 - Added GTK3 port, which is now built default if gtk3 is installed
 - Menu with Preferences and About dialogs
 - Persistent/saved settings (command line options are temporary)
