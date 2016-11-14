@@ -601,7 +601,7 @@ int start_gui( int argc, char **argv )
         gsize tempsize = sizeof( DATADIR );
         if ( tempsize < ( strlen( home_dir ) + sizeof( "/.local/share") ) )
             tempsize = strlen( home_dir ) + sizeof( "/.local/share");
-        tempsize += sizeof( PACKAGE ) + sizeof( "theme.png" );
+        tempsize += sizeof( PACKAGE ) + sizeof( "theme.tiff" );
 
         /* alloc some memory for imagefile string */
         if ( ( imagefile = g_malloc( sizeof( char ) *
@@ -620,14 +620,14 @@ int start_gui( int argc, char **argv )
         }
 
         /* Check home dir first */
-        sprintf( imagefile, "%s/.local/share/%s/theme.png",
+        sprintf( imagefile, "%s/.local/share/%s/theme.tiff",
                  home_dir, PACKAGE );
         if ( stat( imagefile, &sbuf ) != 0 ) {
 
             /* Check system dir next */
-            sprintf( imagefile, "%s/%s/theme.png", DATADIR, PACKAGE );
+            sprintf( imagefile, "%s/%s/theme.tiff", DATADIR, PACKAGE );
             if ( stat( imagefile, &sbuf ) != 0 ) {
-                fprintf( stderr, "%s: %s/.local/share/%s/theme.png\n",
+                fprintf( stderr, "%s: %s/.local/share/%s/theme.tiff\n",
                          strerror( errno ) , home_dir, PACKAGE );
                 fprintf( stderr, "%s: %s\n",
                          strerror( errno ), imagefile );
@@ -639,7 +639,7 @@ int start_gui( int argc, char **argv )
                                                 GTK_MESSAGE_ERROR,
                                                 GTK_BUTTONS_CLOSE,
                                                 "Theme Import error!\n\n"
-                                                "Could not find theme.png\n"
+                                                "Could not find theme.tiff\n"
                                                 "Please make sure it exists in"
                                                 " one of these directories:"
                                                 "\n\n%s/%s"

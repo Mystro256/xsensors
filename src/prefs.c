@@ -243,7 +243,7 @@ gint setdefault_callback( GtkWidget *widget, gpointer data )
     /* alloc some memory for filename string */
     if ( ( filename = g_malloc( sizeof( char ) *
                        ( sizeof( DATADIR ) + sizeof( PACKAGE ) +
-                         sizeof( "theme.png" ) ) ) ) == NULL ) {
+                         sizeof( "theme.tiff" ) ) ) ) == NULL ) {
         fputs( "malloc failed!\n", stderr );
         GtkWidget *dialog = gtk_message_dialog_new(
                                                 GTK_WINDOW (mainwindow),
@@ -257,7 +257,7 @@ gint setdefault_callback( GtkWidget *widget, gpointer data )
         exit( 1 );
     }
 
-    sprintf( filename, "%s/%s/theme.png", DATADIR, PACKAGE );
+    sprintf( filename, "%s/%s/theme.tiff", DATADIR, PACKAGE );
     temp = gdk_pixbuf_new_from_file( filename, NULL );
     if ( temp ) {
         if ( temptheme != theme )
