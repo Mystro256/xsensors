@@ -190,20 +190,24 @@ gint toggle_updates( GtkWidget *widget, gpointer data )
 gint open_theme_dialog( GtkWidget *widget, gpointer data )
 {
     GtkWidget *dialog;
+    GtkFileFilter *filter;
     dialog = gtk_file_chooser_dialog_new( "Open New Theme",
                                           GTK_WINDOW (prefwindow),
                                           GTK_FILE_CHOOSER_ACTION_OPEN,
                                           "_Cancel", GTK_RESPONSE_CANCEL,
                                           "_Select", GTK_RESPONSE_ACCEPT,
                                           NULL );
-    if ( gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT )
+    filter = gtk_file_filter_new();
+    gtk_file_filter_add_pixbuf_formats( filter );
+    gtk_file_chooser_add_filter( GTK_FILE_CHOOSER (dialog), filter );
+    if ( gtk_dialog_run( GTK_DIALOG (dialog) ) == GTK_RESPONSE_ACCEPT )
     {
         char *filename;
         GdkPixbuf *temp;
 
-        filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
+        filename = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER (dialog) );
         temp = gdk_pixbuf_new_from_file( filename, NULL );
-        gtk_widget_destroy (dialog);
+        gtk_widget_destroy( dialog );
         if ( temp ) {
             if ( temptheme != theme )
                 g_object_unref( temptheme );
