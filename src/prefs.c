@@ -28,7 +28,6 @@ extern int usedefaulttheme;
 extern GdkPixbuf *theme;
 extern GtkWidget *mainwindow;
 extern char *home_dir;
-extern cairo_surface_t *surface;
 
 GdkPixbuf *temptheme = NULL;
 GtkWidget *prefwindow = NULL;
