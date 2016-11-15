@@ -42,10 +42,10 @@ GtkWidget *defaultwidget = NULL;
 GtkWidget *drawwidget = NULL;
 #endif
 
-/* Creates home config if it does not exist */
 /* Returns full path + room for 10 more chars */
-/* Return must be freed, unless NULL */
-static char *check_config_dir()
+/* Creates home config if it does not exist */
+/* Return must be freed, unless failed (NULL) */
+static char *get_config_dir()
 {
     char *buffer;
     struct stat sbuf;
@@ -135,28 +135,30 @@ gboolean draw_preview( GtkWidget *widget, cairo_t *cr, gpointer data )
 gint destroy_prefs( GtkWidget *widget, gpointer data )
 {
     FILE *fileconf;
-    char *temp_str;
+    char *filename;
 
-    if ( ( temp_str = check_config_dir() ) == NULL )
+    /* Check and get config dir */
+    if ( ( filename = get_config_dir() ) == NULL )
         return (FALSE);
+    strcat( filename, "custom.ini" );
 
-    strcat( temp_str, "custom.ini" );
-    fileconf = fopen( temp_str, "w" );
-    if ( fileconf == NULL ) {
+    if ( ( fileconf = fopen( filename, "w" ) ) == NULL ) {
         fprintf( stderr, "Could not save preferences!\n"
                  "Failed to save preferences to %s\n"
-                 , temp_str );
+                 , filename );
         GtkWidget *dialog = gtk_message_dialog_new( GTK_WINDOW (prefwindow),
                                           GTK_ERROR_DIALOG_FLAGS,
                                           "Could not save preferences!\n\n"
                                           "Failed to save preferences to %s\n"
-                                          , temp_str );
+                                          , filename );
         gtk_dialog_run( GTK_DIALOG (dialog) );
         gtk_widget_destroy( dialog );
 
-        g_free( temp_str );
+        g_free( filename );
         return (FALSE);
     }
+
+    g_free( filename );
 
     fprintf( fileconf, "[%s]\n", PACKAGE );
     fputs( "; Display all temperatures in Fahrenheit (0 or 1):\n", fileconf );
@@ -170,7 +172,7 @@ gint destroy_prefs( GtkWidget *widget, gpointer data )
     if ( temptheme != theme )
         g_object_unref( temptheme );
 
-    g_free( temp_str );
+    fclose( fileconf );
     return (FALSE);
 }
 
@@ -283,10 +285,11 @@ gint apply_callback( GtkWidget *widget, gpointer data )
     struct stat sbuf;
     char *filename;
 
-    if ( ( filename = check_config_dir() ) == NULL )
+    /* Check and get config dir */
+    if ( ( filename = get_config_dir() ) == NULL )
         return (FALSE);
-
     strcat( filename, "theme.tiff" );
+
     if ( stat( filename, &sbuf ) == 0 ) {
         if ( remove( filename ) != 0 ) {
             fprintf( stderr, "Could not delete old theme!\n"
@@ -327,6 +330,7 @@ gint apply_callback( GtkWidget *widget, gpointer data )
         }
     }
 
+    g_free( filename );
     theme = temptheme;
 #if GTK_MAJOR_VERSION == 2
     gtk_widget_queue_draw_area( drawwidget, 0, 0, 351, 90 );
@@ -335,7 +339,6 @@ gint apply_callback( GtkWidget *widget, gpointer data )
     gtk_widget_set_sensitive( applywidget, FALSE );
     usedefaulttheme = !gtk_widget_get_sensitive( defaultwidget );
 
-    g_free( filename );
     return (FALSE);
 }
 
