@@ -36,7 +36,9 @@ const char *home_dir = NULL;
 
 enum { UPDATE_TIME_SUCCESS, UPDATE_TIME_NAN, UPDATE_TIME_NEG };
 
+/* Convert string to updatetime (from ini or opt) */
 static int get_updatetime( const char * temp_str ) {
+    /* 0 followed by '\n', ' ', or most symbols can be assumed zero */
     if ( temp_str[0] == '0' && temp_str[1] < '0' ) {
         update_time = 0;
     } else {
@@ -70,7 +72,8 @@ static int help_msg( void )
     return SUCCESS;
 }
 
-static void read_config( void )
+/* Read config.ini from ~/.config */
+static void load_config( void )
 {
     FILE * fileconf;
     char temp_str[ 100 ];
@@ -81,12 +84,9 @@ static void read_config( void )
     if ( fileconf == NULL )
         return;
 
-    /*
-     Possible config values:
+    /* Possible config values:
         use_fahrenheit=0 or 1
-        update_time=(uint)
-    */
-
+        update_time=(uint) */
     while ( fgets( temp_str, 100, fileconf ) != NULL ) {
         if ( temp_str[0] != '[' && temp_str[0] != ';' ) {
             if ( strlen( temp_str ) > 15 &&
@@ -123,13 +123,12 @@ int main( int argc, char **argv )
     FILE *sens_conf_file = NULL;
     char *temp_str = NULL;
 
-    /* Get homedir */
+    /* Get homedir and load config.ini. */
     if ( ( home_dir = getenv( "HOME" ) ) == NULL )
         home_dir = getpwuid(getuid())->pw_dir;
+    load_config();
 
-    read_config();
-
-    /* Process arguements. */
+    /* Process arguments. */
     while ( ( c = getopt( argc, argv, "fhc:i:t:v" ) ) != EOF ) {
         switch (c) {
             case 'f':
@@ -169,6 +168,9 @@ int main( int argc, char **argv )
         }
     }
 
+    /* Free temp_str. */
+    g_free( temp_str );
+
     /* Open the config file if specified. */
     if ( sens_config &&
             ( sens_conf_file = fopen( sens_config, "r" ) ) == NULL ) {
@@ -176,7 +178,6 @@ int main( int argc, char **argv )
                  , sens_config );
         return EXIT_FAILURE;
     }
-
 
     /* Initialize the sensors library. */
     int errorno = sensors_init( sens_conf_file );
@@ -197,6 +198,10 @@ int main( int argc, char **argv )
         return EXIT_FAILURE;
     }
 
+    /* Clean up sens_config. */
+    if ( sens_config != NULL )
+        free( sens_config );
+
     /* This will start the GUI. */
     if ( start_gui( argc, argv ) != SUCCESS )
         fputs( "GUI failed!\n", stderr );
@@ -204,8 +209,7 @@ int main( int argc, char **argv )
     /* Clean up the sensors library. */
     sensors_cleanup();
 
-    if ( sens_config != NULL )
-        free( sens_config );
+    /* Clean up imagefile. */
     if ( imagefile != NULL )
         free( imagefile );
 
@@ -214,8 +218,6 @@ int main( int argc, char **argv )
         fputs( "Something has gone wrong closing the config file!\n", stderr );
         return EXIT_FAILURE;
     }
-
-    free( temp_str );
 
     return EXIT_SUCCESS;
 }
