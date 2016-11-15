@@ -100,8 +100,7 @@ gint destroy_prefs( GtkWidget *widget, gpointer data )
                      "Error Number: %d", temp_str, errno );
             GtkWidget *dialog = gtk_message_dialog_new(
                                           GTK_WINDOW (prefwindow),
-                                          GTK_DIALOG_DESTROY_WITH_PARENT,
-                                          GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
+                                          GTK_ERROR_DIALOG_FLAGS,
                                           "Unable to create configuration!\n\n"
                                           "Failed to create directory %s\n"
                                           "Error Number: %d",
@@ -119,8 +118,7 @@ gint destroy_prefs( GtkWidget *widget, gpointer data )
                  "Failed to save preferences to %s\n"
                  , temp_str );
         GtkWidget *dialog = gtk_message_dialog_new( GTK_WINDOW (prefwindow),
-                                          GTK_DIALOG_DESTROY_WITH_PARENT,
-                                          GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
+                                          GTK_ERROR_DIALOG_FLAGS,
                                           "Could not save preferences!\n\n"
                                           "Failed to save preferences to %s\n"
                                           , temp_str );
@@ -224,8 +222,7 @@ gint open_theme_dialog( GtkWidget *widget, gpointer data )
             fprintf( stderr, "Unable to import theme: %s\n", filename );
             GtkWidget *warning = gtk_message_dialog_new(
                                           GTK_WINDOW (prefwindow),
-                                          GTK_DIALOG_DESTROY_WITH_PARENT,
-                                          GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
+                                          GTK_ERROR_DIALOG_FLAGS,
                                           "Unable to import theme:\n%s",
                                           filename );
             gtk_dialog_run( GTK_DIALOG (warning) );
@@ -262,9 +259,7 @@ gint apply_callback( GtkWidget *widget, gpointer data )
         fputs( "malloc failed!\n", stderr );
         GtkWidget *dialog = gtk_message_dialog_new(
                                                 GTK_WINDOW (mainwindow),
-                                                GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                GTK_MESSAGE_ERROR,
-                                                GTK_BUTTONS_CLOSE,
+                                                GTK_ERROR_DIALOG_FLAGS,
                                                 "Memory allocation error!\n\n"
                                                 "Failed apply theme." );
         gtk_dialog_run( GTK_DIALOG (dialog) );
@@ -284,9 +279,7 @@ gint apply_callback( GtkWidget *widget, gpointer data )
                      , filename );
             GtkWidget *dialog = gtk_message_dialog_new(
                                                 GTK_WINDOW (prefwindow),
-                                                GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                GTK_MESSAGE_ERROR,
-                                                GTK_BUTTONS_CLOSE,
+                                                GTK_ERROR_DIALOG_FLAGS,
                                                 "Could not save theme!\n\n"
                                                 "Failed to save theme to %s\n"
                                                 , filename );
@@ -317,9 +310,7 @@ gint setdefault_callback( GtkWidget *widget, gpointer data )
         fputs( "malloc failed!\n", stderr );
         GtkWidget *dialog = gtk_message_dialog_new(
                                                 GTK_WINDOW (mainwindow),
-                                                GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                GTK_MESSAGE_ERROR,
-                                                GTK_BUTTONS_CLOSE,
+                                                GTK_ERROR_DIALOG_FLAGS,
                                                 "Memory allocation error!\n\n"
                                                 "Failed import theme." );
         gtk_dialog_run( GTK_DIALOG (dialog) );
@@ -343,8 +334,7 @@ gint setdefault_callback( GtkWidget *widget, gpointer data )
         fprintf( stderr, "Unable to import default theme: %s\n", filename );
         GtkWidget *dialog = gtk_message_dialog_new(
                                          GTK_WINDOW (prefwindow),
-                                         GTK_DIALOG_DESTROY_WITH_PARENT,
-                                         GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
+                                         GTK_ERROR_DIALOG_FLAGS,
                                          "Unable to import default theme:\n%s",
                                          filename );
         gtk_dialog_run( GTK_DIALOG (dialog) );

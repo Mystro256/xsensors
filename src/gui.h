@@ -21,6 +21,9 @@
 
 enum { VOLT, TEMP, FAN };
 
+#define GTK_ERROR_DIALOG_FLAGS GTK_DIALOG_DESTROY_WITH_PARENT,\
+                                GTK_MESSAGE_ERROR,GTK_BUTTONS_CLOSE
+
 #define NA "Not Available!"
 
 #define COPYRIGHT "© 2012-2016 Jeremy Newton, 2002-2007 Kris Kersey"

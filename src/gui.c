@@ -460,9 +460,7 @@ updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name )
                     free( feattext );
                     GtkWidget *dialog = gtk_message_dialog_new(
                                                 GTK_WINDOW (mainwindow),
-                                                GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                GTK_MESSAGE_ERROR,
-                                                GTK_BUTTONS_CLOSE,
+                                                GTK_ERROR_DIALOG_FLAGS,
                                                 "Memory allocation error!\n\n"
                                                 "Failed to create GTK "
                                                 "Notebook." );
@@ -609,9 +607,7 @@ int start_gui( int argc, char **argv )
             fputs( "malloc failed!\n", stderr );
             GtkWidget *dialog = gtk_message_dialog_new(
                                                 GTK_WINDOW (mainwindow),
-                                                GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                GTK_MESSAGE_ERROR,
-                                                GTK_BUTTONS_CLOSE,
+                                                GTK_ERROR_DIALOG_FLAGS,
                                                 "Memory allocation error!\n\n"
                                                 "Failed import theme." );
             gtk_dialog_run( GTK_DIALOG (dialog) );
@@ -635,9 +631,7 @@ int start_gui( int argc, char **argv )
                        stderr );
                 GtkWidget *dialog = gtk_message_dialog_new(
                                                 GTK_WINDOW (mainwindow),
-                                                GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                GTK_MESSAGE_ERROR,
-                                                GTK_BUTTONS_CLOSE,
+                                                GTK_ERROR_DIALOG_FLAGS,
                                                 "Theme Import error!\n\n"
                                                 "Could not find theme.tiff\n"
                                                 "Please make sure it exists in"

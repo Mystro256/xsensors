@@ -187,8 +187,7 @@ int main( int argc, char **argv )
         if ( !sens_config ) {
             gtk_init( &argc, &argv );
             GtkWidget *dialog = gtk_message_dialog_new( NULL,
-                                          GTK_DIALOG_DESTROY_WITH_PARENT,
-                                          GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
+                                          GTK_ERROR_DIALOG_FLAGS,
                                           "Could not initialize sensors!\n\n"
                                           "Is everything installed properly?\n"
                                           "Error Number: %d", errorno );
