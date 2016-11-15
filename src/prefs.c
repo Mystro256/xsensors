@@ -254,8 +254,8 @@ gint apply_callback( GtkWidget *widget, gpointer data )
 
     /* alloc some memory for filename string */
     if ( ( filename = g_malloc( sizeof( char ) *
-                       ( sizeof( DATADIR ) + sizeof( PACKAGE ) +
-                         sizeof( ".local/share/theme.tiff" ) ) ) ) == NULL ) {
+                       ( strlen( home_dir ) + sizeof( PACKAGE ) +
+                         sizeof( "/.local/share/theme.tiff" ) ) ) ) == NULL ) {
         fputs( "malloc failed!\n", stderr );
         GtkWidget *dialog = gtk_message_dialog_new(
                                                 GTK_WINDOW (mainwindow),
