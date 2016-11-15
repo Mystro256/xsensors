@@ -224,7 +224,7 @@ gboolean draw_callback( GtkWidget *widget, cairo_t *cr, gpointer data )
 }
 
 /* Free the link list. */
-gint free_llist( updates *node )
+static gint free_llist( updates *node )
 {
     if ( node != NULL ) {
         free_llist( node->next );
@@ -244,7 +244,7 @@ static updates *llist_tail( updates *node )
 }
 
 /* Update the sensor information. */
-gint update_sensor_data( gpointer data )
+static gint update_sensor_data( gpointer data )
 {
     updates *updata = data;
 
@@ -329,7 +329,8 @@ gint start_timer( GtkWidget *widget, gpointer data )
     return SUCCESS;
 }
 
-updates *add_sensor_tab( GtkWidget *container, const sensors_chip_name *name )
+static updates *add_sensor_tab( GtkWidget *container,
+                                const sensors_chip_name *name )
 {
     /* packing boxes */
     GtkWidget *mainbox, *voltbox, *tempbox, *fanbox;
