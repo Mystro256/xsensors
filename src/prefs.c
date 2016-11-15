@@ -42,6 +42,53 @@ GtkWidget *defaultwidget = NULL;
 GtkWidget *drawwidget = NULL;
 #endif
 
+/* Creates home config if it does not exist */
+/* Returns full path + room for 10 more chars */
+/* Return must be freed, unless NULL */
+static char *check_config_dir()
+{
+    char *buffer;
+    struct stat sbuf;
+
+    /* alloc some memory for buffer string */
+    /* custom.ini and theme.tiff = 10 chars*/
+    if ( ( buffer = g_malloc( sizeof( char ) *
+                       ( strlen( home_dir ) + sizeof( PACKAGE ) +
+                         sizeof( "/.local/share/" ) + 10 ) ) ) == NULL ) {
+        fputs( "malloc failed!\n", stderr );
+        GtkWidget *dialog = gtk_message_dialog_new(
+                                                GTK_WINDOW (mainwindow),
+                                                GTK_ERROR_DIALOG_FLAGS,
+                                                "Memory allocation error!\n\n"
+                                                "Failed save configuration." );
+        gtk_dialog_run( GTK_DIALOG (dialog) );
+        gtk_widget_destroy( dialog );
+        return NULL;
+    }
+
+    sprintf( buffer, "%s/.local/share/%s/", home_dir, PACKAGE );
+    if ( stat( buffer, &sbuf ) != 0 ) {
+        if ( mkdir( buffer, 0700 ) != 0 ) {
+            fprintf( stderr, "Unable to create configuration!\n"
+                     "Failed to create directory %s\n"
+                     "Error Number: %d", buffer, errno );
+            GtkWidget *dialog = gtk_message_dialog_new(
+                                          GTK_WINDOW (prefwindow),
+                                          GTK_ERROR_DIALOG_FLAGS,
+                                          "Unable to create configuration!\n\n"
+                                          "Failed to create directory %s\n"
+                                          "Error Number: %d",
+                                          buffer, errno );
+            gtk_dialog_run( GTK_DIALOG (dialog) );
+            gtk_widget_destroy( dialog );
+            g_free( buffer );
+            return NULL;
+        }
+    }
+
+    return buffer;
+}
+
 /* Event function to draw theme preview. */
 #if GTK_MAJOR_VERSION == 2
 gboolean draw_preview( GtkWidget *widget, GdkEventExpose *event,
@@ -87,29 +134,11 @@ gboolean draw_preview( GtkWidget *widget, cairo_t *cr, gpointer data )
 
 gint destroy_prefs( GtkWidget *widget, gpointer data )
 {
-    struct stat sbuf;
-    FILE * fileconf;
-    char temp_str[ 100 ];
+    FILE *fileconf;
+    char *temp_str;
 
-    sprintf( temp_str, "%s/.local/share/%s/",
-             home_dir, PACKAGE );
-    if ( stat( temp_str, &sbuf ) != 0 ) {
-        if ( mkdir( temp_str, 0700 ) != 0 ) {
-            fprintf( stderr, "Unable to create configuration!\n"
-                     "Failed to create directory %s\n"
-                     "Error Number: %d", temp_str, errno );
-            GtkWidget *dialog = gtk_message_dialog_new(
-                                          GTK_WINDOW (prefwindow),
-                                          GTK_ERROR_DIALOG_FLAGS,
-                                          "Unable to create configuration!\n\n"
-                                          "Failed to create directory %s\n"
-                                          "Error Number: %d",
-                                          temp_str, errno );
-            gtk_dialog_run( GTK_DIALOG (dialog) );
-            gtk_widget_destroy( dialog );
-            return (FALSE);
-        }
-    }
+    if ( ( temp_str = check_config_dir() ) == NULL )
+        return (FALSE);
 
     strcat( temp_str, "custom.ini" );
     fileconf = fopen( temp_str, "w" );
@@ -124,6 +153,8 @@ gint destroy_prefs( GtkWidget *widget, gpointer data )
                                           , temp_str );
         gtk_dialog_run( GTK_DIALOG (dialog) );
         gtk_widget_destroy( dialog );
+
+        g_free( temp_str );
         return (FALSE);
     }
 
@@ -139,6 +170,7 @@ gint destroy_prefs( GtkWidget *widget, gpointer data )
     if ( temptheme != theme )
         g_object_unref( temptheme );
 
+    g_free( temp_str );
     return (FALSE);
 }
 
@@ -199,8 +231,7 @@ gint open_theme_dialog( GtkWidget *widget, gpointer data )
     gtk_file_filter_add_pixbuf_formats( filter );
     gtk_file_filter_set_name( filter, "Supported File Types" );
     gtk_file_chooser_add_filter( GTK_FILE_CHOOSER (dialog), filter );
-    if ( gtk_dialog_run( GTK_DIALOG (dialog) ) == GTK_RESPONSE_ACCEPT )
-    {
+    if ( gtk_dialog_run( GTK_DIALOG (dialog) ) == GTK_RESPONSE_ACCEPT ) {
         char *filename;
         GdkPixbuf *temp;
 
@@ -252,23 +283,11 @@ gint apply_callback( GtkWidget *widget, gpointer data )
     struct stat sbuf;
     char *filename;
 
-    /* alloc some memory for filename string */
-    if ( ( filename = g_malloc( sizeof( char ) *
-                       ( strlen( home_dir ) + sizeof( PACKAGE ) +
-                         sizeof( "/.local/share/theme.tiff" ) ) ) ) == NULL ) {
-        fputs( "malloc failed!\n", stderr );
-        GtkWidget *dialog = gtk_message_dialog_new(
-                                                GTK_WINDOW (mainwindow),
-                                                GTK_ERROR_DIALOG_FLAGS,
-                                                "Memory allocation error!\n\n"
-                                                "Failed apply theme." );
-        gtk_dialog_run( GTK_DIALOG (dialog) );
-        gtk_widget_destroy( dialog );
-        exit( 1 );
-    }
+    if ( ( filename = check_config_dir() ) == NULL )
+        return (FALSE);
 
-    sprintf( filename, "%s/.local/share/%s/theme.tiff", home_dir, PACKAGE );
-    if ( stat( filename, &sbuf ) == 0 )
+    strcat( filename, "theme.tiff" );
+    if ( stat( filename, &sbuf ) == 0 ) {
         if ( remove( filename ) != 0 ) {
             fprintf( stderr, "Could not delete old theme!\n"
                      "Please make sure this file is accessable:\n%s\n"
@@ -281,10 +300,14 @@ gint apply_callback( GtkWidget *widget, gpointer data )
                                                 "accessable:\n%s" , filename );
             gtk_dialog_run( GTK_DIALOG (dialog) );
             gtk_widget_destroy( dialog );
+
+            g_free( filename );
             return (FALSE);
         }
+    }
 
-    if ( gtk_widget_get_sensitive( defaultwidget ) )
+
+    if ( gtk_widget_get_sensitive( defaultwidget ) ) {
         if ( gdk_pixbuf_save( temptheme, filename, "tiff", NULL, NULL)
                 == FALSE ) {
             fprintf( stderr, "Could not save theme!\n"
@@ -298,8 +321,11 @@ gint apply_callback( GtkWidget *widget, gpointer data )
                                                 , filename );
             gtk_dialog_run( GTK_DIALOG (dialog) );
             gtk_widget_destroy( dialog );
+
+            g_free( filename );
             return (FALSE);
         }
+    }
 
     theme = temptheme;
 #if GTK_MAJOR_VERSION == 2
@@ -308,6 +334,8 @@ gint apply_callback( GtkWidget *widget, gpointer data )
     gtk_widget_set_sensitive( undowidget, FALSE );
     gtk_widget_set_sensitive( applywidget, FALSE );
     usedefaulttheme = !gtk_widget_get_sensitive( defaultwidget );
+
+    g_free( filename );
     return (FALSE);
 }
 
