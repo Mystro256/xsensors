@@ -269,19 +269,32 @@ gint apply_callback( GtkWidget *widget, gpointer data )
 
     sprintf( filename, "%s/.local/share/%s/theme.tiff", home_dir, PACKAGE );
     if ( stat( filename, &sbuf ) == 0 )
-        remove( filename );/*TODO ERROR*/
+        if ( remove( filename ) != 0 ) {
+            fprintf( stderr, "Could not delete old theme!\n"
+                     "Please make sure this file is accessable:\n%s\n"
+                     , filename );
+            GtkWidget *dialog = gtk_message_dialog_new(
+                                                GTK_WINDOW (prefwindow),
+                                                GTK_ERROR_DIALOG_FLAGS,
+                                                "Could not delete old theme!\n"
+                                                "Please make sure this file is"
+                                                "accessable:\n%s" , filename );
+            gtk_dialog_run( GTK_DIALOG (dialog) );
+            gtk_widget_destroy( dialog );
+            return (FALSE);
+        }
 
     if ( gtk_widget_get_sensitive( defaultwidget ) )
         if ( gdk_pixbuf_save( temptheme, filename, "tiff", NULL, NULL)
                 == FALSE ) {
             fprintf( stderr, "Could not save theme!\n"
-                     "Failed to save theme to %s\n"
+                     "Failed to save theme to\n%s\n"
                      , filename );
             GtkWidget *dialog = gtk_message_dialog_new(
                                                 GTK_WINDOW (prefwindow),
                                                 GTK_ERROR_DIALOG_FLAGS,
                                                 "Could not save theme!\n\n"
-                                                "Failed to save theme to %s\n"
+                                                "Failed to save theme to\n%s"
                                                 , filename );
             gtk_dialog_run( GTK_DIALOG (dialog) );
             gtk_widget_destroy( dialog );
