@@ -19,9 +19,7 @@
     02110-1301  USA.
 */
 
-
 #include "main.h"
-#include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
 #include <getopt.h>
