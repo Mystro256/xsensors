@@ -1,6 +1,3 @@
-For 0.80:
-- Filter file chooser to only show gdkpixbuf supported types
-- Check if theme file is correct size
 Low Priority:
 - Better range readouts (neat speedometer type possibly)
 - Port gtkbox to gtkgrid (probably deprecated in the future)
