@@ -75,19 +75,29 @@ static int help_msg( void )
 /* Read config.ini from ~/.config */
 static void load_config( void )
 {
-    FILE * fileconf;
-    char temp_str[ 100 ];
+    FILE *fileconf;
+    char *temp_str;
+    gsize temp_len = strlen( home_dir ) + sizeof( PACKAGE ) +
+                         sizeof( "/.local/share/config.ini" );
+
+    /* alloc some memory for temp_str */
+    if ( ( temp_str = g_malloc( sizeof( char ) * temp_len ) ) == NULL ) {
+        fputs( "Unable to load config.ini! Malloc failed!\n", stderr );
+        return;
+    }
+
     sprintf( temp_str, "%s/.local/share/%s/custom.ini",
              home_dir, PACKAGE );
 
-    fileconf = fopen( temp_str, "r" );
-    if ( fileconf == NULL )
+    if ( ( fileconf = fopen( temp_str, "r" ) ) == NULL ) {
+        g_free( temp_str );
         return;
+    }
 
     /* Possible config values:
         use_fahrenheit=0 or 1
         update_time=(uint) */
-    while ( fgets( temp_str, 100, fileconf ) != NULL ) {
+    while ( fgets( temp_str, temp_len, fileconf ) != NULL ) {
         if ( temp_str[0] != '[' && temp_str[0] != ';' ) {
             if ( strlen( temp_str ) > 15 &&
                     strncmp( temp_str, "use_fahrenheit=", 15 ) == 0 ) {
@@ -112,7 +122,9 @@ static void load_config( void )
             }
         }
     }
+
     fclose( fileconf );
+    g_free( temp_str );
 }
 
 /* Main. */
