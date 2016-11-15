@@ -199,6 +199,7 @@ gint open_theme_dialog( GtkWidget *widget, gpointer data )
                                           NULL );
     filter = gtk_file_filter_new();
     gtk_file_filter_add_pixbuf_formats( filter );
+    gtk_file_filter_set_name( filter, "Supported File Types" );
     gtk_file_chooser_add_filter( GTK_FILE_CHOOSER (dialog), filter );
     if ( gtk_dialog_run( GTK_DIALOG (dialog) ) == GTK_RESPONSE_ACCEPT )
     {
