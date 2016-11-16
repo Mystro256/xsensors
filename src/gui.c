@@ -2,6 +2,7 @@
     gui.c - Part of xsensors
 
     Copyright (c) 2002-2007 Kris Kersey <augustus@linuxhardware.org>
+                  2012-2016 Jeremy Newton (mystro256)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -38,9 +39,12 @@ gint destroy_gui( GtkWidget *widget, gpointer data )
 /* About Dialog */
 gboolean about_callback( GtkWidget *widget, GdkEvent *event )
 {
-    char* authors [4] = {"Kris Kersey",
+    char* authors [6] = {"Kris Kersey",
+                         "Jean Delvare",
+                         "Joaquim Fellmann",
                          "Jeremy Newton (mystro256)",
-                         "with patches from Nanley Chery",NULL};
+                         "with patches from Nanley Chery",
+                         NULL};
 
     gtk_show_about_dialog( GTK_WINDOW (mainwindow),
                            "version", VERSION,

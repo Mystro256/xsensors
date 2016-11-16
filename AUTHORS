@@ -1,7 +1,9 @@
 Xsensors was written by:
 
-	Kris Kersey <augustus@linuxhardware.org> (Original core author)
+    Kris Kersey <augustus@linuxhardware.org> (Original core author)
     Jean Delvare <khali@linux-fr.org> (lib3 support)
-	Joaquim Fellmann <joaquim@altern.org> (Initial autoconf and automake)
+    Joaquim Fellmann <joaquim@altern.org> (Initial autoconf and automake)
+    Nanley Chery (patches for cairo, various)
+    Jeremy Newton <mystro256> (GTK3/UI improvements, preferences, fixes)
 
-Please send bug fixes to: augustus@linuxhardware.org
+Please send bug fixes to: https://github.com/Mystro256/xsensors/issues

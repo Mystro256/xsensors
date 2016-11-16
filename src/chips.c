@@ -2,6 +2,7 @@
     chips.c - Part of xsensors
 
     Copyright (c) 2002-2007 Kris Kersey <augustus@linuxhardware.org>
+                  2012-2016 Jeremy Newton (mystro256)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
