@@ -44,6 +44,11 @@ enum { VOLT, TEMP, FAN };
     "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, Boston, MA\n"\
     "02110-1301  USA."
 
+/* Public vars */
+extern int usedefaulttheme;
+extern GtkWidget *mainwindow;
+extern GdkPixbuf *theme;
+
 /* Prototypes */
 gint destroy_gui( GtkWidget *, gpointer );
 #if GTK_MAJOR_VERSION == 2

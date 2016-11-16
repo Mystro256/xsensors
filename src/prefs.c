@@ -20,14 +20,6 @@
 */
 
 #include "main.h"
-#include "prefs.h"
-
-extern int tf;
-extern int update_time;
-extern int usedefaulttheme;
-extern GdkPixbuf *theme;
-extern GtkWidget *mainwindow;
-extern char *home_dir;
 
 GdkPixbuf *temptheme = NULL;
 GtkWidget *prefwindow = NULL;

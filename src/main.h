@@ -19,7 +19,6 @@
     02110-1301  USA.
 */
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -32,7 +31,14 @@
 #include <gdk/gdk.h>
 #include "chips.h"
 #include "gui.h"
+#include "prefs.h"
 #include "../config.h"
 
 /* Pretty identifiers. */
 enum { SUCCESS, FAILURE };
+
+/* Public vars */
+extern int tf;
+extern int update_time;
+extern char *imagefile;
+extern const char *home_dir;

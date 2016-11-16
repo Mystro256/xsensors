@@ -20,17 +20,11 @@
 */
 
 #include "main.h"
-#include "prefs.h"
 
-extern int tf;
-extern int update_time;
-extern char *imagefile;
-extern char *home_dir;
-
+int usedefaulttheme = FALSE;
 GtkWidget *mainwindow = NULL;
-
 GdkPixbuf *theme = NULL;
-gboolean usedefaulttheme = FALSE;
+
 GdkPixbuf *icon = NULL;
 
 /* Destroy the main window. */

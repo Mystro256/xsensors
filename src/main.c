@@ -26,7 +26,6 @@
 
 char *strdup(const char *s);
 
-/* Our public vars */
 int tf = FALSE;
 int update_time = 1;
 char *imagefile = NULL;
