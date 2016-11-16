@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 
 AM_CONFIG_HEADER(config.h)
 
-AC_INIT(xsensors, 0.80-dev)
+AC_INIT(xsensors, 0.80)
 AC_CONFIG_SRCDIR(src/main.c)
 AM_INIT_AUTOMAKE
 
