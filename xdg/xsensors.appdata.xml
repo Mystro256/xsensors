@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2014 Jeremy Newton <alexjnewt_at_hotmail.com> -->
+<!-- Copyright 2014 Jeremy Newton -->
 <application>
  <id type="desktop">xsensors.desktop</id>
- <metadata_license>CC0-1.0</metadata_license>
+ <metadata_license>CC-BY-SA-3.0</metadata_license>
  <project_license>GPL-2.0+</project_license>
  <name>XSensors</name>
  <summary>An X11 interface to lm_sensors</summary>
@@ -18,5 +18,5 @@
   <screenshot type="default">https://raw.githubusercontent.com/Mystro256/xsensors/master/screenshot.png</screenshot>
  </screenshots>
  <url type="homepage">https://github.com/Mystro256/xsensors</url>
- <updatecontact>alexjnewt_at_hotmail.com</updatecontact>
+ <update_contact>alexjnewt_at_hotmail.com</update_contact>
 </application>
