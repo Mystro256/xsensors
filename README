@@ -1,10 +1,13 @@
 xsensors - Mystro256 fork
 ------------------------------
 
-This is another release of xsensors, a program designed to display all
-the related information from your motherboard sensors.  This information is
-gathered via lm_sensors, the software drivers that actually gathers the 
-sensor information.
+This is an updated fork of xsensors (http://www.linuxhardware.org/xsensors/),
+which continues development where the original stream left off. It includes
+GTK3 support, a preference menu, bugfixes and various updates.
+
+This is a program designed to display all the related information from your
+motherboard sensors.  This information is gathered via lm_sensors, the software
+drivers that actually gathers the sensor information.
 
 Requirements:
 - lm_sensors 3.0.0+ (http://www.lm-sensors.org)
