@@ -2,17 +2,17 @@
 -----
 Changes:
 - Minimum GTK2 version is now 2.8
-- Pixmap theme is now in tiff format (instead of xpm)
 - Pixmap theme is now installed in prefix/share/xsensors/ as theme.tiff
+  (other formats still supported)
 - Command line option for update time has been tweaked
 Enhancements:
 - Show message boxes for most errors
-- Scrollbars
-- Added GTK3 port, which is default if available, overwritten with --with-gtk2
-- Menu with Preferences and About dialogs
+- Scrollbars on tabbed pages
+- Added GTK3 port, which is default if available, override with --with-gtk2
+- Menu with Preferences and About dialog
 - Persistent/saved settings (command line options are per-run)
 Bug fixes:
-- Fix the swaping of red/blue when drawing
+- Fix the theming issues (color mismatch with red/blue)
 - Fix some memory issues
 - Fix command line argument issues
 
