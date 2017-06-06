@@ -1,4 +1,4 @@
-#xsensors - Mystro256 fork
+# xsensors - Mystro256 fork
 
 This is an updated fork of xsensors (http://www.linuxhardware.org/xsensors/),
 which continues development where the original stream left off. It includes
@@ -10,12 +10,12 @@ drivers that actually gathers the sensor information.
 
 ![alt text](https://github.com/Mystro256/xsensors/raw/master/screenshot.png "Screenshot")
 
-##Requirements:
+## Requirements:
 - lm_sensors 3.0.0+ (http://www.lm-sensors.org)
 - gtk+ 2 or 3 (http://www.gtk.org)
 - cairo (https://www.cairographics.org)
 
-##Installation:
+## Installation:
 ```sh
 ./configure
 make
