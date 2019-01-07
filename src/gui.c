@@ -513,7 +513,6 @@ static updates *add_sensor_tab( GtkWidget *container,
         gtk_box_pack_start( GTK_BOX (mainbox), voltbox, FALSE, FALSE, 0 );
         gtk_widget_show( voltlabel );
     }
-
     if ( usedtemp > 0 ) {
         gtk_widget_show( tempbox );
         gtk_box_pack_start( GTK_BOX (mainbox), tempbox, FALSE, FALSE, 0 );
@@ -598,7 +597,7 @@ int start_gui( int argc, char **argv )
         gsize tempsize = sizeof( DATADIR );
         if ( tempsize < ( strlen( home_dir ) + sizeof( "/.local/share") ) )
             tempsize = strlen( home_dir ) + sizeof( "/.local/share");
-        tempsize += sizeof( PACKAGE ) + sizeof( "theme.tiff" );
+        tempsize += sizeof( PACKAGE ) + sizeof( "theme.png" );
 
         /* alloc some memory for imagefile string */
         if ( ( imagefile = g_malloc( sizeof( char ) *
@@ -615,14 +614,14 @@ int start_gui( int argc, char **argv )
         }
 
         /* Check home dir first */
-        sprintf( imagefile, "%s/.local/share/%s/theme.tiff",
+        sprintf( imagefile, "%s/.local/share/%s/theme.png",
                  home_dir, PACKAGE );
         if ( stat( imagefile, &sbuf ) != 0 ) {
 
             /* Check system dir next */
-            sprintf( imagefile, "%s/%s/theme.tiff", DATADIR, PACKAGE );
+            sprintf( imagefile, "%s/%s/theme.png", DATADIR, PACKAGE );
             if ( stat( imagefile, &sbuf ) != 0 ) {
-                fprintf( stderr, "%s: %s/.local/share/%s/theme.tiff\n",
+                fprintf( stderr, "%s: %s/.local/share/%s/theme.png\n",
                          strerror( errno ) , home_dir, PACKAGE );
                 fprintf( stderr, "%s: %s\n",
                          strerror( errno ), imagefile );
@@ -632,7 +631,7 @@ int start_gui( int argc, char **argv )
                                                 GTK_WINDOW (mainwindow),
                                                 GTK_ERROR_DIALOG_FLAGS,
                                                 "Theme Import error!\n\n"
-                                                "Could not find theme.tiff\n"
+                                                "Could not find theme.png\n"
                                                 "Please make sure it exists in"
                                                 " one of these directories:"
                                                 "\n\n%s/%s"
@@ -653,7 +652,13 @@ int start_gui( int argc, char **argv )
             exit( 1 );
         }
     }
-    theme = gdk_pixbuf_new_from_file( imagefile, NULL );
+    GError* tmperr;
+    theme = gdk_pixbuf_new_from_file( imagefile, &tmperr );
+    if(theme == NULL)
+    {
+        printf("Unable to load theme file: %s\n", tmperr->message);
+        return FAILURE;
+    }
 
     /* Import 128x128 icon if it's available */
     char iconfile [sizeof( DATADIR ) - 1 + sizeof( PACKAGE ) - 1 +
