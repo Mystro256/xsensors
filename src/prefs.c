@@ -42,10 +42,10 @@ static char *get_config_dir()
     struct stat sbuf;
 
     /* alloc some memory for buffer string */
-    /* custom.ini and theme.tiff = 10 chars*/
+    /* custom.ini and theme.png = 9 chars*/
     if ( ( buffer = g_malloc( sizeof( char ) *
                        ( strlen( home_dir ) + sizeof( PACKAGE ) +
-                         sizeof( "/.local/share/" ) + 10 ) ) ) == NULL ) {
+                         sizeof( "/.local/share/" ) + 9 ) ) ) == NULL ) {
         fputs( "malloc failed!\n", stderr );
         GtkWidget *dialog = gtk_message_dialog_new(
                                                 GTK_WINDOW (mainwindow),
@@ -279,7 +279,7 @@ gint apply_callback( GtkWidget *widget, gpointer data )
     /* Check and get config dir */
     if ( ( filename = get_config_dir() ) == NULL )
         return (FALSE);
-    strcat( filename, "theme.tiff" );
+    strcat( filename, "theme.png" );
 
     if ( stat( filename, &sbuf ) == 0 ) {
         if ( remove( filename ) != 0 ) {
@@ -302,7 +302,7 @@ gint apply_callback( GtkWidget *widget, gpointer data )
 
 
     if ( gtk_widget_get_sensitive( defaultwidget ) ) {
-        if ( gdk_pixbuf_save( temptheme, filename, "tiff", NULL, NULL)
+        if ( gdk_pixbuf_save( temptheme, filename, "png", NULL, NULL)
                 == FALSE ) {
             fprintf( stderr, "Could not save theme!\n"
                      "Failed to save theme to\n%s\n"
@@ -341,7 +341,7 @@ gint setdefault_callback( GtkWidget *widget, gpointer data )
     /* alloc some memory for filename string */
     if ( ( filename = g_malloc( sizeof( char ) *
                        ( sizeof( DATADIR ) + sizeof( PACKAGE ) +
-                         sizeof( "theme.tiff" ) ) ) ) == NULL ) {
+                         sizeof( "theme.png" ) ) ) ) == NULL ) {
         fputs( "malloc failed!\n", stderr );
         GtkWidget *dialog = gtk_message_dialog_new(
                                                 GTK_WINDOW (mainwindow),
@@ -353,7 +353,7 @@ gint setdefault_callback( GtkWidget *widget, gpointer data )
         exit( 1 );
     }
 
-    sprintf( filename, "%s/%s/theme.tiff", DATADIR, PACKAGE );
+    sprintf( filename, "%s/%s/theme.png", DATADIR, PACKAGE );
     temp = gdk_pixbuf_new_from_file( filename, NULL );
     if ( temp ) {
         if ( temptheme != theme )
