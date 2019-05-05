@@ -678,7 +678,7 @@ int start_gui( int argc, char **argv )
     gtk_widget_show( mainbox );
 
     /* Create menu */
-    /* TODO Make into appmenu for gtk3 */
+    /* TODO get rid of the menubar, these can be placed somewhere else */
     menubar = gtk_menu_new();
 
     tempwgt = gtk_menu_item_new_with_label( "Preferences" );
