@@ -575,6 +575,7 @@ int start_gui( int argc, char **argv )
 {
     struct stat sbuf;
     char title [20];
+    GError* tmperr = NULL;
 
     GtkWidget *mainbox, *menubar, *tempwgt, *notebook;
 
@@ -652,7 +653,6 @@ int start_gui( int argc, char **argv )
             exit( 1 );
         }
     }
-    GError* tmperr;
     theme = gdk_pixbuf_new_from_file( imagefile, &tmperr );
     if(theme == NULL)
     {
