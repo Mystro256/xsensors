@@ -611,7 +611,7 @@ int start_gui( int argc, char **argv )
                                                 "Failed import theme." );
             gtk_dialog_run( GTK_DIALOG (dialog) );
             gtk_widget_destroy( dialog );
-            exit( 1 );
+            return FAILURE;
         }
 
         /* Check home dir first */
@@ -641,7 +641,7 @@ int start_gui( int argc, char **argv )
                                                 home_dir, PACKAGE );
                 gtk_dialog_run( GTK_DIALOG (dialog) );
                 gtk_widget_destroy( dialog );
-                exit( 1 );
+                return FAILURE;
             }
             usedefaulttheme = TRUE;
         }
@@ -650,13 +650,13 @@ int start_gui( int argc, char **argv )
             fprintf( stderr, "%s: %s\n", strerror( errno ), imagefile );
             fputs( "Image file not found in specified location! Exiting!\n",
                    stderr );
-            exit( 1 );
+            return FAILURE;
         }
     }
     theme = gdk_pixbuf_new_from_file( imagefile, &tmperr );
     if(theme == NULL)
     {
-        printf("Unable to load theme file: %s\n", tmperr->message);
+        fprintf( stderr, "Unable to load theme file: %s\n", tmperr->message);
         return FAILURE;
     }
 
