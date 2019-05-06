@@ -213,8 +213,10 @@ int main( int argc, char **argv )
         free( sens_config );
 
     /* This will start the GUI. */
-    if ( start_gui( argc, argv ) != SUCCESS )
+    if ( start_gui( argc, argv ) != SUCCESS ) {
         fputs( "GUI failed!\n", stderr );
+        return EXIT_FAILURE;
+    }
 
     /* Clean up the sensors library. */
     sensors_cleanup();
