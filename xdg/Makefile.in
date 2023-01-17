@@ -144,10 +144,10 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(appdatadir)" "$(DESTDIR)$(desktopdir)" \
 	"$(DESTDIR)$(icon128dir)" "$(DESTDIR)$(icon48dir)" \
-	"$(DESTDIR)$(icon64dir)" "$(DESTDIR)$(mandatadir)" \
+	"$(DESTDIR)$(icon64dir)" "$(DESTDIR)$(icon32dir)" "$(DESTDIR)$(icon24dir)" "$(DESTDIR)$(icon16dir)" "$(DESTDIR)$(mandatadir)" \
 	"$(DESTDIR)$(pixmapdir)"
 DATA = $(appdata_DATA) $(desktop_DATA) $(icon128_DATA) $(icon48_DATA) \
-	$(icon64_DATA) $(mandata_DATA) $(pixmap_DATA)
+	$(icon64_DATA) $(icon32_DATA) $(icon24_DATA) $(icon16_DATA) $(mandata_DATA) $(pixmap_DATA)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/mkinstalldirs
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -255,6 +255,18 @@ top_srcdir = @top_srcdir@
 pixmapdir = $(datadir)/xsensors
 pixmap_DATA = \
 	theme.png
+
+icon16dir = $(datadir)/icons/hicolor/16x16/apps/
+icon16_DATA = \
+	icons/16x16/xsensors.png
+
+icon24dir = $(datadir)/icons/hicolor/24x24/apps/
+icon24_DATA = \
+	icons/24x24/xsensors.png
+
+icon32dir = $(datadir)/icons/hicolor/32x32/apps/
+icon32_DATA = \
+	icons/32x32/xsensors.png
 
 icon48dir = $(datadir)/icons/hicolor/48x48/apps/
 icon48_DATA = \
@@ -417,6 +429,69 @@ uninstall-icon64DATA:
 	@list='$(icon64_DATA)'; test -n "$(icon64dir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(icon64dir)'; $(am__uninstall_files_from_dir)
+install-icon32DATA: $(icon32_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(icon32_DATA)'; test -n "$(icon32dir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(icon32dir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(icon32dir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(icon32dir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(icon32dir)" || exit $$?; \
+	done
+
+uninstall-icon32DATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(icon32_DATA)'; test -n "$(icon32dir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(icon32dir)'; $(am__uninstall_files_from_dir)
+install-icon24DATA: $(icon24_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(icon24_DATA)'; test -n "$(icon24dir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(icon24dir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(icon24dir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(icon24dir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(icon24dir)" || exit $$?; \
+	done
+
+uninstall-icon24DATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(icon24_DATA)'; test -n "$(icon24dir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(icon24dir)'; $(am__uninstall_files_from_dir)
+install-icon16DATA: $(icon16_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(icon16_DATA)'; test -n "$(icon16dir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(icon16dir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(icon16dir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(icon16dir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(icon16dir)" || exit $$?; \
+	done
+
+uninstall-icon16DATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(icon16_DATA)'; test -n "$(icon16dir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(icon16dir)'; $(am__uninstall_files_from_dir)
 install-mandataDATA: $(mandata_DATA)
 	@$(NORMAL_INSTALL)
 	@list='$(mandata_DATA)'; test -n "$(mandatadir)" || list=; \
@@ -500,7 +575,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(appdatadir)" "$(DESTDIR)$(desktopdir)" "$(DESTDIR)$(icon128dir)" "$(DESTDIR)$(icon48dir)" "$(DESTDIR)$(icon64dir)" "$(DESTDIR)$(mandatadir)" "$(DESTDIR)$(pixmapdir)"; do \
+	for dir in "$(DESTDIR)$(appdatadir)" "$(DESTDIR)$(desktopdir)" "$(DESTDIR)$(icon128dir)" "$(DESTDIR)$(icon48dir)" "$(DESTDIR)$(icon64dir)" "$(DESTDIR)$(icon32dir)" "$(DESTDIR)$(icon24dir)" "$(DESTDIR)$(icon16dir)" "$(DESTDIR)$(mandatadir)" "$(DESTDIR)$(pixmapdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -554,7 +629,7 @@ info: info-am
 info-am:
 
 install-data-am: install-appdataDATA install-desktopDATA \
-	install-icon128DATA install-icon48DATA install-icon64DATA \
+	install-icon128DATA install-icon48DATA install-icon64DATA install-icon32DATA install-icon24DATA install-icon16DATA \
 	install-mandataDATA install-pixmapDATA
 
 install-dvi: install-dvi-am
@@ -601,7 +676,7 @@ ps-am:
 
 uninstall-am: uninstall-appdataDATA uninstall-desktopDATA \
 	uninstall-icon128DATA uninstall-icon48DATA \
-	uninstall-icon64DATA uninstall-mandataDATA \
+	uninstall-icon64DATA uninstall-icon32DATA uninstall-icon24DATA uninstall-icon16DATA uninstall-mandataDATA \
 	uninstall-pixmapDATA
 
 .MAKE: install-am install-strip
@@ -612,7 +687,7 @@ uninstall-am: uninstall-appdataDATA uninstall-desktopDATA \
 	install-data install-data-am install-desktopDATA install-dvi \
 	install-dvi-am install-exec install-exec-am install-html \
 	install-html-am install-icon128DATA install-icon48DATA \
-	install-icon64DATA install-info install-info-am install-man \
+	install-icon64DATA install-icon32DATA install-icon24DATA install-icon16DATA install-info install-info-am install-man \
 	install-mandataDATA install-pdf install-pdf-am \
 	install-pixmapDATA install-ps install-ps-am install-strip \
 	installcheck installcheck-am installdirs maintainer-clean \
@@ -620,7 +695,7 @@ uninstall-am: uninstall-appdataDATA uninstall-desktopDATA \
 	pdf-am ps ps-am tags-am uninstall uninstall-am \
 	uninstall-appdataDATA uninstall-desktopDATA \
 	uninstall-icon128DATA uninstall-icon48DATA \
-	uninstall-icon64DATA uninstall-mandataDATA \
+	uninstall-icon64DATA uninstall-icon32DATA uninstall-icon24DATA uninstall-icon16DATA uninstall-mandataDATA \
 	uninstall-pixmapDATA
 
 .PRECIOUS: Makefile
