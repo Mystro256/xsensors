@@ -35,16 +35,16 @@ printf "\n" &&
 printf "${bold}${GRE}Script to build xsensors on Linux.${c0}\n" &&
 printf "${YEL}Building xsensors...${c0}\n" &&
 
-# Build htop
+# Export optimization flags
 export NINJA_SUMMARIZE_BUILD=1 &&
 
-export CFLAGS="-DNDEBUG -g0 -s -O3 -mavx -maes"
-export CPPFLAGS="-DNDEBUG -g0 -s -O3 -mavx -maes"
-export GLIB_CFLAGS="-DNDEBUG -g0 -s -O3 -mavx -maes"
-export GTK_LIBS="-DNDEBUG -g0 -s -O3 -mavx -maes"
-export GTK_CFLAGS="-DNDEBUG -g0 -s -O3 -mavx -maes"
-export XSENSORS_CFLAGS="-DNDEBUG -g0 -s -O3 -mavx -maes"
-export LDFLAGS="-Wl,-O3 -mavx -maes"
+export CFLAGS="-DNDEBUG -g0 -s -O3 -msse3"
+export CPPFLAGS="-DNDEBUG -g0 -s -O3 -msse3"
+export GLIB_CFLAGS="-DNDEBUG -g0 -s -O3 -msse3"
+export GTK_LIBS="-DNDEBUG -g0 -s -O3 -msse3"
+export GTK_CFLAGS="-DNDEBUG -g0 -s -O3 -msse3"
+export XSENSORS_CFLAGS="-DNDEBUG -g0 -s -O3 -msse3"
+export LDFLAGS="-Wl,-O3 -msse3"
 
 # --clean
 makeClean () {
@@ -101,6 +101,7 @@ case $1 in
 	--gtk3) makeGTK3; exit 0;;
 esac
 
+# Error message if no flag is supplied.
 printf "${bold}${RED}Error: Must supply --gtk2, --gtk3, and/or --clean.\n" &&
 printf "${bold}${YEL}Run this script with --help to display full help message.\n" &&
 printf "\n" &&
