@@ -19,7 +19,7 @@ try() { "$@" || die "${RED}Failed $*"; }
 displayHelp () {
 	printf "\n" &&
 	printf "${bold}${GRE}Script to build xsensors on Linux.${c0}\n" &&
-	printf "${YEL}Use the --clean flag to run make clean.\n" &&
+	printf "${YEL}Use the --clean flag to run make clean. (should be run when rebuilding)\n" &&
 	printf "${YEL}Use the --gtk2 flag to build with GTK2.\n" &&
 	printf "${YEL}Use the --gtk3 flag to build with GTK3.\n" &&
 	printf "${YEL}Use the --help flag to show this help.\n" &&
