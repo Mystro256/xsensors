@@ -19,6 +19,11 @@ try() { "$@" || die "${RED}Failed $*"; }
 displayHelp () {
 	printf "\n" &&
 	printf "${bold}${GRE}Script to build xsensors on Linux.${c0}\n" &&
+	printf "${YEL}Use the --clean flag to run make clean.\n" &&
+	printf "${YEL}Use the --gtk2 flag to build with GTK2.\n" &&
+	printf "${YEL}Use the --gtk3 flag to build with GTK3.\n" &&
+	printf "${YEL}Use the --help flag to show this help.\n" &&
+	tput sgr0 &&
 	printf "\n"
 }
 
@@ -28,8 +33,7 @@ esac
 
 printf "\n" &&
 printf "${bold}${GRE}Script to build xsensors on Linux.${c0}\n" &&
-printf "${YEL}Building xsensors...\n" &&
-printf "${CYA}\n" &&
+printf "${YEL}Building xsensors...${c0}\n" &&
 
 # Build htop
 export NINJA_SUMMARIZE_BUILD=1 &&
@@ -42,17 +46,64 @@ export GTK_CFLAGS="-DNDEBUG -g0 -s -O3 -mavx -maes"
 export XSENSORS_CFLAGS="-DNDEBUG -g0 -s -O3 -mavx -maes"
 export LDFLAGS="-Wl,-O3 -mavx -maes"
 
-make clean &&
+# --clean
+makeClean () {
+	printf "${CYA}\n" &&
+	make clean &&
+	printf "\n" &&
+	printf "${bold}${GRE}Build dir cleaned.${c0}\n" &&
+	printf "\n"
+}
 
-./autogen.sh &&
+case $1 in
+	--clean) makeClean; exit 0;;
+esac
 
-./configure --with-gtk2 --disable-debug &&
+# --gtk2
+makeGTK2 () {
+	printf "\n" &&
+	printf "${bold}${GRE}Building with GTK2...${c0}\n" &&
+	printf "${CYA}\n" &&
+	./autogen.sh &&
 
-make VERBOSE=1 V=1 &&
+	./configure --with-gtk2 --disable-debug &&
 
-printf "\n" &&
-printf "${GRE}${bold}Build Completed. ${YEL}${bold}You can now sudo make install or make install to install it.\n" &&
+	make VERBOSE=1 V=1
+	printf "${c0}\n" &&
+	printf "${GRE}${bold}Build Completed. ${YEL}${bold}You can now sudo make install or make install to install it.\n" &&
+	printf "${GRE}(sudo make uninstall or make uninstall to uninstall it)\n" &&
+	printf "\n" &&
+	tput sgr0
+}
+
+case $1 in
+	--gtk2) makeGTK2; exit 0;;
+esac
+
+# --gtk3
+makeGTK3 () {
+	printf "\n" &&
+	printf "${bold}${GRE}Building with GTK3...${c0}\n" &&
+	printf "${CYA}\n" &&
+	./autogen.sh &&
+
+	./configure --disable-debug &&
+
+	make VERBOSE=1 V=1 &&
+	printf "${c0}\n" &&
+	printf "${GRE}${bold}Build Completed. ${YEL}${bold}You can now sudo make install or make install to install it.\n" &&
+	printf "${GRE}(sudo make uninstall or make uninstall to uninstall it)\n" &&
+	printf "\n" &&
+	tput sgr0
+}
+
+case $1 in
+	--gtk3) makeGTK3; exit 0;;
+esac
+
+printf "${bold}${RED}Error: Must supply --gtk2, --gtk3, and/or --clean.\n" &&
+printf "${bold}${YEL}Run this script with --help to display full help message.\n" &&
 printf "\n" &&
 tput sgr0 &&
 
-exit 0
+exit 1
