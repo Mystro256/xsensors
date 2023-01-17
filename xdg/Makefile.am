@@ -3,6 +3,21 @@ pixmapdir = $(datadir)/xsensors
 pixmap_DATA =	\
 	theme.png
 
+icon16dir = $(datadir)/icons/hicolor/16x16/apps/
+
+icon16_DATA =	\
+	icons/16x16/xsensors.png
+
+icon24dir = $(datadir)/icons/hicolor/24x24/apps/
+
+icon24_DATA =	\
+	icons/24x24/xsensors.png
+
+icon32dir = $(datadir)/icons/hicolor/32x32/apps/
+
+icon32_DATA =	\
+	icons/32x32/xsensors.png
+
 icon48dir = $(datadir)/icons/hicolor/48x48/apps/
 
 icon48_DATA =	\
