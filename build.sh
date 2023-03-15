@@ -40,6 +40,7 @@ export NINJA_SUMMARIZE_BUILD=1 &&
 
 export CFLAGS="-DNDEBUG -g0 -s -O3 -msse3"
 export CPPFLAGS="-DNDEBUG -g0 -s -O3 -msse3"
+export CXXFLAGS="-DNDEBUG -g0 -s -O3 -msse3"
 export GLIB_CFLAGS="-DNDEBUG -g0 -s -O3 -msse3"
 export GTK_LIBS="-DNDEBUG -g0 -s -O3 -msse3"
 export GTK_CFLAGS="-DNDEBUG -g0 -s -O3 -msse3"
@@ -50,6 +51,7 @@ export LDFLAGS="-Wl,-O3 -msse3"
 makeClean () {
 	printf "${CYA}\n" &&
 	make clean &&
+	make distclean &&
 	printf "\n" &&
 	printf "${bold}${GRE}Build dir cleaned.${c0}\n" &&
 	printf "\n"
