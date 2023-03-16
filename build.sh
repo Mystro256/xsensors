@@ -38,14 +38,14 @@ printf "${YEL}Building xsensors...${c0}\n" &&
 # Export optimization flags
 export NINJA_SUMMARIZE_BUILD=1 &&
 
-export CFLAGS="-DNDEBUG -g0 -s -O3 -msse3"
-export CPPFLAGS="-DNDEBUG -g0 -s -O3 -msse3"
-export CXXFLAGS="-DNDEBUG -g0 -s -O3 -msse3"
-export GLIB_CFLAGS="-DNDEBUG -g0 -s -O3 -msse3"
-export GTK_LIBS="-DNDEBUG -g0 -s -O3 -msse3"
-export GTK_CFLAGS="-DNDEBUG -g0 -s -O3 -msse3"
-export XSENSORS_CFLAGS="-DNDEBUG -g0 -s -O3 -msse3"
-export LDFLAGS="-Wl,-O3 -msse3"
+export CFLAGS="-DNDEBUG -O3 -msse3 -g0 -s"
+export CPPFLAGS="-DNDEBUG -O3 -msse3 -g0 -s"
+export CXXFLAGS="-DNDEBUG -O3 -msse3 -g0 -s"
+export GLIB_CFLAGS="-DNDEBUG -O3 -msse3 -g0 -s"
+export GTK_LIBS="-DNDEBUG -O3 -msse3 -g0 -s"
+export GTK_CFLAGS="-DNDEBUG -O3 -msse3 -g0 -s"
+export XSENSORS_CFLAGS="-DNDEBUG -O3 -msse3 -g0 -s"
+export LDFLAGS="-Wl,-O3 -msse3 -s"
 
 # --clean
 makeClean () {
