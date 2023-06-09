@@ -39,7 +39,7 @@ gint destroy_gui( GtkWidget *widget, gpointer data )
 /* Quit app on Escape key press */
 gboolean on_key_press_callback(GtkWidget *widget, GdkEventKey *event, gpointer data){
     switch(event->keyval){
-        case GDK_KEY_Escape:
+        case GDK_KEY_q:
             gtk_main_quit();
             break;
     }
