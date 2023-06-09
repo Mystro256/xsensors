@@ -27,7 +27,7 @@ enum { VOLT, TEMP, FAN };
 
 #define NA "Not Available!"
 
-#define COPYRIGHT "© 2012-2016 Jeremy Newton, 2002-2007 Kris Kersey"
+#define COPYRIGHT "© 2012-2023 Jeremy Newton, 2002-2007 Kris Kersey"
 
 #define GPL2PLUS \
     "This program is free software; you can redistribute it and/or modify\n"\
@@ -58,6 +58,7 @@ gboolean draw_callback( GtkWidget *, GdkEventExpose *, gpointer );
 gboolean draw_callback( GtkWidget *, cairo_t *, gpointer );
 #endif
 gboolean about_callback( GtkWidget *, GdkEvent * );
+gboolean on_key_press_callback( GtkWidget *, GdkEventKey *, gpointer );
 gint start_timer( GtkWidget *, gpointer );
 void get_pm_location( gchar, int *, int *, int * );
 int start_gui( int, char ** );

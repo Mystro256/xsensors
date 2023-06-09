@@ -36,14 +36,25 @@ gint destroy_gui( GtkWidget *widget, gpointer data )
     return (FALSE);
 }
 
+/* Quit app on Escape key press */
+gboolean on_key_press_callback(GtkWidget *widget, GdkEventKey *event, gpointer data){
+    switch(event->keyval){
+        case GDK_KEY_q:
+            gtk_main_quit();
+            break;
+    }
+    return FALSE;
+}
+
 /* About Dialog */
 gboolean about_callback( GtkWidget *widget, GdkEvent *event )
 {
-    char* authors [6] = {"Kris Kersey",
+    char* authors [7] = {"Kris Kersey",
                          "Jean Delvare",
                          "Joaquim Fellmann",
                          "Jeremy Newton (mystro256)",
                          "with patches from Nanley Chery",
+                         "and Alexander Frick",
                          NULL};
 
     gtk_show_about_dialog( GTK_WINDOW (mainwindow),
@@ -696,6 +707,9 @@ int start_gui( int argc, char **argv )
     g_signal_connect( G_OBJECT (tempwgt), "activate",
                       G_CALLBACK (about_callback), NULL );
     gtk_widget_show( tempwgt );
+
+    g_signal_connect( G_OBJECT (mainwindow), "key_press_event",
+                      G_CALLBACK (on_key_press_callback), NULL);
 
     tempwgt = gtk_menu_item_new_with_label( "Quit" );
     gtk_menu_shell_append( GTK_MENU_SHELL (menubar), tempwgt );
